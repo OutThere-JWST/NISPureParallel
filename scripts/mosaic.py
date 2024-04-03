@@ -21,15 +21,13 @@ parser.add_argument('clusterid', type=str)
 args = parser.parse_args()
 cid = args.clusterid
 
-# Load products
-obs = Table.read('cluster-obs.fits',int(cid))
-name = obs.meta['EXTNAME']
-print(f'Mosaicing {name}')
-
-# Get main paths
+# Get paths and get clusters
 main = os.getcwd()
 clusters = os.path.join(main,'CLUSTERS')
+obs = Table.read(os.path.join(clusters,'cluster-obs.fits'),int(cid))
+name = obs.meta['EXTNAME']
 home = os.path.join(clusters,name)
+print(f'Mosaicing {name}')
 
 # Subdirectories
 logs = os.path.join(home,'logs')

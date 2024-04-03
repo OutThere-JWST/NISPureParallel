@@ -144,8 +144,9 @@ if __name__ == '__main__':
         prod_hdul[-1].header['EXTNAME'] = names[i]
 
     # Save FITS file
-    obs_hdul.writeto('cluster-obs.fits',overwrite=True)
-    prod_hdul.writeto('cluster-prods.fits',overwrite=True)
+    if not os.path.isdir('CLUSTERS'): os.mkdir('CLUSTERS')
+    obs_hdul.writeto('CLUSTERS/cluster-obs.fits',overwrite=True)
+    prod_hdul.writeto('CLUSTERS/cluster-prods.fits',overwrite=True)
 
     # Get products to download
     prods = vstack([Table(p.data) for p in prod_hdul[1:]])

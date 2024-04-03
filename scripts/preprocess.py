@@ -23,16 +23,16 @@ parser.add_argument('clusterid', type=str)
 args = parser.parse_args()
 cid = args.clusterid
 
-# Load products
-prods = Table.read('cluster-prods.fits',int(cid))
-name = prods.meta['EXTNAME']
-print(f'Processing {name}')
+# Get paths and get clusters
+main = os.getcwd()
+clusters = os.path.join(main,'CLUSTERS')
+prods = Table.read(os.path.join(clusters,'cluster-prods.fits'),int(cid))
+name = obs.meta['EXTNAME']
+home = os.path.join(clusters,name)
+print(f'Mosaicing {name}')
 
 # Get main paths
-main = os.getcwd()
 rate = os.path.join(main,'RATE')
-clusters = os.path.join(main,'CLUSTERS')
-home = os.path.join(clusters,name)
 if not os.path.exists(home): os.mkdir(home)
 
 # Subdirectories
