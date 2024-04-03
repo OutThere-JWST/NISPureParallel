@@ -1,0 +1,17 @@
+name: grizli-jwst
+channels:
+- conda-forge
+dependencies:
+- python==3.11.* # Need to wait for drizzlepac to be on 3.12
+- ipython # Non essential
+- scipy
+- pip
+- pip:
+  - git+https://github.com/spacetelescope/jwst.git
+  - git+https://github.com/astropy/astroquery.git # For flat downloads
+  - git+https://github.com/karllark/dust_attenuation.git # Optional
+  - git+https://github.com/gbrammer/eazy-py.git # Optional
+  - reproject # Optional
+  - columnjump # For Stage 1 Pipeline
+  - snowblind # For Stage 1 Pipeline
+  - -e /u/rahvi/py-packages/grizli[jwst]

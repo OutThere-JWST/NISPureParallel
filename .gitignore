@@ -1,0 +1,11 @@
+# Ignored directories
+logs/
+UNCAL/
+RATE/
+CLUSTERS/
+
+# Ignore SLURM files
+*.slurm
+
+# Ignore FITS files
+*.fits
