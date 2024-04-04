@@ -1,0 +1,12 @@
+name: snakemake
+channels:
+- conda-forge
+dependencies:
+- python=3.11.*
+- tqdm
+- numpy
+- astropy
+- bioconda::snakemake
+- pip:
+  - sregion
+  - git+https://github.com/astropy/astroquery.git # Flat downloads

@@ -14,19 +14,11 @@ from threadpoolctl import threadpool_limits
 
 # JWST Pipeline
 import jwst
-#from columnjump import  ColumnJumpStep
+from columnjump import  ColumnJumpStep
 from jwst.pipeline import Detector1Pipeline
-#from snowblind import SnowblindStep, JumpPlusStep
-#from jwst.step import JumpStep, RampFitStep, AssignWcsStep
+from snowblind import SnowblindStep, JumpPlusStep
+from jwst.step import JumpStep, RampFitStep, AssignWcsStep
 
-# Grizli
-from grizli import jwst_utils
-
-# Parse arguements
-parser = argparse.ArgumentParser()
-parser.add_argument('--cpu', type=int, default=(cpu_count() - 2))
-parser.add_argument('--scratch', action='store_true')
-args = parser.parse_args()
 
 # Detector 1 Pipeline
 @threadpool_limits.wrap(limits=1, user_api='blas')
@@ -64,7 +56,7 @@ def cal(file,out):
     jump = JumpStep.call(
         cjump,
         flag_4_neighbors=True,
-        expand_large_events=False,
+        expand_large_events=False, # False if using snowblind
         min_jump_to_flag_neighbors=20,
         rejection_threshold=5.0,
         after_jump_flag_time1=0
@@ -89,10 +81,6 @@ def cal(file,out):
 
     # Save results
     rate.save(out)
-
-    # Stage 2 Processing with Grizli
-    jwst_utils.initialize_jwst_image(out)
-    jwst_utils.set_jwst_to_hst_keywords(out,reset=True)
     
     print(f'Finished {file}')
 
@@ -101,10 +89,16 @@ def cal(file,out):
 # Run pipeline in parallel
 if __name__ == '__main__':
 
+    # Parse arguements
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--cpu', type=int, default=(cpu_count() - 2))
+    parser.add_argument('--scratch', action='store_true')
+    args = parser.parse_args()
+
     # Get paths
     main = os.getcwd()
     uncal = os.path.join(main,'UNCAL')
-    rate = os.path.join(main,'TEST')
+    rate = os.path.join(main,'RATE')
 
     # Restart from scratch
     if not os.path.exists(rate):

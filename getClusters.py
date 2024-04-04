@@ -5,17 +5,23 @@ import os
 import json
 import glob
 import shutil
+import argparse
 import numpy as np
 from tqdm import tqdm
 from sregion import SRegion
 from astropy.io import fits
 from shapely import union_all
 import xml.etree.ElementTree as et
-from astropy.table import Table,vstack
 from astroquery.mast import Observations
+from astropy.table import Table,join,vstack
 from astropy.coordinates import SkyCoord,get_constellation
 
 if __name__ == '__main__':
+
+    # Parse arguements
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--download', action='store_true')
+    args = parser.parse_args()
 
     # Set proposal IDs
     proposal_ids = ['1571','3383']
@@ -83,7 +89,7 @@ if __name__ == '__main__':
         for i,r in enumerate(regs):
 
             # Check if region intersects with most recent cluster
-            if c_regs[-1].intersects(r):
+            if c_regs[-1].intersects(r) and c_regs[-1].distance(r) < 30/3600:
 
                 # Combine regions and observations
                 c_regs[-1] = c_regs[-1].union(regs.pop(i))
@@ -119,6 +125,8 @@ if __name__ == '__main__':
         # Keep track
         names.append(name)
 
+    # Write cluster names to file
+    with open('CLUSTERS/clusters.txt','w') as f: f.write('\n'.join(names))
 
     # Save clusters to FITS file
     obs_cols = ['obs_id','s_ra','s_dec','filters','t_obs_release','t_exptime','obsid','s_region','prim_id'] # Columns to keep
@@ -148,15 +156,18 @@ if __name__ == '__main__':
     obs_hdul.writeto('CLUSTERS/cluster-obs.fits',overwrite=True)
     prod_hdul.writeto('CLUSTERS/cluster-prods.fits',overwrite=True)
 
-    # Get products to download
-    prods = vstack([Table(p.data) for p in prod_hdul[1:]])
+    # Skip if download flag is not set
+    if args.download:
 
-    # Create Download Directory
-    if not os.path.isdir('UNCAL'):
-        os.mkdir('UNCAL')
+        # Get products to download
+        prods = vstack([Table(p.data) for p in prod_hdul[1:]])
 
-    # Get list of files to download
-    todo = np.setdiff1d(prods['productFilename'],[os.path.basename(f) for f in glob.glob('UNCAL/*.fits')])
+        # Create Download Directory
+        if not os.path.isdir('UNCAL'):
+            os.mkdir('UNCAL')
 
-    # Download products if not already downloaded
-    if len(todo) > 0: Observations.download_products(join(prods,Table([todo])),download_dir='UNCAL',flat=True)
+        # Get list of files to download
+        todo = np.setdiff1d(prods['productFilename'],[os.path.basename(f) for f in glob.glob('UNCAL/*.fits')])
+
+        # Download products if not already downloaded
+        if len(todo) > 0: Observations.download_products(join(prods,Table([todo])),download_dir='UNCAL',flat=True)

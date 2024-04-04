@@ -69,10 +69,9 @@ for f in files:
 
     # Copy raw file
     f = shutil.copy(f,raw)
-    continue
 
     # Initialize image
-    jwst_utils.initialize_jwst_image(f,oneoverf_correction=(not custom_oof))
+    jwst_utils.initialize_jwst_image(f)
     jwst_utils.set_jwst_to_hst_keywords(f,reset=True)
 
 # Parse Visits
@@ -177,4 +176,3 @@ for file in files:
     # Save and close
     fig.savefig(os.path.join(plots,f.replace('.fits','.pdf')),bbox_inches='tight')
     pyplot.close(fig)
-

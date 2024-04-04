@@ -1,0 +1,11 @@
+name: jwst
+channels:
+- conda-forge
+dependencies:
+- python==3.12.* # Need to wait for drizzlepac to be on 3.12
+- threadpoolctl
+- pip
+- pip:
+  - git+https://github.com/spacetelescope/jwst.git
+  - columnjump # For Stage 1 Pipeline
+  - snowblind # For Stage 1 Pipeline

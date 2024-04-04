@@ -1,13 +1,13 @@
+with open('CLUSTERS/clusters.txt') as f: clusters = f.read().splitlines()
+
 rule all:
-  input:
-    "CLUSTERS/cluster-obs.fits",
-    "CLUSTERS/cluster-prods.fits"
+    input:
+        directory("RATE")
 
-rule downloadLevel1:
-  output:
-    "CLUSTERS/cluster-obs.fits",
-    "CLUSTERS/cluster-prods.fits"
-  conda:"envs/grizli-jwst.yaml"
-  script:"scripts/downloadLevel1.py"
-
-
+rule runStage1:
+    input:
+        directory("UNCAL")
+    output:
+        directory("RATE")
+    conda:"envs/jwst.yaml"  
+    shell:"./workflow/scripts/runStage1.py --scratch --cpu 1"
