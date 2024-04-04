@@ -1,5 +1,0 @@
-name: snakemake
-channels:
-- bioconda
-dependencies:
-- snakemake

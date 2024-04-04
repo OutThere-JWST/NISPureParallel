@@ -4,6 +4,9 @@ UNCAL/
 RATE/
 CLUSTERS/
 
+# Ignore Snakmake files
+*.snakemake
+
 # Ignore SLURM files
 *.slurm
 

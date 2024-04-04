@@ -1,0 +1,13 @@
+rule all:
+  input:
+    "CLUSTERS/cluster-obs.fits",
+    "CLUSTERS/cluster-prods.fits"
+
+rule downloadLevel1:
+  output:
+    "CLUSTERS/cluster-obs.fits",
+    "CLUSTERS/cluster-prods.fits"
+  conda:"envs/grizli-jwst.yaml"
+  script:"scripts/downloadLevel1.py"
+
+
