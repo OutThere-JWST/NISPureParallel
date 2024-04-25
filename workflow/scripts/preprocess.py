@@ -21,15 +21,14 @@ warnings.filterwarnings('ignore')
 parser = argparse.ArgumentParser()
 parser.add_argument('clusterid', type=str)
 args = parser.parse_args()
-cid = args.clusterid
+cname = args.clusterid
 
 # Get paths and get clusters
 main = os.getcwd()
 clusters = os.path.join(main,'CLUSTERS')
-prods = Table.read(os.path.join(clusters,'cluster-prods.fits'),int(cid))
-name = obs.meta['EXTNAME']
-home = os.path.join(clusters,name)
-print(f'Mosaicing {name}')
+prods = Table.read(os.path.join(clusters,'cluster-prods.fits'),cname)
+home = os.path.join(clusters,cname)
+print(f'Preprocessing {cname}')
 
 # Get main paths
 rate = os.path.join(main,'RATE')
@@ -75,7 +74,7 @@ for f in files:
     jwst_utils.set_jwst_to_hst_keywords(f,reset=True)
 
 # Parse Visits
-visits, all_groups, info = auto_script.parse_visits(field_root=name,RAW_PATH=raw)
+visits, all_groups, info = auto_script.parse_visits(field_root=cname,RAW_PATH=raw)
 
 # Get color cycle
 colors = [c['color'] for c in pyplot.rcParams['axes.prop_cycle']]
@@ -147,7 +146,7 @@ other_args = {
 }
 
 # Process visit
-visit_processor.process_visit(name,tab=assoc,prep_args=prep_args,other_args=other_args,clean=False, sync=False,with_db=False,visit_split_shift=2,combine_same_pa=True)
+visit_processor.process_visit(cname,tab=assoc,prep_args=prep_args,other_args=other_args,clean=False, sync=False,with_db=False,visit_split_shift=2,combine_same_pa=True)
 
 # Plot Science Images
 files = glob.glob(os.path.join(prep,'*drz_sci.fits'))
