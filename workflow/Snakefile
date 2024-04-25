@@ -10,7 +10,6 @@ rule runStage1:
     output:
         directory("RATE")
     conda:"envs/jwst.yaml"  
-    shell:"./workflow/scripts/runStage1.py --scratch --cpu 1"
     resources:
         nodes=1,
         tasks=1,
@@ -19,3 +18,4 @@ rule runStage1:
         partition='p.huge',
         runtime=1440,
         slurm_extra="--mail-type=ALL --mail-user=hviding@mpia.de"
+    shell:"./workflow/scripts/runStage1.py --scratch --cpu 1"
