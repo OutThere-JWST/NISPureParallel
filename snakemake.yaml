@@ -3,10 +3,12 @@ channels:
 - conda-forge
 dependencies:
 - python=3.12.*
+- pip
 - tqdm
 - numpy
 - astropy
 - bioconda::snakemake
+- snakemake-executor-plugin-slurm
 - pip:
   - sregion
   - git+https://github.com/astropy/astroquery.git # Flat downloads
