@@ -5,21 +5,20 @@ with open('CLUSTERS/clusters.txt') as f: clusters = f.read().splitlines()
 
 rule all:
     input:
-        directory("RATE")
+        directory('RATE')
 
 rule runStage1:
     input:
-        directory("UNCAL")
+        directory('UNCAL')
     output:
-        directory("RATE")
-    conda:"envs/jwst.yaml"  
-    log:"logs/Stage1.out"
+        directory('RATE')
+    conda:'envs/jwst.yaml'  
     resources:
         nodes=1,
         tasks=1,
-        cpus_per_task=32,
-        mem=2048000,
-        partition="p.huge",
+        cpus_per_task=36,
+        mem_mb=2048000,
+        slurm_partition='p.huge',
         runtime=1440,
-        slurm_extra="--mail-type=ALL --mail-user=hviding@mpia.de"
-    shell:"./workflow/scripts/runStage1.py --scratch --cpu 36"
+        slurm_extra='--mail-type=ALL --mail-user=hviding@mpia.de -o logs/Stage1.out'
+    shell:'./workflow/scripts/runStage1.py --scratch --cpu 36'
