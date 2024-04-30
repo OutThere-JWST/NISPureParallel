@@ -3,3 +3,11 @@ jobs: 100
 use-conda: True
 conda-frontend: conda
 # executor: slurm
+default-resources:
+  nodes: 1
+  tasks: 1
+  cpus_per_task: 36
+  mem_mb: 250000
+  slurm_partition: 'p.vera'
+  runtime: 1440
+  slurm_extra: '--mail-type=ALL --mail-user=hviding@mpia.de'

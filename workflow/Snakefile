@@ -21,13 +21,8 @@ rule runStage1:
     conda:'envs/jwst.yaml'
     log:'logs/Stage1.log'
     resources:
-        nodes=1,
-        tasks=1,
-        cpus_per_task=36,
         mem_mb=2048000,
-        slurm_partition='p.huge',
-        runtime=1440,
-        slurm_extra='--mail-type=ALL --mail-user=hviding@mpia.de'
+        slurm_partition='p.huge'
     shell:'./workflow/scripts/runStage1.py --cpu 4'
 
 # Preprocess Rule
@@ -38,14 +33,6 @@ rule preProcess:
         'CLUSTERS/{cluster}/logs/proc.out'
     conda:'envs/grizli.yaml'
     log:'logs/PreProcess_{cluster}.log'
-    resources:
-        nodes=1,
-        tasks=1,
-        cpus_per_task=36,
-        mem_mb=250000,
-        slurm_partition='p.vera',
-        runtime=1440,
-        slurm_extra='--mail-type=ALL --mail-user=hviding@mpia.de'
     shell:'./workflow/scripts/preprocess.py {wildcards.cluster}'
 
 # Mosaic Rule
@@ -56,12 +43,4 @@ rule mosaic:
         'CLUSTERS/{cluster}/logs/mos.out'
     conda:'envs/grizli.yaml'
     log:'logs/PreProcess_{cluster}.log'
-    resources:
-        nodes=1,
-        tasks=1,
-        cpus_per_task=36,
-        mem_mb=250000,
-        slurm_partition='p.vera',
-        runtime=1440,
-        slurm_extra='--mail-type=ALL --mail-user=hviding@mpia.de'
     shell:'./workflow/scripts/preprocess.py {wildcards.cluster}'
