@@ -23,7 +23,7 @@ rule runStage1:
     resources:
         mem_mb=2048000,
         slurm_partition='p.huge'
-    shell:'./workflow/scripts/runStage1.py --cpu 4'
+    shell:'./workflow/scripts/runStage1.py --cpu $SLURM_CPUS_PER_TASK'
 
 # Preprocess Rule
 rule preProcess:
@@ -44,3 +44,34 @@ rule mosaic:
     conda:'envs/grizli.yaml'
     log:'logs/PreProcess_{cluster}.log'
     shell:'./workflow/scripts/preprocess.py {wildcards.cluster}'
+
+# Contamination Rule
+rule contam:
+    input:
+        'CLUSTERS/{cluster}/logs/mos.out'
+    output:
+        'CLUSTERS/{cluster}/logs/contam.out'
+    conda:'envs/grizli.yaml'
+    log:'logs/PreProcess_{cluster}.log'
+    shell:'./workflow/scripts/preprocess.py {wildcards.cluster}'
+
+# Extraction Rule
+rule extract:
+    input:
+        'CLUSTERS/{cluster}/logs/contam.out'
+    output:
+        'CLUSTERS/{cluster}/logs/extr.out'
+    conda:'envs/grizli.yaml'
+    log:'logs/PreProcess_{cluster}.log'
+    shell:'./workflow/scripts/preprocess.py {wildcards.cluster}'
+
+# Fitting Rule
+rule zfit:
+    input:
+        'CLUSTERS/{cluster}/logs/extr.out'
+    output:
+        'CLUSTERS/{cluster}/logs/zfit.out'
+    conda:'envs/grizli.yaml'
+    log:'logs/PreProcess_{cluster}.log'
+    shell:'./workflow/scripts/preprocess.py {wildcards.cluster}'
+

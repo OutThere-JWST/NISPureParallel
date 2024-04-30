@@ -51,8 +51,8 @@ if __name__ == '__main__':
 
     # Redirect stdout and stderr to file
     if not verbose:
-        sys.stdout = open(os.path.join(logs,'mod.out'),'w')
-        sys.stderr = open(os.path.join(logs,'mod.err'),'w')
+        sys.stdout = open(os.path.join(logs,'contam.out'),'w')
+        sys.stderr = open(os.path.join(logs,'contam.err'),'w')
 
     # Go to prep directory
     os.chdir(prep)
