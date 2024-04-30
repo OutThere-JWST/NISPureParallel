@@ -12,7 +12,8 @@ rule runStage1:
         directory('UNCAL')
     output:
         directory('RATE')
-    conda:'envs/jwst.yaml'  
+    conda:'envs/jwst.yaml'
+    log:'logs/Stage1.log'
     resources:
         nodes=1,
         tasks=1,
@@ -20,5 +21,5 @@ rule runStage1:
         mem_mb=2048000,
         slurm_partition='p.huge',
         runtime=1440,
-        slurm_extra='--mail-type=ALL --mail-user=hviding@mpia.de -o logs/Stage1.out'
+        slurm_extra='--mail-type=ALL --mail-user=hviding@mpia.de'
     shell:'./workflow/scripts/runStage1.py --scratch --cpu 36'
