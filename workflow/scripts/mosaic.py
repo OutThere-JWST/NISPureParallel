@@ -17,14 +17,14 @@ warnings.filterwarnings('ignore')
 
 # Parse arguements
 parser = argparse.ArgumentParser()
-parser.add_argument('clusterid', type=str)
+parser.add_argument('clustername', type=str)
 args = parser.parse_args()
-cid = args.clusterid
+cname = args.clustername
 
 # Get paths and get clusters
 main = os.getcwd()
 clusters = os.path.join(main,'CLUSTERS')
-obs = Table.read(os.path.join(clusters,'cluster-obs.fits'),int(cid))
+obs = Table.read(os.path.join(clusters,'cluster-obs.fits'),cname)
 name = obs.meta['EXTNAME']
 home = os.path.join(clusters,name)
 print(f'Mosaicing {name}')

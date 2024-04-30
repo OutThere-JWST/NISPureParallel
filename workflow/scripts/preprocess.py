@@ -19,9 +19,9 @@ warnings.filterwarnings('ignore')
 
 # Parse arguements
 parser = argparse.ArgumentParser()
-parser.add_argument('clusterid', type=str)
+parser.add_argument('clustername', type=str)
 args = parser.parse_args()
-cname = args.clusterid
+cname = args.clustername
 
 # Get paths and get clusters
 main = os.getcwd()

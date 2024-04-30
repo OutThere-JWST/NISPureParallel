@@ -1,17 +1,23 @@
-# Run getCluster on startup
-#import os
-#os.system(f'workflow/scripts/getClusters.py')
-with open('CLUSTERS/clusters.txt') as f: clusters = f.read().splitlines()
+# Import packages
+import os
+from astropy.io import fits
+from astropy.table import Table,vstack
 
+# Run getCluster on startup
+os.system(f'workflow/scripts/getClusters.py --download')
+with open('CLUSTERS/clusters.txt') as f: CLUSTERS = f.read().splitlines()
+
+# Final Rule
 rule all:
     input:
-        directory('RATE')
+        expand('CLUSTERS/{cluster}/logs/proc.out',cluster=CLUSTERS)
 
+# Stage1 Rule
 rule runStage1:
     input:
-        directory('UNCAL')
+        [f'UNCAL/{f}' for f in vstack([Table.read('CLUSTERS/cluster-prods.fits',c) for c in CLUSTERS])['productFilename'].tolist()]
     output:
-        directory('RATE')
+        [f'RATE/{f}'.replace('uncal','rate') for f in vstack([Table.read('CLUSTERS/cluster-prods.fits',c) for c in CLUSTERS])['productFilename'].tolist()]
     conda:'envs/jwst.yaml'
     log:'logs/Stage1.log'
     resources:
@@ -22,4 +28,40 @@ rule runStage1:
         slurm_partition='p.huge',
         runtime=1440,
         slurm_extra='--mail-type=ALL --mail-user=hviding@mpia.de'
-    shell:'./workflow/scripts/runStage1.py --scratch --cpu 36'
+    shell:'./workflow/scripts/runStage1.py --cpu 4'
+
+# Preprocess Rule
+rule preProcess:
+    input:
+        [f'RATE/{f}'.replace('uncal','rate') for f in vstack([Table.read('CLUSTERS/cluster-prods.fits',c) for c in CLUSTERS])['productFilename'].tolist()]
+    output:
+        'CLUSTERS/{cluster}/logs/proc.out'
+    conda:'envs/grizli.yaml'
+    log:'logs/PreProcess_{cluster}.log'
+    resources:
+        nodes=1,
+        tasks=1,
+        cpus_per_task=36,
+        mem_mb=250000,
+        slurm_partition='p.vera',
+        runtime=1440,
+        slurm_extra='--mail-type=ALL --mail-user=hviding@mpia.de'
+    shell:'./workflow/scripts/preprocess.py {wildcards.cluster}'
+
+# Mosaic Rule
+rule mosaic:
+    input:
+        'CLUSTERS/{cluster}/logs/proc.out'
+    output:
+        'CLUSTERS/{cluster}/logs/mos.out'
+    conda:'envs/grizli.yaml'
+    log:'logs/PreProcess_{cluster}.log'
+    resources:
+        nodes=1,
+        tasks=1,
+        cpus_per_task=36,
+        mem_mb=250000,
+        slurm_partition='p.vera',
+        runtime=1440,
+        slurm_extra='--mail-type=ALL --mail-user=hviding@mpia.de'
+    shell:'./workflow/scripts/preprocess.py {wildcards.cluster}'
