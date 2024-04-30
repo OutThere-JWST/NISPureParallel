@@ -42,7 +42,7 @@ rule mosaic:
     output:
         'CLUSTERS/{cluster}/logs/mos.out'
     conda:'envs/grizli.yaml'
-    log:'logs/PreProcess_{cluster}.log'
+    log:'logs/Mosaic_{cluster}.log'
     shell:'./workflow/scripts/preprocess.py {wildcards.cluster}'
 
 # Contamination Rule
@@ -52,7 +52,7 @@ rule contam:
     output:
         'CLUSTERS/{cluster}/logs/contam.out'
     conda:'envs/grizli.yaml'
-    log:'logs/PreProcess_{cluster}.log'
+    log:'logs/Contam_{cluster}.log'
     shell:'./workflow/scripts/preprocess.py {wildcards.cluster}'
 
 # Extraction Rule
@@ -62,7 +62,7 @@ rule extract:
     output:
         'CLUSTERS/{cluster}/logs/extr.out'
     conda:'envs/grizli.yaml'
-    log:'logs/PreProcess_{cluster}.log'
+    log:'logs/Extract_{cluster}.log'
     shell:'./workflow/scripts/preprocess.py {wildcards.cluster}'
 
 # Fitting Rule
@@ -72,6 +72,6 @@ rule zfit:
     output:
         'CLUSTERS/{cluster}/logs/zfit.out'
     conda:'envs/grizli.yaml'
-    log:'logs/PreProcess_{cluster}.log'
+    log:'logs/Redshift_{cluster}.log'
     shell:'./workflow/scripts/preprocess.py {wildcards.cluster}'
 
