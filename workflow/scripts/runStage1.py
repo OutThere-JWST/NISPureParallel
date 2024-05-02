@@ -91,7 +91,7 @@ if __name__ == '__main__':
 
     # Parse arguements
     parser = argparse.ArgumentParser()
-    parser.add_argument('--cpu', type=int, default=(cpu_count() - 2))
+    parser.add_argument('--ncpu', type=int, default=(cpu_count() - 2))
     parser.add_argument('--scratch', action='store_true')
     args = parser.parse_args()
 
@@ -114,7 +114,7 @@ if __name__ == '__main__':
     print(f'jwst:{jwst.__version__}')
 
     # Multiprocessing
-    pool = Pool(processes=args.cpu)
+    pool = Pool(processes=args.ncpu)
     pool.starmap_async(cal,files,chunksize=1)
     pool.close()
     pool.join()

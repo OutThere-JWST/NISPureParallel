@@ -10,7 +10,7 @@ with open('CLUSTERS/clusters.txt') as f: CLUSTERS = f.read().splitlines()
 # Final Rule
 rule all:
     input:
-        expand('CLUSTERS/{cluster}/logs/proc.out',cluster=CLUSTERS)
+        expand('CLUSTERS/{cluster}/logs/contam.out',cluster=CLUSTERS)
 
 # Stage1 Rule
 rule runStage1:
@@ -23,7 +23,7 @@ rule runStage1:
     resources:
         mem_mb=2048000,
         slurm_partition='p.huge'
-    shell:'./workflow/scripts/runStage1.py --cpu $SLURM_CPUS_PER_TASK'
+    shell:'./workflow/scripts/runStage1.py --ncpu $SLURM_CPUS_PER_TASK'
 
 # Preprocess Rule
 rule preProcess:
@@ -53,7 +53,7 @@ rule contam:
         'CLUSTERS/{cluster}/logs/contam.out'
     conda:'envs/grizli.yaml'
     log:'logs/Contam_{cluster}.log'
-    shell:'./workflow/scripts/preprocess.py {wildcards.cluster}'
+    shell:'./workflow/scripts/preprocess.py {wildcards.cluster} --ncpu $SLURM_CPUS_PER_TASK'
 
 # Extraction Rule
 rule extract:
@@ -63,7 +63,7 @@ rule extract:
         'CLUSTERS/{cluster}/logs/extr.out'
     conda:'envs/grizli.yaml'
     log:'logs/Extract_{cluster}.log'
-    shell:'./workflow/scripts/preprocess.py {wildcards.cluster}'
+    shell:'./workflow/scripts/preprocess.py {wildcards.cluster} --ncpu $SLURM_CPUS_PER_TASK'
 
 # Fitting Rule
 rule zfit:
@@ -73,5 +73,5 @@ rule zfit:
         'CLUSTERS/{cluster}/logs/zfit.out'
     conda:'envs/grizli.yaml'
     log:'logs/Redshift_{cluster}.log'
-    shell:'./workflow/scripts/preprocess.py {wildcards.cluster}'
+    shell:'./workflow/scripts/preprocess.py {wildcards.cluster} --ncpu $SLURM_CPUS_PER_TASK'
 

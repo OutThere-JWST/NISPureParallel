@@ -28,17 +28,17 @@ if __name__ == '__main__':
 
     # Parse arguements
     parser = argparse.ArgumentParser()
-    parser.add_argument('k', type=str)
-    parser.add_argument('-v','--verbose', action='store_true', help='Print to console, not to log file')
+    parser.add_argument('clustername', type=str)
+    parser.add_argument('--ncpu', type=str,default=1)
     args = parser.parse_args()
-    k = args.k
-    verbose = args.verbose
-    print(f'Modelling {k}')
+    cname = args.clustername
+    ncpu = args.ncpu
 
-    # Get main paths
+    # Get paths and get clusters
     main = os.getcwd()
-    fields = os.path.join(main,'fields')
-    home = os.path.join(fields,k)
+    clusters = os.path.join(main,'CLUSTERS')
+    home = os.path.join(clusters,cname)
+    print(f'Modelling Contamination {k}')
 
     # Subdirectories
     logs = os.path.join(home,'logs')
@@ -50,9 +50,8 @@ if __name__ == '__main__':
     with open(os.path.join(main,'params.json'),'r') as file: params = json.load(file)
 
     # Redirect stdout and stderr to file
-    if not verbose:
-        sys.stdout = open(os.path.join(logs,'contam.out'),'w')
-        sys.stderr = open(os.path.join(logs,'contam.err'),'w')
+    sys.stdout = open(os.path.join(logs,'contam.out'),'w')
+    sys.stderr = open(os.path.join(logs,'contam.err'),'w')
 
     # Go to prep directory
     os.chdir(prep)
@@ -98,7 +97,7 @@ if __name__ == '__main__':
             field_root=root,
             PREP_PATH=prep,
             EXTRACT_PATH=extract,
-            refine_niter=2,
+            refine_niter=3,
             refine_mag_limits=[16, 24],
             prelim_mag_limit=26,
             init_coeffs=[1, -0.6],
@@ -106,9 +105,9 @@ if __name__ == '__main__':
             files=grism_files,
             model_kwargs={'compute_size': False, 'size':48},
             subtract_median_filter=False,
-            use_jwst_crds=False,
+            use_jwst_crds=True,
             force_ref=ref,
-            cpu_count=1
+            cpu_count=ncpu
             # sep_background_kwargs={}
             )
 

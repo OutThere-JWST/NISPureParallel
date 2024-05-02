@@ -10,7 +10,7 @@ import argparse
 import numpy as np
 from tqdm import tqdm
 from astropy.table import Table
-from multiprocessing import cpu_count,Pool
+from multiprocessing import Pool
 
 # Silence warnings
 warnings.filterwarnings('ignore')
@@ -35,22 +35,17 @@ if __name__ == '__main__':
 
     # Parse arguements
     parser = argparse.ArgumentParser()
-    parser.add_argument('k', type=str)
-    parser.add_argument('--cpu', type=int, default=(cpu_count()-2))
-    parser.add_argument('-v','--verbose', action='store_true', help='Print to console, not to log file')
+    parser.add_argument('clustername', type=str)
+    parser.add_argument('--ncpu', type=str,default=1)
     args = parser.parse_args()
-    k = args.k
-    cpu = args.cpu
-    verbose = args.verbose
-    print(f'Extracting {k}')
+    cname = args.clustername
+    ncpu = args.ncpu
 
-    # Load json
-    with open('params.json','r') as file: params = json.load(file)
-
-    # Get main paths
+    # Get paths and get clusters
     main = os.getcwd()
-    fields = os.path.join(main,'fields')
-    home = os.path.join(fields,k)
+    clusters = os.path.join(main,'CLUSTERS')
+    home = os.path.join(clusters,cname)
+    print(f'Extracting {k}')
 
     # Subdirectories
     logs = os.path.join(home,'logs')
@@ -73,7 +68,7 @@ if __name__ == '__main__':
     grp = multifit.GroupFLT(
         grism_files=glob.glob('*GrismFLT.fits'),
         catalog=f'{root}-ir.cat.fits',
-        cpu_count=-1, sci_extn=1, pad=800
+        cpu_count=ncpu, sci_extn=1, pad=800
     )
 
     # # Move files
@@ -101,7 +96,7 @@ if __name__ == '__main__':
     args = [(grp.get_beams(i, size=32, min_mask=0, min_sens=0.01),root) for i in ids]
 
     # Multiprocessing pool
-    pool = Pool(processes=cpu)
+    pool = Pool(processes=ncpu)
     pool.starmap_async(extractBeams,args)
     pool.close()
     pool.join()
