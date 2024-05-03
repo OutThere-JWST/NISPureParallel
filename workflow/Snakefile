@@ -23,7 +23,11 @@ rule runStage1:
     resources:
         mem_mb=2048000,
         slurm_partition='p.huge'
-    shell:'./workflow/scripts/runStage1.py --ncpu $SLURM_CPUS_PER_TASK'
+    shell:
+        """
+        module load texlive/2021
+        ./workflow/scripts/runStage1.py --ncpu $SLURM_CPUS_PER_TASK'
+        """
 
 # Preprocess Rule
 rule preProcess:
@@ -33,7 +37,11 @@ rule preProcess:
         'CLUSTERS/{cluster}/logs/proc.out'
     conda:'envs/grizli.yaml'
     log:'logs/PreProcess_{cluster}.log'
-    shell:'./workflow/scripts/preprocess.py {wildcards.cluster}'
+    shell:
+        """
+        module load texlive/2021
+        ./workflow/scripts/preprocess.py {wildcards.cluster}'
+        """
 
 # Mosaic Rule
 rule mosaic:
@@ -43,7 +51,11 @@ rule mosaic:
         'CLUSTERS/{cluster}/logs/mos.out'
     conda:'envs/grizli.yaml'
     log:'logs/Mosaic_{cluster}.log'
-    shell:'./workflow/scripts/preprocess.py {wildcards.cluster}'
+    shell:
+        """
+        module load texlive/2021
+        ./workflow/scripts/preprocess.py {wildcards.cluster}
+        """
 
 # Contamination Rule
 rule contam:
@@ -53,7 +65,11 @@ rule contam:
         'CLUSTERS/{cluster}/logs/contam.out'
     conda:'envs/grizli.yaml'
     log:'logs/Contam_{cluster}.log'
-    shell:'./workflow/scripts/preprocess.py {wildcards.cluster} --ncpu $SLURM_CPUS_PER_TASK'
+    shell:
+        """
+        module load texlive/2021
+        ./workflow/scripts/preprocess.py {wildcards.cluster} --ncpu $SLURM_CPUS_PER_TASK
+        """
 
 # Extraction Rule
 rule extract:
@@ -63,7 +79,11 @@ rule extract:
         'CLUSTERS/{cluster}/logs/extr.out'
     conda:'envs/grizli.yaml'
     log:'logs/Extract_{cluster}.log'
-    shell:'./workflow/scripts/preprocess.py {wildcards.cluster} --ncpu $SLURM_CPUS_PER_TASK'
+    shell:
+        """
+        module load texlive/2021
+        ./workflow/scripts/preprocess.py {wildcards.cluster} --ncpu $SLURM_CPUS_PER_TASK
+        """
 
 # Fitting Rule
 rule zfit:
@@ -73,5 +93,9 @@ rule zfit:
         'CLUSTERS/{cluster}/logs/zfit.out'
     conda:'envs/grizli.yaml'
     log:'logs/Redshift_{cluster}.log'
-    shell:'./workflow/scripts/preprocess.py {wildcards.cluster} --ncpu $SLURM_CPUS_PER_TASK'
+    shell:
+        """
+        module load texlive/2021
+        ./workflow/scripts/preprocess.py {wildcards.cluster} --ncpu $SLURM_CPUS_PER_TASK
+        """
 
