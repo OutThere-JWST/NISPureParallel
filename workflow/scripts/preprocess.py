@@ -18,7 +18,7 @@ from astropy.coordinates import Angle
 warnings.filterwarnings('ignore')
 
 # Import grizli
-import jwst,grizli
+import grizli
 from grizli import utils
 from grizli import jwst_utils
 from grizli.aws import visit_processor
@@ -62,7 +62,7 @@ if __name__ == '__main__':
     os.chdir(clusters)
 
     # Print grizli and jwst versions
-    print(f'grizli:{grizli.__version__} | jwst:{jwst.__version__}')
+    print(f'grizli:{grizli.__version__}')
 
     # Initialize image
     files = [os.path.join(rate,f).replace('uncal','rate') for f in prods['productFilename']]
@@ -148,7 +148,7 @@ if __name__ == '__main__':
     }
 
     # Process visit
-    visit_processor.process_visit(cname,tab=assoc,prep_args=prep_args,other_args=other_args,clean=False, sync=False,with_db=False,visit_split_shift=2,combine_same_pa=True)
+    visit_processor.process_visit(cname,tab=assoc,prep_args=prep_args,other_args=other_args,clean=False, sync=False,with_db=False,visit_split_shift=2,combine_same_pa=True,ROOT_PATH=clusters)
 
     # Plot Science Images
     files = glob.glob(os.path.join(prep,'*drz_sci.fits'))

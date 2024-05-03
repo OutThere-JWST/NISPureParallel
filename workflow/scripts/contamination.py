@@ -19,8 +19,8 @@ from reproject import reproject_adaptive as reproject
 warnings.filterwarnings('ignore')
 
 # Import grizli
-import jwst,grizli
-from grizli import utils,multifit
+import grizli
+from grizli import utils
 from grizli.aws import visit_processor
 from grizli.pipeline import auto_script
 
@@ -57,7 +57,7 @@ if __name__ == '__main__':
     os.chdir(prep)
 
     # Print grizli and jwst versions
-    print(f'grizli:{grizli.__version__} | jwst:{jwst.__version__}')
+    print(f'grizli:{grizli.__version__}')
 
     # Association Name
     root = params[k]['name']

@@ -16,7 +16,7 @@ from astropy.table import Table
 warnings.filterwarnings('ignore')
 
 # Import grizli
-import jwst,grizli
+import grizli
 from grizli import utils
 from grizli.aws import visit_processor
 from grizli.pipeline import auto_script
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     os.chdir(prep)
 
     # Print grizli and jwst versions
-    print(f'grizli:{grizli.__version__} | jwst:{jwst.__version__}')
+    print(f'grizli:{grizli.__version__}')
 
     # Make a table with file information
     files = sorted(glob.glob('*rate.fits'))

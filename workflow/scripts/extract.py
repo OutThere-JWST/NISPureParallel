@@ -16,10 +16,8 @@ from multiprocessing import Pool
 warnings.filterwarnings('ignore')
 
 # Import grizli
-import jwst,grizli
-from grizli import utils,multifit
-from grizli.aws import visit_processor
-from grizli.pipeline import auto_script
+import grizli
+from grizli import multifit
 
 # Extract beams
 def extractBeams(b,root):
@@ -59,7 +57,7 @@ if __name__ == '__main__':
         sys.stderr = open(os.path.join(logs,'extr.err'),'w')
 
     # Print grizli and jwst versions
-    print(f'grizli:{grizli.__version__} | jwst:{jwst.__version__}')
+    print(f'grizli:{grizli.__version__}')
 
     # Association Name
     root = params[k]['name']

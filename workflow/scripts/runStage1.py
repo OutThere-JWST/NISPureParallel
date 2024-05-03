@@ -19,7 +19,6 @@ from jwst.pipeline import Detector1Pipeline
 from snowblind import SnowblindStep, JumpPlusStep
 from jwst.step import JumpStep, RampFitStep, AssignWcsStep
 
-
 # Detector 1 Pipeline
 @threadpool_limits.wrap(limits=1, user_api='blas')
 def cal(file,out):

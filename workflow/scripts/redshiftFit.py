@@ -16,7 +16,7 @@ from multiprocessing import Pool
 warnings.filterwarnings('ignore')
 
 # Import grizli
-import jwst,grizli
+import grizli
 from grizli import fitting
 from grizli.pipeline import auto_script
 
@@ -64,7 +64,7 @@ if __name__ == '__main__':
         sys.stderr = open(os.path.join(logs,'zfit.err'),'w')
 
     # Print grizli and jwst versions
-    print(f'grizli:{grizli.__version__} | jwst:{jwst.__version__}')
+    print(f'grizli:{grizli.__version__}')
 
     # Association Name
     root = params[k]['name']
