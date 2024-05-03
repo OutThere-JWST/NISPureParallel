@@ -10,4 +10,4 @@ default-resources:
   mem_mb: 250000
   slurm_partition: 'p.vera'
   runtime: 1440
-  slurm_extra: "'--mail-type=ALL --mail-user=hviding@mpia.de'"
+  # slurm_extra: "'--mail-type=ALL --mail-user=hviding@mpia.de'"

@@ -4,7 +4,8 @@ from astropy.io import fits
 from astropy.table import Table,vstack
 
 # Run getCluster on startup
-os.system(f'workflow/scripts/getClusters.py --download')
+onstart:
+    shell(f'workflow/scripts/getClusters.py --download')
 with open('CLUSTERS/clusters.txt') as f: CLUSTERS = f.read().splitlines()
 
 # Final Rule
