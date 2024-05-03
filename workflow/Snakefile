@@ -16,9 +16,9 @@ rule all:
 # Stage1 Rule
 rule runStage1:
     input:
-        [f'UNCAL/{f}' for f in vstack([Table.read('CLUSTERS/cluster-prods.fits',c) for c in CLUSTERS])['productFilename'].tolist()]
+        [f'UNCAL/{f}' for f in vstack([Table.read('CLUSTERS/cluster-prods.fits',c)['productFilename'] for c in CLUSTERS]).tolist()]
     output:
-        [f'RATE/{f}'.replace('uncal','rate') for f in vstack([Table.read('CLUSTERS/cluster-prods.fits',c) for c in CLUSTERS])['productFilename'].tolist()]
+        [f'RATE/{f}'.replace('uncal','rate') for f in vstack([Table.read('CLUSTERS/cluster-prods.fits',c)['productFilename'] for c in CLUSTERS]).tolist()]
     conda:'envs/jwst.yaml'
     log:'logs/Stage1.log'
     resources:
@@ -33,7 +33,7 @@ rule runStage1:
 # Preprocess Rule
 rule preProcess:
     input:
-        [f'RATE/{f}'.replace('uncal','rate') for f in vstack([Table.read('CLUSTERS/cluster-prods.fits',c) for c in CLUSTERS])['productFilename'].tolist()]
+        [f'RATE/{f}'.replace('uncal','rate') for f in vstack([Table.read('CLUSTERS/cluster-prods.fits',c)['productFilename'] for c in CLUSTERS]).tolist()]
     output:
         'CLUSTERS/{cluster}/logs/proc.out'
     conda:'envs/grizli.yaml'
