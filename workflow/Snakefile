@@ -27,7 +27,7 @@ rule runStage1:
     shell:
         """
         module load texlive/2021
-        ./workflow/scripts/runStage1.py --ncpu $SLURM_CPUS_PER_TASK'
+        ./workflow/scripts/runStage1.py --ncpu $SLURM_CPUS_PER_TASK
         """
 
 # Preprocess Rule
@@ -41,7 +41,7 @@ rule preProcess:
     shell:
         """
         module load texlive/2021
-        ./workflow/scripts/preprocess.py {wildcards.cluster}'
+        ./workflow/scripts/preprocess.py {wildcards.cluster}
         """
 
 # Mosaic Rule
