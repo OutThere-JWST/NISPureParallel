@@ -33,6 +33,7 @@ if __name__ == '__main__':
     main = os.getcwd()
     clusters = os.path.join(main,'CLUSTERS')
     obs = Table.read(os.path.join(clusters,'cluster-obs.fits'),cname)
+    home = os.path.join(clusters,cname)
     print(f'Mosaicing {cname}')
 
     # Subdirectories
@@ -66,7 +67,7 @@ if __name__ == '__main__':
 
     # Drizzle full mosaics
     visit_processor.cutout_mosaic(
-        name,
+        cname,
         res=res[~is_grism], # Just direct
         ir_wcs=ref_wcs,
         half_optical=False, # Otherwise will make JWST exposures at half pixel scale of ref_wcs
@@ -92,14 +93,14 @@ if __name__ == '__main__':
         if k not in filts:
             # Copy file
             shutil.copyfile(
-                f'{name}-{filts[0]}_drc_sci.fits',
-                f'{name}-{k}_drc_sci.fits'
+                f'{cname}-{filts[0]}_drc_sci.fits',
+                f'{cname}-{k}_drc_sci.fits'
                 )
-            todelete.append(f'{name}-{k}_drc_sci.fits')
+            todelete.append(f'{cname}-{k}_drc_sci.fits')
 
     # Create RGB Figure
     _,_,_,fig = auto_script.field_rgb(
-        root=name,HOME_PATH=None,force_rgb=scales.keys(),suffix='.rgb',
+        root=cname,HOME_PATH=None,force_rgb=scales.keys(),suffix='.rgb',
         show_ir=False,rgb_scl=scale,use_imsave=False,
         full_dimensions=1,get_rgb_array=False,scl=8,
         output_format='png',add_labels=False
@@ -116,14 +117,14 @@ if __name__ == '__main__':
 
     # Save figure
     fig.tight_layout(pad=0)
-    fig.savefig(f'{name}.rgb.png',pad_inches=0,bbox_inches='tight')
+    fig.savefig(f'{cname}.rgb.png',pad_inches=0,bbox_inches='tight')
     pyplot.close(fig)
-    os.rename(os.path.join(prep,f'{name}.rgb.png'),os.path.join(plots,f'{name}.rgb.png'))
+    os.rename(os.path.join(prep,f'{cname}.rgb.png'),os.path.join(plots,f'{cname}.rgb.png'))
 
     # Delete extras 
     for f in todelete: os.remove(f)
 
     # Create combined catalog
-    auto_script.make_filter_combinations(name, weight_fnu=True, min_count=1,filter_combinations={'ir': ['F115WN-CLEAR','F150WN-CLEAR','F200WN-CLEAR']})
+    auto_script.make_filter_combinations(cname, weight_fnu=True, min_count=1,filter_combinations={'ir': ['F115WN-CLEAR','F150WN-CLEAR','F200WN-CLEAR']})
     # grizli.prep.make_SEP_catalog(f'{root}-ir', threshold=1.2)
-    phot = auto_script.multiband_catalog(field_root=name, detection_filter='ir', get_all_filters=True,rescale_weight=True)
+    phot = auto_script.multiband_catalog(field_root=cname, detection_filter='ir', get_all_filters=True,rescale_weight=True)
