@@ -55,7 +55,7 @@ rule mosaic:
     shell:
         """
         module load texlive/2021
-        ./workflow/scripts/preprocess.py {wildcards.cluster}
+        ./workflow/scripts/mosaic.py {wildcards.cluster}
         """
 
 # Contamination Rule
@@ -69,7 +69,7 @@ rule contam:
     shell:
         """
         module load texlive/2021
-        ./workflow/scripts/preprocess.py {wildcards.cluster} --ncpu $SLURM_CPUS_PER_TASK
+        ./workflow/scripts/contamination.py {wildcards.cluster} --ncpu $SLURM_CPUS_PER_TASK
         """
 
 # Extraction Rule
@@ -83,7 +83,7 @@ rule extract:
     shell:
         """
         module load texlive/2021
-        ./workflow/scripts/preprocess.py {wildcards.cluster} --ncpu $SLURM_CPUS_PER_TASK
+        ./workflow/scripts/extract.py {wildcards.cluster} --ncpu $SLURM_CPUS_PER_TASK
         """
 
 # Fitting Rule
@@ -97,6 +97,6 @@ rule zfit:
     shell:
         """
         module load texlive/2021
-        ./workflow/scripts/preprocess.py {wildcards.cluster} --ncpu $SLURM_CPUS_PER_TASK
+        ./workflow/scripts/redshiftFit.py {wildcards.cluster} --ncpu $SLURM_CPUS_PER_TASK
         """
 
