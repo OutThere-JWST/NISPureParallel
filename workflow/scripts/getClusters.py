@@ -24,7 +24,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Set proposal IDs
-    proposal_ids = ['1571','3383']
+    proposal_ids = ['1571','3383','4681']
 
     # Query survey
     obs = Observations.query_criteria(
