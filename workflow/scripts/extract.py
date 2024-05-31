@@ -34,7 +34,8 @@ if __name__ == '__main__':
     # Parse arguements
     parser = argparse.ArgumentParser()
     parser.add_argument('clustername', type=str)
-    parser.add_argument('--ncpu', type=str,default=1)
+    parser.add_argument('--ncpu', type=int,default=1)
+    parser.add_argument('--verbose', action='store_true')
     args = parser.parse_args()
     cname = args.clustername
     ncpu = args.ncpu
@@ -43,7 +44,7 @@ if __name__ == '__main__':
     main = os.getcwd()
     clusters = os.path.join(main,'CLUSTERS')
     home = os.path.join(clusters,cname)
-    print(f'Extracting {k}')
+    print(f'Extracting {cname}')
 
     # Subdirectories
     logs = os.path.join(home,'logs')
@@ -52,20 +53,17 @@ if __name__ == '__main__':
     os.chdir(extract)
 
     # Redirect stdout and stderr to file
-    if not verbose:
+    if not args.verbose:
         sys.stdout = open(os.path.join(logs,'extr.out'),'w')
         sys.stderr = open(os.path.join(logs,'extr.err'),'w')
 
     # Print grizli and jwst versions
     print(f'grizli:{grizli.__version__}')
 
-    # Association Name
-    root = params[k]['name']
-
     # Load GroupFLT
     grp = multifit.GroupFLT(
         grism_files=glob.glob('*GrismFLT.fits'),
-        catalog=f'{root}-ir.cat.fits',
+        catalog=f'{cname}-ir.cat.fits',
         cpu_count=ncpu, sci_extn=1, pad=800
     )
 
@@ -86,12 +84,12 @@ if __name__ == '__main__':
     # pyplot.close(fig)
 
     # Get IDs
-    cat = Table.read(f'{root}-ir.cat.fits')
+    cat = Table.read(f'{cname}-ir.cat.fits')
     mag = cat['MAG_AUTO'].filled(np.inf)
     ids = cat['NUMBER'][mag < 27]
 
     # Crate arguements
-    args = [(grp.get_beams(i, size=32, min_mask=0, min_sens=0.01),root) for i in ids]
+    args = [(grp.get_beams(i, size=32, min_mask=0, min_sens=0.01),cname) for i in ids]
 
     # Multiprocessing pool
     pool = Pool(processes=ncpu)

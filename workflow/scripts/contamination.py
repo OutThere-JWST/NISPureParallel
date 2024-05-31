@@ -9,16 +9,19 @@ import shutil
 import argparse
 import warnings
 import numpy as np
+from matplotlib import pyplot
+from reproject import reproject_adaptive as reproject
+
+# Astropy packages
 from astropy.io import fits
 from astropy.wcs import WCS
-from matplotlib import pyplot
+from astropy.table import Table
 from astropy.visualization import make_lupton_rgb
-from reproject import reproject_adaptive as reproject
 
 # Silence warnings
 warnings.filterwarnings('ignore')
 
-# Import grizli
+# grizli packages
 import grizli
 from grizli import utils
 from grizli.aws import visit_processor
@@ -29,7 +32,8 @@ if __name__ == '__main__':
     # Parse arguements
     parser = argparse.ArgumentParser()
     parser.add_argument('clustername', type=str)
-    parser.add_argument('--ncpu', type=str,default=1)
+    parser.add_argument('--ncpu', type=int,default=1)
+    parser.add_argument('--verbose', action='store_true')
     args = parser.parse_args()
     cname = args.clustername
     ncpu = args.ncpu
@@ -38,7 +42,7 @@ if __name__ == '__main__':
     main = os.getcwd()
     clusters = os.path.join(main,'CLUSTERS')
     home = os.path.join(clusters,cname)
-    print(f'Modelling Contamination {k}')
+    print(f'Modelling Contamination {cname}')
 
     # Subdirectories
     logs = os.path.join(home,'logs')
@@ -46,21 +50,16 @@ if __name__ == '__main__':
     plots = os.path.join(home,'Plots')
     extract = os.path.join(home,'Extractions')
 
-    # Load json
-    with open(os.path.join(main,'params.json'),'r') as file: params = json.load(file)
-
     # Redirect stdout and stderr to file
-    sys.stdout = open(os.path.join(logs,'contam.out'),'w')
-    sys.stderr = open(os.path.join(logs,'contam.err'),'w')
+    if not args.verbose:
+        sys.stdout = open(os.path.join(logs,'contam.out'),'w')
+        sys.stderr = open(os.path.join(logs,'contam.err'),'w')
 
     # Go to prep directory
     os.chdir(prep)
 
     # Print grizli and jwst versions
     print(f'grizli:{grizli.__version__}')
-
-    # Association Name
-    root = params[k]['name']
 
     # Make a table with file information
     files = sorted(glob.glob('*rate.fits'))
@@ -87,14 +86,15 @@ if __name__ == '__main__':
 
         # Force detection image
         for f in filt_ref[filt]:
-            if f'CLEAR;{f}' in params[k]['filters']:
+            obs = Table.read(os.path.join(clusters,'cluster-obs.fits'),cname)
+            if f'CLEAR;{f}' in np.unique(obs['filters']):
                 ref_filt = f
                 break
-        ref = f'{root}-{ref_filt.lower()}n-clear_drc_sci.fits'
+        ref = f'{cname}-{ref_filt.lower()}n-clear_drc_sci.fits'
 
         # Create grism model
         grp = auto_script.grism_prep(
-            field_root=root,
+            field_root=cname,
             PREP_PATH=prep,
             EXTRACT_PATH=extract,
             refine_niter=3,
@@ -112,13 +112,13 @@ if __name__ == '__main__':
             )
 
         # Drizzle grism models
-        grp.drizzle_grism_models(root=root, kernel='square', scale=0.04, pixfrac=0.75)
+        grp.drizzle_grism_models(root=cname, kernel='square', scale=0.04, pixfrac=0.75)
 
     # Copy grism model plots
     for f in glob.glob(os.path.join(extract,'*grism*png')): shutil.copy(f,plots)
 
     # Reference header
-    with fits.open(os.path.join(prep,f'{root}-ir_drc_sci.fits')) as f:
+    with fits.open(os.path.join(prep,f'{cname}-ir_drc_sci.fits')) as f:
         ref = WCS(f[0].header)
         size = f[0].data.shape
         
@@ -127,12 +127,12 @@ if __name__ == '__main__':
         suffix = f'_grism_{end}.fits'
 
         # Get files
-        files = sorted(glob.glob(os.path.join(extract,f'{root}-*{suffix}')))[::-1]
+        files = sorted(glob.glob(os.path.join(extract,f'{cname}-*{suffix}')))[::-1]
 
         # Get filters
         filters,grisms = [],[]
         for f in files:
-            clean = f.replace(root,'').replace(suffix,'').split('-')
+            clean = f.replace(cname,'').replace(suffix,'').split('-')
             filters.append(clean[-2])
             grisms.append(clean[-1])
         filters,grisms = np.array(filters),np.array(grisms)
@@ -148,12 +148,12 @@ if __name__ == '__main__':
             # Reproject grism images (zero if not available)
             all_filts = ['f200w','f150w','f115w']
             ims = [
-                reproject(f'{root}-{gf}-{grism}{suffix}',ref,size,conserve_flux=True)[0] if gf in gfilts else np.zeros(size)
+                reproject(f'{cname}-{gf}-{grism}{suffix}',ref,size,conserve_flux=True)[0] if gf in gfilts else np.zeros(size)
                 for gf in all_filts
                 ]
 
             # Make RGB
-            filename = os.path.join(plots,f'{root}-grism.{grism}_{end}.png')
+            filename = os.path.join(plots,f'{cname}-grism.{grism}_{end}.png')
             rgb = make_lupton_rgb(*ims,filename=filename,Q=20,stretch=0.1)
             
             # Get diemsnions

@@ -9,6 +9,8 @@ import argparse
 import warnings
 import numpy as np
 from matplotlib import pyplot
+
+# Astropy packages
 from astropy.io import fits
 from astropy.table import Table
 from astropy.io.fits import getheader,getdata
@@ -17,7 +19,7 @@ from astropy.coordinates import Angle
 # Silence warnings
 warnings.filterwarnings('ignore')
 
-# Import grizli
+# grizli packages
 import grizli
 from grizli import utils
 from grizli import jwst_utils
@@ -29,6 +31,7 @@ if __name__ == '__main__':
     # Parse arguements
     parser = argparse.ArgumentParser()
     parser.add_argument('clustername', type=str)
+    parser.add_argument('--verbose', action='store_true')
     args = parser.parse_args()
     cname = args.clustername
 
@@ -55,8 +58,9 @@ if __name__ == '__main__':
         os.mkdir(d)
 
     # Redirect stdout and stderr to file
-    sys.stdout = open(os.path.join(logs,'proc.out'),'w')
-    sys.stderr = open(os.path.join(logs,'proc.err'),'w')
+    if not args.verbose:
+        sys.stdout = open(os.path.join(logs,'proc.out'),'w')
+        sys.stderr = open(os.path.join(logs,'proc.err'),'w')
 
     # Change to working directory
     os.chdir(clusters)

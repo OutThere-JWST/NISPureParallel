@@ -8,14 +8,16 @@ import shutil
 import argparse
 import warnings
 import numpy as np
-from astropy.wcs import WCS
 from matplotlib import pyplot
+
+# Astropy packages
+from astropy.wcs import WCS
 from astropy.table import Table
 
 # Silence warnings
 warnings.filterwarnings('ignore')
 
-# Import grizli
+# grizli packages
 import grizli
 from grizli import utils
 from grizli.aws import visit_processor
@@ -26,6 +28,7 @@ if __name__ == '__main__':
     # Parse arguements
     parser = argparse.ArgumentParser()
     parser.add_argument('clustername', type=str)
+    parser.add_argument('--verbose', action='store_true')
     args = parser.parse_args()
     cname = args.clustername
 
@@ -42,8 +45,9 @@ if __name__ == '__main__':
     plots = os.path.join(home,'Plots')
 
     # Redirect stdout and stderr to file
-    sys.stdout = open(os.path.join(logs,'mos.out'),'w')
-    sys.stderr = open(os.path.join(logs,'mos.err'),'w')
+    if not args.verbose:
+        sys.stdout = open(os.path.join(logs,'mos.out'),'w')
+        sys.stderr = open(os.path.join(logs,'mos.err'),'w')
 
     # Go to prep directory
     os.chdir(prep)

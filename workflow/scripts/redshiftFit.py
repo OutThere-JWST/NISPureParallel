@@ -41,7 +41,8 @@ if __name__ == '__main__':
     # Parse arguements
     parser = argparse.ArgumentParser()
     parser.add_argument('clustername', type=str)
-    parser.add_argument('--ncpu', type=str,default=1)
+    parser.add_argument('--ncpu', type=int,default=1)
+    parser.add_argument('--verbose', action='store_true')
     args = parser.parse_args()
     cname = args.clustername
     ncpu = args.ncpu
@@ -50,7 +51,7 @@ if __name__ == '__main__':
     main = os.getcwd()
     clusters = os.path.join(main,'CLUSTERS')
     home = os.path.join(clusters,cname)
-    print(f'Fitting {k}')
+    print(f'Fitting {cname}')
 
     # Subdirectories
     logs = os.path.join(home,'logs')
@@ -59,15 +60,12 @@ if __name__ == '__main__':
     os.chdir(extract)
 
     # Redirect stdout and stderr to file
-    if not verbose:
+    if not args.verbose:
         sys.stdout = open(os.path.join(logs,'zfit.out'),'w')
         sys.stderr = open(os.path.join(logs,'zfit.err'),'w')
 
     # Print grizli and jwst versions
     print(f'grizli:{grizli.__version__}')
-
-    # Association Name
-    root = params[k]['name']
 
     # Generate fit arguements
     pline={
@@ -78,13 +76,13 @@ if __name__ == '__main__':
         'wcs':None
         }
     auto_script.generate_fit_params(
-        pline=pline,field_root=root,min_sens=0.01,min_mask=0.0
+        pline=pline,field_root=cname,min_sens=0.01,min_mask=0.0
         )
 
     # Get IDs
-    cat = Table.read(f'{root}-ir.cat.fits')
+    cat = Table.read(f'{cname}-ir.cat.fits')
     mag = cat['MAG_AUTO'].filled(np.inf)
-    ids = cat['NUMBER'][mag < 25]
+    ids = cat['NUMBER'][mag < 25][0:4]
 
     # Multiprocessing pool
     with Pool(processes=ncpu) as pool:
