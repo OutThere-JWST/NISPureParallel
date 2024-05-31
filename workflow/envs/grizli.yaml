@@ -9,4 +9,4 @@ dependencies:
   - git+https://github.com/karllark/dust_attenuation.git # Optional
   - git+https://github.com/gbrammer/eazy-py.git # Optional
   - reproject # Optional
-  - grizli[jwst] @ git+https://github.com/TheSkyentist/grizli.git@visitproc-root
+  - grizli[jwst] @ git+https://github.com/TheSkyentist/grizli.git@dev
