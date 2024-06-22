@@ -12,3 +12,6 @@ CLUSTERS/
 
 # Ignore FITS files
 *.fits
+
+# Ignore macOS Journaling files
+*.DS_Store
