@@ -8,13 +8,17 @@ import shutil
 import argparse
 import warnings
 import numpy as np
-from matplotlib import pyplot
+
+# Packages for Plotting
+from sregion import SRegion
+from shapely import union_all
+from matplotlib import pyplot,patches
 
 # Astropy packages
 from astropy.io import fits
 from astropy.table import Table
-from astropy.io.fits import getheader,getdata
 from astropy.coordinates import Angle
+from astropy.io.fits import getheader,getdata
 
 # Silence warnings
 warnings.filterwarnings('ignore')
@@ -25,6 +29,34 @@ from grizli import utils
 from grizli import jwst_utils
 from grizli.aws import visit_processor
 from grizli.pipeline import auto_script
+
+# Plot Shapely Object
+def plot_shapely(r,ax,ec='r',fc='r'):
+
+    # If MultiPolygon, plot each
+    if hasattr(r,'geoms'):
+
+        # Loop over geoms
+        ras,decs = [],[] # Keep track of coordinates
+        for g in r.geoms:
+
+            # Plot each geom
+            ra,dec = plot_shapely(g,ax,ec=ec,fc=fc)
+            ras.append(ra)
+            decs.append(dec)
+
+        # Return list of all coordinates
+        return np.concatenate(ras),np.concatenate(decs)
+
+    # Get ra,dec of exterior
+    coords = np.array(r.exterior.xy)
+    
+    # Plot main polygon in red
+    patch = patches.Polygon(coords.T, closed=True, edgecolor=ec,facecolor=fc,lw=3)
+    ax.add_patch(patch)
+
+    # Return ra,dec
+    return coords
 
 if __name__ == '__main__':
 
@@ -62,6 +94,42 @@ if __name__ == '__main__':
         sys.stdout = open(os.path.join(logs,'proc.out'),'w')
         sys.stderr = open(os.path.join(logs,'proc.err'),'w')
 
+    # Plot the cluster in context
+    hdul_obs = fits.open('CLUSTERS/cluster-obs.fits')
+    
+    # Create figure
+    fig,ax = pyplot.subplots(figsize=(12,12))
+
+    # Plot current region in red
+    ra,dec = plot_shapely(union_all([SRegion(sr).shapely[0] for sr in Table(hdul_obs[cname].data)['s_region']]),ax,ec='#009F81',fc='#00FCCF')
+
+    # Get scale on sphere
+    scale = np.cos(np.deg2rad(np.max(dec)+np.min(dec))/2)
+    
+    # Plot all regions (except region we are on) in gray
+    for hdu in hdul_obs[1:]:
+        if hdu.name == cname: continue
+        plot_shapely(union_all([SRegion(sr).shapely[0] for sr in Table(hdu.data)['s_region']]),ax,ec='k',fc='gray')
+
+    # Axis labels and limits
+    pad = 5/60
+    ax.set(xlabel='Right Ascension (ICRS)',xlim=(np.max(ra)+pad/scale,np.min(ra)-pad/scale)) # Reverse xlim
+    ax.set(ylabel='Declination (ICRS)',ylim=(np.min(dec)-pad,np.max(dec)+pad))
+    ax.set(title=cname.lower().replace('-',r'$-$'))
+
+    # Format labels correctly
+    ax.xaxis.set_major_formatter(lambda x,_: Angle(x,unit='deg').to_string(unit='hour', sep=[r'$^\textrm{'+s+'}$' for s in 'hms']))
+    ax.tick_params(axis='x', labelrotation=25)
+    ax.yaxis.set_major_formatter(lambda x,_: Angle(x,unit='deg').to_string(unit='degree', sep=(r'$^\circ$',r"$'$",r"$''$")).replace('-',r'$-$'))
+
+    # Add grid
+    ax.grid(True,which='major',ls='--',color='k',alpha=0.5)
+    ax.grid(True,which='minor',ls=':',color='k',alpha=0.25)
+
+    # Save figure
+    fig.savefig(os.path.join(plots,f'{cname}-region.pdf'))
+    pyplot.close(fig)
+
     # Change to working directory
     os.chdir(clusters)
 
@@ -83,39 +151,69 @@ if __name__ == '__main__':
     visits, all_groups, info = auto_script.parse_visits(field_root=cname,RAW_PATH=raw)
 
     # Get color cycle
-    colors = [c['color'] for c in pyplot.rcParams['axes.prop_cycle']]
+    ls_dic = {
+        'CLEAR':'--',
+        'GR150R':'-.',
+        'GR150C':':'
+    }
+    colors = {
+        'F200W-CLEAR' :'#A40122',
+        'F200W-GR150R':'#E20134',
+        'F200W-GR150C':'#FF6E3A',
+        'F150W-CLEAR' :'#9F0162',
+        'F150W-GR150R':'#FF5AAF',
+        'F150W-GR150C':'#FFB2FD',
+        'F115W-CLEAR' :'#8400CD',
+        'F115W-GR150R':'#008DF9',
+        'F115W-GR150C':'#00C2F9'
+    }
 
     # Create figure
     fig, ax = pyplot.subplots(1,1,figsize=(12,12))
 
     # Enumerate visits
+    ras,decs = [],[]
     for i, v in enumerate(visits):
-
-        # Get color
-        c = colors[i%len(colors)]
 
         # Get region box
         sr = utils.SRegion(v['footprint'])
+        for coords in sr.xy:
+            ra,dec = coords.T
+            ras.append(ra)
+            decs.append(dec)
 
-        # Plot center 
-        ax.scatter(*sr.centroid[0], marker='.', c=c)
+        # Get filter-grism combo
+        fg = '-'.join(v['product'].split('-')[2:]).upper()
 
         # Place patches for region
-        for patch in sr.patch(ec=c, fc='None', alpha=0.5, label=v['product'],lw=3,ls='--'): ax.add_patch(patch)
+        for patch in sr.patch(ec=colors[fg],fc='None',alpha=0.5,lw=3,ls=ls_dic[fg[6:]],label=fg.replace('-','$-$')):
+            ax.add_patch(patch)
+
+    # Concatenate coordinates
+    ra = np.concatenate(ras)
+    dec = np.concatenate(decs)
+
+    # Add legend
+    ax.legend(fontsize=20,frameon=True)
 
     # Set axis parameters
-    ax.set_aspect(1./np.cos(ax.get_ylim()[0]/180*np.pi)) # square with cos(dec)
-    ax.set_xlim(ax.get_xlim()[::-1]) # Reverse Xlim
-    ax.legend(fontsize=10,frameon=True)
-    ax.grid(ls=':')
+    pad = 5/3600
+    scale = np.cos(np.deg2rad(np.max(dec)+np.min(dec))/2)
+    ax.set(xlabel='Right Ascension (ICRS)',xlim=(np.max(ra)+pad/scale,np.min(ra)-pad/scale)) # Reverse xlim
+    ax.set(ylabel='Declination (ICRS)',ylim=(np.min(dec)-pad,np.max(dec)+pad))
+    ax.set(title=cname.lower().replace('-',r'$-$'))
 
     # Format labels correctly
-    ax.set_xticklabels([Angle(t,unit='deg').to_string(unit='hour', sep=[r'$^\textrm{'+s+'}$' for s in 'hms']) for t in ax.get_xticks()], rotation=25)
-    ax.set_yticklabels([Angle(t,unit='deg').to_string(unit='degree', sep=(r'$^\circ$',r"$'$",r"$''$")) for t in ax.get_yticks()])
-    ax.set(xlabel='Right Ascension (ICRS)',ylabel='Declination (ICRS)')
+    ax.xaxis.set_major_formatter(lambda x,_: Angle(x,unit='deg').to_string(unit='hour', sep=[r'$^\textrm{'+s+'}$' for s in 'hms']))
+    ax.tick_params(axis='x', labelrotation=25)
+    ax.yaxis.set_major_formatter(lambda x,_: Angle(x,unit='deg').to_string(unit='degree', sep=(r'$^\circ$',r"$'$",r"$''$")).replace('-',r'$-$'))
+
+    # Add grid
+    ax.grid(True,which='major',ls='--',color='k',alpha=0.5)
+    ax.grid(True,which='minor',ls=':',color='k',alpha=0.25)
 
     # Save figure
-    fig.savefig(os.path.join(plots,'regions.pdf'),bbox_inches='tight')
+    fig.savefig(os.path.join(plots,f'{cname}-visits.pdf'),bbox_inches='tight')
     pyplot.close(fig)
 
     # Make visit associations
