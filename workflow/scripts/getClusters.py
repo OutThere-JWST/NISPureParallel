@@ -42,7 +42,7 @@ def parametric_arc(a,b):
         return a*np.cos(scaled_t) + c*np.sin(scaled_t)
     return arc
 
-# Distance between two arcs
+# Distance between two arcs (result in radians)
 def distance_between_arcs(a,b,c,d):
 
     # If points are the same, skip, essentially
@@ -62,7 +62,7 @@ def distance_between_arcs(a,b,c,d):
 def distance_between_shapely(sA,sB,min_dist=1):
 
     # Check if MultiPolygon (can only be sA)
-    if hasattr(sA,'geoms'): return np.min([distance_between_shapely(g,sB) for g in sA.geoms]).min()*180/np.pi
+    if hasattr(sA,'geoms'): return np.min([distance_between_shapely(g,sB) for g in sA.geoms]).min()
 
     # Get SingleSphericalPolygons
     spA = SingleSphericalPolygon.from_radec(*sA.exterior.xy)
@@ -72,17 +72,17 @@ def distance_between_shapely(sA,sB,min_dist=1):
     spA_points = spA.points
     spB_points = spB.points
 
-    # Don't bother checking if we are further apart than ~1 degree
-    if np.arccos(np.dot(spA_points[0],spB_points[0]))*180/np.pi > min_dist: return np.inf
+    # Don't bother checking if points are further apart than some threshhold (in degrees)
+    if np.arccos(np.dot(spA_points[0],spB_points[0])) > np.deg2rad(min_dist): return np.inf
 
     # Get distances between arcs
-    return np.min(
+    return np.rad2deg(np.min(
         [distance_between_arcs(*i) for i in 
             [
                 (spA_points[i],spA_points[i+1],spB_points[j],spB_points[j+1])
-                    for i in range(len(spA_points)-1) for j in range(len(spB_points)-1)
-                ]
-        ])*180/np.pi
+                for i in range(len(spA_points)-1) for j in range(len(spB_points)-1)
+            ]
+        ]))
 
 if __name__ == '__main__':
 
