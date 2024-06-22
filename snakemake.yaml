@@ -11,4 +11,5 @@ dependencies:
 - snakemake-executor-plugin-slurm
 - pip:
   - sregion
+  - spherical_geometry
   - git+https://github.com/astropy/astroquery.git # Flat downloads
