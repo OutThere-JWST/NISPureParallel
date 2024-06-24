@@ -11,7 +11,7 @@ with open('CLUSTERS/clusters.txt') as f: CLUSTERS = f.read().splitlines()
 # Final Rule
 rule all:
     input:
-        expand('CLUSTERS/{cluster}/logs/contam.out',cluster=CLUSTERS)
+        expand('CLUSTERS/{cluster}/logs/zfit.out',cluster=CLUSTERS)
 
 # Stage1 Rule
 rule runStage1:
