@@ -219,6 +219,8 @@ if __name__ == '__main__':
         names.append(name)
 
     # Write cluster names to file
+    names.remove('leo-08')
+    print('Removing leo-08 while it is bugged')
     with open('CLUSTERS/clusters.txt','w') as f: f.write('\n'.join(names))
 
     # Save clusters to FITS file
