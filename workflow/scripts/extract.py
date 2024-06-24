@@ -33,17 +33,17 @@ if __name__ == '__main__':
 
     # Parse arguements
     parser = argparse.ArgumentParser()
-    parser.add_argument('clustername', type=str)
+    parser.add_argument('fieldname', type=str)
     parser.add_argument('--ncpu', type=int,default=1)
     parser.add_argument('--verbose', action='store_true')
     args = parser.parse_args()
-    cname = args.clustername
+    cname = args.fieldname
     ncpu = args.ncpu
 
-    # Get paths and get clusters
+    # Get paths and get fields
     main = os.getcwd()
-    clusters = os.path.join(main,'CLUSTERS')
-    home = os.path.join(clusters,cname)
+    fields = os.path.join(main,'CLUSTERS')
+    home = os.path.join(fields,cname)
     print(f'Extracting {cname}')
 
     # Subdirectories

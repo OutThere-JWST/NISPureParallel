@@ -31,17 +31,17 @@ if __name__ == '__main__':
 
     # Parse arguements
     parser = argparse.ArgumentParser()
-    parser.add_argument('clustername', type=str)
+    parser.add_argument('fieldname', type=str)
     parser.add_argument('--ncpu', type=int,default=1)
     parser.add_argument('--verbose', action='store_true')
     args = parser.parse_args()
-    cname = args.clustername
+    cname = args.fieldname
     ncpu = args.ncpu
 
-    # Get paths and get clusters
+    # Get paths and get fields
     main = os.getcwd()
-    clusters = os.path.join(main,'CLUSTERS')
-    home = os.path.join(clusters,cname)
+    fields = os.path.join(main,'FIELDS')
+    home = os.path.join(fields,cname)
     print(f'Modelling Contamination {cname}')
 
     # Subdirectories
@@ -86,7 +86,7 @@ if __name__ == '__main__':
 
         # Force detection image
         for f in filt_ref[filt]:
-            obs = Table.read(os.path.join(clusters,'cluster-obs.fits'),cname)
+            obs = Table.read(os.path.join(fields,'field-obs.fits'),cname)
             if f'CLEAR;{f}' in np.unique(obs['filters']):
                 ref_filt = f
                 break

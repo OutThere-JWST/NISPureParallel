@@ -147,24 +147,24 @@ if __name__ == '__main__':
     regs = [SRegion(o).shapely[0] for o in obs['s_region']]
     obs = [Table(o) for o in obs]
 
-    # Combine all overlapping clusters
-    clusters = [obs[0]]
-    c_regs = [regs[0]]
+    # Combine all overlapping fields
+    fields = [obs[0]]
+    f_regs = [regs[0]]
     obs = obs[1:]
     regs = regs[1:]
 
-    # Iterate until all regions have been assigned to a cluster
+    # Iterate until all regions have been assigned to a field
     while len(regs) > 0:
 
         # Iterate over regions
         for i,r in enumerate(regs):
 
-            # Check if region intersects with most recent cluster (approximating in Cartesian)
-            if c_regs[-1].intersects(r):
+            # Check if region intersects with most recent field (approximating in Cartesian)
+            if f_regs[-1].intersects(r):
 
                 # Combine regions and observations
-                c_regs[-1] = c_regs[-1].union(regs.pop(i))
-                clusters[-1] = vstack([clusters[-1],obs.pop(i)])
+                f_regs[-1] = f_regs[-1].union(regs.pop(i))
+                fields[-1] = vstack([fields[-1],obs.pop(i)])
 
                 # Break loop and start over
                 notfinished = False
@@ -173,27 +173,27 @@ if __name__ == '__main__':
             # Finished loop with no intersection
             notfinished = True
 
-        # If no intersection, add new clusters
+        # If no intersection, add new fields
         if notfinished:
-            c_regs.append(regs.pop(0))
-            clusters.append(obs.pop(0))
+            f_regs.append(regs.pop(0))
+            fields.append(obs.pop(0))
 
-    # Combine clusters that are too close
-    print('Combine Nearly Clusters (Spherical)...')
+    # Combine fields that are too close
+    print('Combine Nearly Fields (Spherical)...')
     
-    # Check distance between clusters (in Spherical)
+    # Check distance between fields (in Spherical)
     i = 0
-    while i < len(clusters):
+    while i < len(fields):
 
-        # Check against all other clusters
-        for j in range(i+1,len(clusters)):
+        # Check against all other fields
+        for j in range(i+1,len(fields)):
 
             # Check distance between regions
-            if distance_between_shapely(c_regs[i],c_regs[j]) < 30/3600:
+            if distance_between_shapely(f_regs[i],f_regs[j]) < 30/3600:
 
-                # Combine clusters
-                c_regs[i] = c_regs[i].union(c_regs.pop(j))
-                clusters[i] = vstack([clusters[i],clusters.pop(j)])
+                # Combine fields
+                f_regs[i] = f_regs[i].union(f_regs.pop(j))
+                fields[i] = vstack([fields[i],fields.pop(j)])
 
                 # Break loop and start over
                 i -= 1 # Decrement index to counteract increment
@@ -202,12 +202,12 @@ if __name__ == '__main__':
         # Increment index
         i += 1
 
-    # Get cluster names from Constellations
+    # Get field names from Constellations
     names = []
-    for i,c in enumerate(clusters):
+    for i,f in enumerate(fields):
 
-        # Create Cluster Name
-        con = get_constellation(SkyCoord(*c['s_ra','s_dec'][0],unit='deg'),short_name=True).lower()
+        # Create field Name
+        con = get_constellation(SkyCoord(*f['s_ra','s_dec'][0],unit='deg'),short_name=True).lower()
 
         # Find instance of constellation
         j = 0
@@ -218,25 +218,26 @@ if __name__ == '__main__':
         # Keep track
         names.append(name)
 
-    # Write cluster names to file
+    # Write field names to file
     names.remove('leo-08')
     print('Removing leo-08 while it is bugged')
-    with open('CLUSTERS/clusters.txt','w') as f: f.write('\n'.join(names))
+    if not os.path.isdir('FIELDS'): os.mkdir('FIELDS')
+    with open('FIELDS/fields.txt','w') as f: f.write('\n'.join(names))
 
-    # Save clusters to FITS file
+    # Save fields to FITS file
     print('Querying Products and Saving to FITS...')
     obs_cols = ['obs_id','s_ra','s_dec','filters','t_obs_release','t_exptime','obsid','s_region','prim_id'] # Columns to keep
     prod_cols = ['obs_id','productFilename','dataURI','obs_collection','obsID']
     obs_hdul = fits.HDUList([fits.PrimaryHDU()])
     prod_hdul = fits.HDUList([fits.PrimaryHDU()])
-    for i,c in enumerate(tqdm(clusters)):
+    for i,f in enumerate(tqdm(fields)):
 
-        # Append cluster observations
-        obs_hdul.append(fits.BinTableHDU(c[obs_cols]))
+        # Append field observations
+        obs_hdul.append(fits.BinTableHDU(f[obs_cols]))
         obs_hdul[-1].header['EXTNAME'] = names[i]
 
         # Query products (only science uncalibrated)
-        allprods = Observations.get_product_list(c)
+        allprods = Observations.get_product_list(f)
         good = np.logical_and(
             allprods['productType']=='SCIENCE',
             allprods['productSubGroupDescription']=='UNCAL' # Uncal files only
@@ -248,9 +249,8 @@ if __name__ == '__main__':
         prod_hdul[-1].header['EXTNAME'] = names[i]
 
     # Save FITS file
-    if not os.path.isdir('CLUSTERS'): os.mkdir('CLUSTERS')
-    obs_hdul.writeto('CLUSTERS/cluster-obs.fits',overwrite=True)
-    prod_hdul.writeto('CLUSTERS/cluster-prods.fits',overwrite=True)
+    obs_hdul.writeto('FIELDS/field-obs.fits',overwrite=True)
+    prod_hdul.writeto('FIELDS/field-prods.fits',overwrite=True)
 
     # Skip if download flag is not set
     if args.download:
