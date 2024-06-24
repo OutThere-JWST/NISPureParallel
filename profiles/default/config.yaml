@@ -3,6 +3,8 @@ jobs: 100
 use-conda: True
 conda-frontend: conda
 # executor: slurm
+keep-going: True
+keep-incomplete: True
 default-resources:
   nodes: 1
   tasks: 1

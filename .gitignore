@@ -2,7 +2,7 @@
 logs/
 UNCAL/
 RATE/
-CLUSTERS/
+FIELDS/
 
 # Ignore Snakmake files
 *.snakemake

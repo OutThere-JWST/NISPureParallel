@@ -219,7 +219,9 @@ if __name__ == '__main__':
         names.append(name)
 
     # Write field names to file
+    i = names.index('leo-08')
     names.remove('leo-08')
+    fields.pop(i)
     print('Removing leo-08 while it is bugged')
     if not os.path.isdir('FIELDS'): os.mkdir('FIELDS')
     with open('FIELDS/fields.txt','w') as f: f.write('\n'.join(names))
