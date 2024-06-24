@@ -77,7 +77,7 @@ if __name__ == '__main__':
         half_optical=False, # Otherwise will make JWST exposures at half pixel scale of ref_wcs
         kernel='square', # Drizzle parameters
         pixfrac=0.8,
-        clean_flt=False, # Otherwise removes "rate.fits" files from the workign directory!
+        clean_flt=False, # Otherwise removes "rate.fits" files from the working directory!
         s3output=None,
         make_exptime_map=False,
         weight_type='jwst',
