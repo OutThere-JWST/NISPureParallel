@@ -183,7 +183,7 @@ if __name__ == '__main__':
             decs.append(dec)
 
         # Get filter-grism combo
-        fg = '-'.join(v['product'].split('-')[2:]).upper()
+        fg = '-'.join(v['product'].split('-')[-2:]).upper()
 
         # Place patches for region
         for patch in sr.patch(ec=colors[fg],fc='None',alpha=0.5,lw=3,ls=ls_dic[fg[6:]],label=fg.replace('-','$-$')):
