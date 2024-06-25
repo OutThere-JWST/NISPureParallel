@@ -1,5 +1,5 @@
 cores: 1
-jobs: 100
+jobs: 200
 use-conda: True
 conda-frontend: conda
 # executor: slurm
