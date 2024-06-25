@@ -10,7 +10,6 @@ import argparse
 import numpy as np
 from tqdm import tqdm
 from astropy.table import Table
-from multiprocessing import Pool
 
 # Silence warnings
 warnings.filterwarnings('ignore')
@@ -79,6 +78,7 @@ if __name__ == '__main__':
     ids = cat['NUMBER'][mag < 24]
 
     # Iterate over IDs
+    extracted = []
     for i in ids:
 
         # Get beams from group
@@ -88,3 +88,10 @@ if __name__ == '__main__':
         # Extract beam
         mb = multifit.MultiBeam(beams, fcontam=0.1, min_sens=0.01, min_mask=0, group_name=fname)
         mb.write_master_fits()
+
+        # Keep track of extracted objects
+        extracted.append(i)
+
+    # Write catalog of extracted objects
+    Table([extracted],names=['NUMBER']).write(f'{fname}-extracted.fits',overwrite=True)
+

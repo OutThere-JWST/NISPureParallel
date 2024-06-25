@@ -9,8 +9,8 @@ import warnings
 import argparse
 import numpy as np
 from tqdm import tqdm
-from astropy.table import Table
-from multiprocessing import Pool
+from astropy.table import Table,vstack
+from multiprocessing import Pool,cpu_count
 
 # Silence warnings
 warnings.filterwarnings('ignore')
@@ -41,7 +41,7 @@ if __name__ == '__main__':
     # Parse arguements
     parser = argparse.ArgumentParser()
     parser.add_argument('fieldname', type=str)
-    parser.add_argument('--ncpu', type=int,default=1)
+    parser.add_argument('--ncpu', type=int,default=(cpu_count() - 2))
     parser.add_argument('--verbose', action='store_true')
     args = parser.parse_args()
     fname = args.fieldname
@@ -80,9 +80,7 @@ if __name__ == '__main__':
         )
 
     # Get IDs
-    cat = Table.read(f'{fname}-ir.cat.fits')
-    mag = cat['MAG_AUTO'].filled(np.inf)
-    ids = cat['NUMBER'][mag < 24]
+    ids = Table.read(f'{fname}-extracted.fits')['NUMBER']
 
     # Multiprocessing pool
     with Pool(processes=ncpu) as pool:
@@ -91,14 +89,7 @@ if __name__ == '__main__':
         pool.close()
         pool.join()
 
-    # # Move files
-    # for f in glob(f'{root}_*{str(i).rjust(5,"0")}.*.png'):
-    #     new = f.replace('full','zfit').replace('stack','twod')
-    #     new = '.'.join(new.split('.')[-2:])
-    #     os.rename(f,os.path.join(extract_plots,f'{str(i)}.{new}'))
-
     # Create fitting catalog
-    # out = vstack([
-    #     Table.read(f) for f in tqdm(glob(f'{root}*row.fits'))
-    # ])
-    # out[np.argsort(out['id'])].write(f'{root}_fitresults.fits',overwrite=True)
+    out = vstack([
+        Table.read(f'{fname}_{str(i).zfill(5)}.row.fits') for i in ids
+    ]).write(f'{fname}_fitresults.fits',overwrite=True)

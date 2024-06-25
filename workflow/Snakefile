@@ -9,7 +9,7 @@ with open('FIELDS/fields.txt') as f: FIELDS = f.read().splitlines()
 # Final Rule
 rule all:
     input:
-        expand('FIELDS/{field}/logs/zfit.out',field=FIELDS)
+        expand('FIELDS/{field}/logs/fmap.out',field=FIELDS)
 
 # Stage1 Rule
 rule runStage1:
@@ -84,7 +84,7 @@ rule extract:
         ./workflow/scripts/extract.py {wildcards.field} --ncpu $SLURM_CPUS_PER_TASK
         """
 
-# Fitting Rule
+# Redshift Fitting Rule
 rule zfit:
     input:
         'FIELDS/{field}/logs/extr.out'
@@ -98,3 +98,16 @@ rule zfit:
         ./workflow/scripts/redshiftFit.py {wildcards.field} --ncpu $SLURM_CPUS_PER_TASK
         """
 
+# Fitsmap Creation Rule
+rule fmap:
+    input:
+        'FIELDS/{field}/logs/zfit.out'
+    output:
+        'FIELDS/{field}/logs/fmap.out'
+    conda:'envs/fitsmap.yaml'
+    log:'logs/Fitsmap_{field}.log'
+    shell:
+        """
+        module load texlive/2021
+        ./workflow/scripts/makeFitsmap.py {wildcards.field} --ncpu $SLURM_CPUS_PER_TASK
+        """
