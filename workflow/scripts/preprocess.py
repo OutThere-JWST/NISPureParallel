@@ -62,17 +62,17 @@ if __name__ == '__main__':
 
     # Parse arguements
     parser = argparse.ArgumentParser()
-    parser.add_argument('clustername', type=str)
+    parser.add_argument('fieldname', type=str)
     parser.add_argument('--verbose', action='store_true')
     args = parser.parse_args()
-    cname = args.clustername
+    fname = args.fieldname
 
-    # Get paths and get clusters
+    # Get paths and get fields
     main = os.getcwd()
-    clusters = os.path.join(main,'CLUSTERS')
-    prods = Table.read(os.path.join(clusters,'cluster-prods.fits'),cname)
-    home = os.path.join(clusters,cname)
-    print(f'Preprocessing {cname}')
+    fields = os.path.join(main,'FIELDS')
+    prods = Table.read(os.path.join(fields,'field-prods.fits'),fname)
+    home = os.path.join(fields,fname)
+    print(f'Preprocessing {fname}')
 
     # Get main paths
     rate = os.path.join(main,'RATE')
@@ -94,28 +94,28 @@ if __name__ == '__main__':
         sys.stdout = open(os.path.join(logs,'proc.out'),'w')
         sys.stderr = open(os.path.join(logs,'proc.err'),'w')
 
-    # Plot the cluster in context
-    hdul_obs = fits.open('CLUSTERS/cluster-obs.fits')
+    # Plot the field in context
+    hdul_obs = fits.open('FIELDS/field-obs.fits')
     
     # Create figure
     fig,ax = pyplot.subplots(figsize=(12,12))
 
     # Plot current region in red
-    ra,dec = plot_shapely(union_all([SRegion(sr).shapely[0] for sr in Table(hdul_obs[cname].data)['s_region']]),ax,ec='#009F81',fc='#00FCCF')
+    ra,dec = plot_shapely(union_all([SRegion(sr).shapely[0] for sr in Table(hdul_obs[fname].data)['s_region']]),ax,ec='#009F81',fc='#00FCCF')
 
     # Get scale on sphere
     scale = np.cos(np.deg2rad(np.max(dec)+np.min(dec))/2)
     
     # Plot all regions (except region we are on) in gray
     for hdu in hdul_obs[1:]:
-        if hdu.name == cname: continue
+        if hdu.name == fname: continue
         plot_shapely(union_all([SRegion(sr).shapely[0] for sr in Table(hdu.data)['s_region']]),ax,ec='k',fc='gray')
 
     # Axis labels and limits
     pad = 5/60
     ax.set(xlabel='Right Ascension (ICRS)',xlim=(np.max(ra)+pad/scale,np.min(ra)-pad/scale)) # Reverse xlim
     ax.set(ylabel='Declination (ICRS)',ylim=(np.min(dec)-pad,np.max(dec)+pad))
-    ax.set(title=cname.lower().replace('-',r'$-$'))
+    ax.set(title=fname.lower().replace('-',r'$-$'))
 
     # Format labels correctly
     ax.xaxis.set_major_formatter(lambda x,_: Angle(x,unit='deg').to_string(unit='hour', sep=[r'$^\textrm{'+s+'}$' for s in 'hms']))
@@ -127,11 +127,11 @@ if __name__ == '__main__':
     ax.grid(True,which='minor',ls=':',color='k',alpha=0.25)
 
     # Save figure
-    fig.savefig(os.path.join(plots,f'{cname}-region.pdf'))
+    fig.savefig(os.path.join(plots,f'{fname}-region.pdf'))
     pyplot.close(fig)
 
     # Change to working directory
-    os.chdir(clusters)
+    os.chdir(fields)
 
     # Print grizli and jwst versions
     print(f'grizli:{grizli.__version__}')
@@ -148,7 +148,7 @@ if __name__ == '__main__':
         jwst_utils.set_jwst_to_hst_keywords(f,reset=True)
 
     # Parse Visits
-    visits, all_groups, info = auto_script.parse_visits(field_root=cname,RAW_PATH=raw)
+    visits, all_groups, info = auto_script.parse_visits(field_root=fname,RAW_PATH=raw)
 
     # Get color cycle
     ls_dic = {
@@ -201,7 +201,7 @@ if __name__ == '__main__':
     scale = np.cos(np.deg2rad(np.max(dec)+np.min(dec))/2)
     ax.set(xlabel='Right Ascension (ICRS)',xlim=(np.max(ra)+pad/scale,np.min(ra)-pad/scale)) # Reverse xlim
     ax.set(ylabel='Declination (ICRS)',ylim=(np.min(dec)-pad,np.max(dec)+pad))
-    ax.set(title=cname.lower().replace('-',r'$-$'))
+    ax.set(title=fname.lower().replace('-',r'$-$'))
 
     # Format labels correctly
     ax.xaxis.set_major_formatter(lambda x,_: Angle(x,unit='deg').to_string(unit='hour', sep=[r'$^\textrm{'+s+'}$' for s in 'hms']))
@@ -213,7 +213,7 @@ if __name__ == '__main__':
     ax.grid(True,which='minor',ls=':',color='k',alpha=0.25)
 
     # Save figure
-    fig.savefig(os.path.join(plots,f'{cname}-visits.pdf'),bbox_inches='tight')
+    fig.savefig(os.path.join(plots,f'{fname}-visits.pdf'),bbox_inches='tight')
     pyplot.close(fig)
 
     # Make visit associations
@@ -250,7 +250,7 @@ if __name__ == '__main__':
     }
 
     # Process visit
-    visit_processor.process_visit(cname,tab=assoc,prep_args=prep_args,other_args=other_args,clean=False, sync=False,with_db=False,visit_split_shift=2,combine_same_pa=True,ROOT_PATH=clusters)
+    visit_processor.process_visit(fname,tab=assoc,prep_args=prep_args,other_args=other_args,clean=False, sync=False,with_db=False,visit_split_shift=2,combine_same_pa=True,ROOT_PATH=fields)
 
     # Plot Science Images
     files = glob.glob(os.path.join(prep,'*drz_sci.fits'))
