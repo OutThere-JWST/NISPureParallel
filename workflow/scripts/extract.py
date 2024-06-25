@@ -18,16 +18,6 @@ warnings.filterwarnings('ignore')
 # Import grizli
 import grizli
 from grizli import multifit
-
-# Extract beams
-def extractBeams(b,root):
-
-    if len(b) == 0: 
-        return
-
-    # Extract beams
-    mb = multifit.MultiBeam(b, fcontam=0.1, min_sens=0.01, min_mask=0, group_name=root)
-    mb.write_master_fits()
     
 if __name__ == '__main__':
 
@@ -37,14 +27,14 @@ if __name__ == '__main__':
     parser.add_argument('--ncpu', type=int,default=1)
     parser.add_argument('--verbose', action='store_true')
     args = parser.parse_args()
-    cname = args.fieldname
+    fname = args.fieldname
     ncpu = args.ncpu
 
     # Get paths and get fields
     main = os.getcwd()
-    fields = os.path.join(main,'CLUSTERS')
-    home = os.path.join(fields,cname)
-    print(f'Extracting {cname}')
+    fields = os.path.join(main,'FIELDS')
+    home = os.path.join(fields,fname)
+    print(f'Extracting {fname}')
 
     # Subdirectories
     logs = os.path.join(home,'logs')
@@ -63,7 +53,7 @@ if __name__ == '__main__':
     # Load GroupFLT
     grp = multifit.GroupFLT(
         grism_files=glob.glob('*GrismFLT.fits'),
-        catalog=f'{cname}-ir.cat.fits',
+        catalog=f'{fname}-ir.cat.fits',
         cpu_count=ncpu, sci_extn=1, pad=800
     )
 
@@ -84,15 +74,17 @@ if __name__ == '__main__':
     # pyplot.close(fig)
 
     # Get IDs
-    cat = Table.read(f'{cname}-ir.cat.fits')
+    cat = Table.read(f'{fname}-ir.cat.fits')
     mag = cat['MAG_AUTO'].filled(np.inf)
-    ids = cat['NUMBER'][mag < 27]
+    ids = cat['NUMBER'][mag < 24]
 
-    # Crate arguements
-    args = [(grp.get_beams(i, size=32, min_mask=0, min_sens=0.01),cname) for i in ids]
+    # Iterate over IDs
+    for i in ids:
 
-    # Multiprocessing pool
-    pool = Pool(processes=ncpu)
-    pool.starmap_async(extractBeams,args)
-    pool.close()
-    pool.join()
+        # Get beams from group
+        beams = grp.get_beams(i, size=32, min_mask=0, min_sens=0.01)
+        if len(beams) == 0: continue # Skip if no beams
+
+        # Extract beam
+        mb = multifit.MultiBeam(beams, fcontam=0.1, min_sens=0.01, min_mask=0, group_name=fname)
+        mb.write_master_fits()

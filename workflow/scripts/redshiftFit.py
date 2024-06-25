@@ -24,7 +24,7 @@ from grizli.pipeline import auto_script
 def zfit(i):
 
     # Fit
-    fitting.run_all_parallel(i,zr=[0.1,5],args_file='fit_args.npy',verbose=False)
+    fitting.run_all_parallel(i,zr=[0.1,5],args_file='fit_args.npy',verbose=True)
 
     # # Create oned spectrum figure
     # fig = mb.oned_figure()
@@ -44,14 +44,14 @@ if __name__ == '__main__':
     parser.add_argument('--ncpu', type=int,default=1)
     parser.add_argument('--verbose', action='store_true')
     args = parser.parse_args()
-    cname = args.fieldname
+    fname = args.fieldname
     ncpu = args.ncpu
 
     # Get paths and get fields
     main = os.getcwd()
     fields = os.path.join(main,'FIELDS')
-    home = os.path.join(fields,cname)
-    print(f'Fitting {cname}')
+    home = os.path.join(fields,fname)
+    print(f'Fitting {fname}')
 
     # Subdirectories
     logs = os.path.join(home,'logs')
@@ -76,17 +76,18 @@ if __name__ == '__main__':
         'wcs':None
         }
     auto_script.generate_fit_params(
-        pline=pline,field_root=cname,min_sens=0.01,min_mask=0.0
+        pline=pline,field_root=fname,min_sens=0.01,min_mask=0.0
         )
 
     # Get IDs
-    cat = Table.read(f'{cname}-ir.cat.fits')
+    cat = Table.read(f'{fname}-ir.cat.fits')
     mag = cat['MAG_AUTO'].filled(np.inf)
-    ids = cat['NUMBER'][mag < 25][0:4]
+    ids = cat['NUMBER'][mag < 24]
 
     # Multiprocessing pool
     with Pool(processes=ncpu) as pool:
-        _ = pool.map_async(zfit,ids)
+        result = pool.map_async(zfit,ids)
+        output = result.get()
         pool.close()
         pool.join()
 
