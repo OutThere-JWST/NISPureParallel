@@ -27,8 +27,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('fieldname', type=str)
     parser.add_argument('--ncpu', type=int,default=(cpu_count() - 2))
+    parser.add_argument('--slowsegmap', action='store_true')
     parser.add_argument('--verbose', action='store_true')
     args = parser.parse_args()
+    slowsegmap = args.slowsegmap
     fname = args.fieldname
     ncpu = args.ncpu
 
@@ -112,55 +114,60 @@ if __name__ == '__main__':
     palette = [[226,1,52],[0,141,249],[0,159,129],[255,195,59],[255,90,175],[159,1,98]]
     if not path.exists(path.join(plots,'Segmentation.png')):
         
-        # Load segmap
-        seg = fits.getdata(path.join(prep,f'{fname}-ir_seg.fits'))[::-1] # Flip for orientation
+        # Either slow-segmap coloring with 4 Color Theorem (Fast Version)
+        # Or fast-segmap coloring with simple coloring
+        if slowsegmap:
 
-        # # Four color theorem
-        # verts = {}
-        # for b in trange(1,seg.max()+1):
-        #     # Create list of edges
-        #     verts[b] = []
+            # Load Segmap
+            seg = fits.getdata(path.join(prep,f'{fname}-ir_seg.fits'))[::-1] # Flip for orientation
 
-        #     # Iterate over all pixels in bin
-        #     locs = np.where(seg == b)
-        #     for x,y in zip(*locs):
+            # Four color theorem
+            verts = {}
+            for b in trange(1,seg.max()+1):
+                # Create list of edges
+                verts[b] = []
 
-        #         # Iterate over all touching edges
-        #         for i in [-1,1]:
+                # Iterate over all pixels in bin
+                locs = np.where(seg == b)
+                for x,y in zip(*locs):
 
-        #             # Horizontal touches
-        #             h = seg[x+i,y]
-        #             if (h != b) and (h != 0) and (h not in verts[b]):
-        #                 verts[b].append(h)
-                    
-        #             # Vertical Touches
-        #             v = seg[x,y+i]
-        #             if (v != b) and (v != 0) and (v not in verts[b]):
-        #                 verts[b].append(v)
+                    # Iterate over all touching edges
+                    for i in [-1,1]:
 
-        # # Color Vertices
-        # vertices = sorted((list(verts.keys())))
-        # color_graph = {}
-        # for vertex in tqdm(vertices):
-        #     unused_colors = len(vertices) * [True]
-        #     for neighbor in verts[vertex]:
-        #         if neighbor in color_graph:
-        #             color = color_graph[neighbor]
-        #             unused_colors[color] = False
-        #     for color, unused in enumerate(unused_colors):
-        #         if unused:
-        #             color_graph[vertex] = color
-        #             break
+                        # Horizontal touches
+                        h = seg[x+i,y]
+                        if (h != b) and (h != 0) and (h not in verts[b]):
+                            verts[b].append(h)
+                        
+                        # Vertical Touches
+                        v = seg[x,y+i]
+                        if (v != b) and (v != 0) and (v not in verts[b]):
+                            verts[b].append(v)
 
-        # # Create segmap image
-        # im = np.zeros(seg.shape+(3,),dtype='uint8')
-        # for c in tqdm(color_graph):
-        #     im[seg == c] = palette[color_graph[c]]
+            # Color Vertices
+            vertices = sorted((list(verts.keys())))
+            color_graph = {}
+            for vertex in tqdm(vertices):
+                unused_colors = len(vertices) * [True]
+                for neighbor in verts[vertex]:
+                    if neighbor in color_graph:
+                        color = color_graph[neighbor]
+                        unused_colors[color] = False
+                for color, unused in enumerate(unused_colors):
+                    if unused:
+                        color_graph[vertex] = color
+                        break
 
-        # Easy Color
-        im = np.zeros(seg.shape+(3,),dtype='uint8')
-        for i,p in enumerate(palette):
-            im[seg % len(palette) == i+1] = p
+            # Create segmap image
+            im = np.zeros(seg.shape+(3,),dtype='uint8')
+            for c in tqdm(color_graph):
+                im[seg == c] = palette[color_graph[c]]
+
+        else:
+            # Easy Color
+            im = np.zeros(seg.shape+(3,),dtype='uint8')
+            for i,p in enumerate(palette):
+                im[seg % len(palette) == i+1] = p
 
         # Save figure
         out = Image.fromarray(im,'RGB')

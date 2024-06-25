@@ -109,5 +109,5 @@ rule fmap:
     shell:
         """
         module load texlive/2021
-        ./workflow/scripts/makeFitsmap.py {wildcards.field} --ncpu $SLURM_CPUS_PER_TASK
+        ./workflow/scripts/makeFitsmap.py {wildcards.field} --slowsegmap --ncpu $SLURM_CPUS_PER_TASK
         """
