@@ -6,4 +6,4 @@ dependencies:
 - pip
 - pip:
   - reproject # Optional
-  - git+https://github.com/ryanhausen/fitsmap.git
+  - git+https://github.com/TheSkyentist/fitsmap.git
