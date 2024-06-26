@@ -7,6 +7,7 @@ import glob
 import json
 import shutil
 import argparse
+from astropy.table import Table
 
 # Multiprocessing
 from multiprocessing import cpu_count,Pool
@@ -90,30 +91,32 @@ if __name__ == '__main__':
 
     # Parse arguements
     parser = argparse.ArgumentParser()
+    parser.add_argument('fieldname', type=str)
     parser.add_argument('--ncpu', type=int, default=(cpu_count() - 2))
     parser.add_argument('--scratch', action='store_true')
     args = parser.parse_args()
+    fname = args.fieldname
 
     # Get paths
     main = os.getcwd()
     uncal = os.path.join(main,'UNCAL')
     rate = os.path.join(main,'RATE')
 
-    # Restart from scratch
-    if not os.path.exists(rate):
-        os.mkdir(rate)
-    if args.scratch:
-        shutil.rmtree(rate)
-        os.mkdir(rate)
+    # Get list of products
+    prods = Table.read(os.path.join(main,'FIELDS','field-prods.fits'),fname)
+    files = prods['productFilename']
 
-    # List of files to process
-    files = [(f,f.replace(uncal,rate).replace('uncal','rate')) for f in glob.glob(os.path.join(uncal,'*uncal.fits')) if not os.path.exists(os.path.join(rate,os.path.basename(f).replace('uncal','rate')))]
+    # If not starting from scratch, remove files that are done
+    if not args.scratch: files = [f for f in files if not os.path.exists(os.path.join(rate,f.replace('uncal','rate')))]
+    
+    # Get list of inputs
+    inputs = [(os.path.join(uncal,f),os.path.join(rate,f.replace('uncal','rate'))) for f in files]
 
     # Print version
     print(f'jwst:{jwst.__version__}')
 
     # Multiprocessing
-    pool = Pool(processes=args.ncpu)
-    pool.starmap_async(cal,files,chunksize=1)
-    pool.close()
-    pool.join()
+    with Pool(processes=args.ncpu) as pool:
+        pool.starmap(cal,inputs,chunksize=1)
+        pool.close()
+        pool.join()

@@ -5,33 +5,33 @@ from astropy.table import Table
 
 # Names of fields
 with open('FIELDS/fields.txt') as f: FIELDS = f.read().splitlines()
+uncal = dict((f,Table.read('FIELDS/field-prods.fits',f)['productFilename'].tolist()) for f in FIELDS)
 
 # Final Rule
 rule all:
     input:
-        expand('FIELDS/{field}/logs/fmap.out',field=FIELDS)
+        expand('FIELDS/{field}/logs/proc.out',field=FIELDS)
 
-# Stage1 Rule
-rule runStage1:
-    input:
-        [f'UNCAL/{f}' for f in np.concatenate([Table.read('FIELDS/field-prods.fits',c)['productFilename'].tolist() for c in FIELDS])]
-    output:
-        [f'RATE/{f}'.replace('uncal','rate') for f in np.concatenate([Table.read('FIELDS/field-prods.fits',c)['productFilename'].tolist() for c in FIELDS])]
-    conda:'envs/jwst.yaml'
-    log:'logs/Stage1.log'
-    resources:
-        mem_mb=2048000,
-        slurm_partition='p.huge'
-    shell:
-        """
-        module load texlive/2021
-        ./workflow/scripts/runStage1.py --ncpu $SLURM_CPUS_PER_TASK
-        """
+# Stage 1 Rules
+for field in FIELDS:
+    rule:
+        name: f"stage1_{field}"
+        input:
+            [f'UNCAL/{f}' for f in uncal[field]]
+        output:
+            [f'RATE/{f.replace('uncal','rate')}' for f in uncal[field]]
+        conda:'envs/jwst.yaml'
+        log: f'logs/Stage1_{field}.log'
+        shell: 
+            f"""
+            module load texlive/2021
+            ./workflow/scripts/runStage1.py {field} --ncpu $SLURM_CPUS_PER_TASK
+            """
 
 # Preprocess Rule
 rule preProcess:
     input:
-        [f'RATE/{f}'.replace('uncal','rate') for f in np.concatenate([Table.read('FIELDS/field-prods.fits',c)['productFilename'].tolist() for c in FIELDS])]
+        lambda wildcards: [f'RATE/{f.replace('uncal','rate')}' for f in uncal[wildcards.field]]
     output:
         'FIELDS/{field}/logs/proc.out'
     conda:'envs/grizli.yaml'
