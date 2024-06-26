@@ -91,5 +91,5 @@ if __name__ == '__main__':
 
     # Create fitting catalog
     out = vstack([
-        Table.read(f'{fname}_{str(i).zfill(5)}.row.fits') for i in ids
+        Table.read(f'{fname}_{str(i).zfill(5)}.row.fits') for i in ids if os.path.exists(f'{fname}_{str(i).zfill(5)}.row.fits')
     ]).write(f'{fname}_fitresults.fits',overwrite=True)
