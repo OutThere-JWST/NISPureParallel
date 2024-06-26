@@ -250,7 +250,8 @@ if __name__ == '__main__':
     }
 
     # Process visit
-    visit_processor.process_visit(fname,tab=assoc,prep_args=prep_args,other_args=other_args,clean=False, sync=False,with_db=False,visit_split_shift=2,combine_same_pa=True,ROOT_PATH=fields)
+    visit_processor.ROOT_PATH = fields
+    visit_processor.process_visit(fname,tab=assoc,prep_args=prep_args,other_args=other_args,clean=False, sync=False,with_db=False,visit_split_shift=2,combine_same_pa=True)
 
     # Plot Science Images
     files = glob.glob(os.path.join(prep,'*drz_sci.fits'))
