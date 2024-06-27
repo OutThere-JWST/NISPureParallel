@@ -10,7 +10,7 @@ uncal = dict((f,Table.read('FIELDS/field-prods.fits',f)['productFilename'].tolis
 # Final Rule
 rule all:
     input:
-        expand('FIELDS/{field}/logs/proc.out',field=FIELDS)
+        expand('FIELDS/{field}/logs/fmap.out',field=FIELDS)
 
 # Stage 1 Rules
 for field in FIELDS:
