@@ -1,0 +1,10 @@
+# Number of cores allowed on the system
+cores: 1
+
+# SnakeMake Conda settings
+use-conda: True
+conda-frontend: conda
+
+# Settings to continue running and keep incomplete
+keep-going: True
+keep-incomplete: True

@@ -1,0 +1,10 @@
+# MPCDF Raven configuration file
+jobs: 200
+executor: slurm
+default-resources:
+  nodes: 1
+  tasks: 1
+  cpus_per_task: 144
+  mem_mb: 240000
+  runtime: 1440
+  slurm_partition: 'general'

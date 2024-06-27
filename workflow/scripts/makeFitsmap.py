@@ -273,7 +273,7 @@ if __name__ == '__main__':
     with open(path.join(fitsmap,'map/js/index.js'),'w+') as f: f.write(''.join(js))
 
     # Add Settings Sliders (Bit of a Hack)
-    settings_button = path.join(main,'settings_button')
+    settings_button = path.join(main,'resources','fitsmap_settings_button')
     shutil.copy(path.join(settings_button,'SettingsControl.css'),path.join(fitsmap,'map','css'))
     shutil.copy(path.join(settings_button,'settingsControl.js'),path.join(fitsmap,'map','js'))
     i = js.index('// Map event setup =============================================================\n')
