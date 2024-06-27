@@ -12,102 +12,11 @@ rule all:
     input:
         expand('FIELDS/{field}/logs/fmap.out',field=FIELDS)
 
-# Stage 1 Rules
-for field in FIELDS:
-    rule:
-        name: f"stage1_{field}"
-        input:
-            [f'UNCAL/{f}' for f in uncal[field]]
-        output:
-            [f'RATE/{f.replace('uncal','rate')}' for f in uncal[field]]
-        conda:'envs/jwst.yaml'
-        log: f'logs/Stage1_{field}.log'
-        shell: 
-            f"""
-            module load texlive/2021
-            ./workflow/scripts/runStage1.py {field} --ncpu $SLURM_CPUS_PER_TASK
-            """
-
-# Preprocess Rule
-rule preProcess:
-    input:
-        lambda wildcards: [f'RATE/{f.replace('uncal','rate')}' for f in uncal[wildcards.field]]
-    output:
-        'FIELDS/{field}/logs/proc.out'
-    conda:'envs/grizli.yaml'
-    log:'logs/PreProcess_{field}.log'
-    shell:
-        """
-        module load texlive/2021
-        ./workflow/scripts/preprocess.py {wildcards.field}
-        """
-
-# Mosaic Rule
-rule mosaic:
-    input:
-        'FIELDS/{field}/logs/proc.out'
-    output:
-        'FIELDS/{field}/logs/mos.out'
-    conda:'envs/grizli.yaml'
-    log:'logs/Mosaic_{field}.log'
-    shell:
-        """
-        module load texlive/2021
-        ./workflow/scripts/mosaic.py {wildcards.field}
-        """
-
-# Contamination Rule
-rule contam:
-    input:
-        'FIELDS/{field}/logs/mos.out'
-    output:
-        'FIELDS/{field}/logs/contam.out'
-    conda:'envs/grizli.yaml'
-    log:'logs/Contam_{field}.log'
-    shell:
-        """
-        module load texlive/2021
-        ./workflow/scripts/contamination.py {wildcards.field} --ncpu $SLURM_CPUS_PER_TASK
-        """
-
-# Extraction Rule
-rule extract:
-    input:
-        'FIELDS/{field}/logs/contam.out'
-    output:
-        'FIELDS/{field}/logs/extr.out'
-    conda:'envs/grizli.yaml'
-    log:'logs/Extract_{field}.log'
-    shell:
-        """
-        module load texlive/2021
-        ./workflow/scripts/extract.py {wildcards.field} --ncpu $SLURM_CPUS_PER_TASK
-        """
-
-# Redshift Fitting Rule
-rule zfit:
-    input:
-        'FIELDS/{field}/logs/extr.out'
-    output:
-        'FIELDS/{field}/logs/zfit.out'
-    conda:'envs/grizli.yaml'
-    log:'logs/Redshift_{field}.log'
-    shell:
-        """
-        module load texlive/2021
-        ./workflow/scripts/redshiftFit.py {wildcards.field} --ncpu $SLURM_CPUS_PER_TASK
-        """
-
-# Fitsmap Creation Rule
-rule fmap:
-    input:
-        'FIELDS/{field}/logs/zfit.out'
-    output:
-        'FIELDS/{field}/logs/fmap.out'
-    conda:'envs/fitsmap.yaml'
-    log:'logs/Fitsmap_{field}.log'
-    shell:
-        """
-        module load texlive/2021
-        ./workflow/scripts/makeFitsmap.py {wildcards.field} --slowsegmap --ncpu $SLURM_CPUS_PER_TASK
-        """
+# Include rules
+include: "rules/preprocess.smk"
+include: "rules/mosaic.smk"
+include: "rules/contamination.smk"
+include: "rules/extract.smk"
+include: "rules/makeFitsmap.smk"
+include: "rules/redshiftFit.smk"
+include: "rules/runStage1.smk"

@@ -2,9 +2,13 @@
 jobs: 200
 executor: slurm
 default-resources:
-  nodes: 1
-  tasks: 1
-  cpus_per_task: 36
-  mem_mb: 250000
-  runtime: 1440
-  slurm_partition: 'p.vera'
+    nodes: 1
+    tasks: 1
+    cpus_per_task: 36
+    mem_mb: 250000
+    runtime: 1440
+    slurm_partition: 'p.vera'
+rules *:
+    envmodules:
+        'texlive/2021',
+        # 'anaconda/3/2023.03'
