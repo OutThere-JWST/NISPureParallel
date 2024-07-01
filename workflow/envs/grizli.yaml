@@ -6,6 +6,7 @@ dependencies:
 - pip
 - pip:
   - git+https://github.com/spacetelescope/jwst.git
+  - git+https://github.com/spacetelescope/drizzlepac.git # Until Drizzlepac Update
   - git+https://github.com/karllark/dust_attenuation.git # Optional
   - git+https://github.com/gbrammer/eazy-py.git # Optional
   - reproject # Optional

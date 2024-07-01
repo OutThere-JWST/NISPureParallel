@@ -1,6 +1,5 @@
 # Import packages
 import os
-import numpy as np
 from astropy.table import Table
 
 # Names of fields
