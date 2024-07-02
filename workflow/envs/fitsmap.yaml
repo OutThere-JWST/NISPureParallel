@@ -2,8 +2,16 @@ name: fitsmap
 channels:
 - conda-forge
 dependencies:
-- python==3.11.*
-- pip
-- pip:
-  - reproject # Optional
-  - git+https://github.com/TheSkyentist/fitsmap.git
+  - python=3.11
+  - cbor2 
+  - click
+  - pillow
+  - astropy
+  - reproject
+  - matplotlib
+  - scikit-image
+  - mapbox-vector-tile
+  - numpy<2
+  - protobuf<4.21
+  - pip:
+    - fitsmap
