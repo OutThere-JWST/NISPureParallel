@@ -5,6 +5,8 @@ dependencies:
 - python=3.12.*
 - pip
 - tqdm
+- conda
+- mamba
 - scipy
 - astropy
 - bioconda::snakemake

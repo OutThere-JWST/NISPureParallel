@@ -2,7 +2,7 @@ name: jwst
 channels:
 - conda-forge
 dependencies:
-- python==3.12.* # Need to wait for drizzlepac to be on 3.12
+- python=3.12.* # Need to wait for drizzlepac to be on 3.12
 - threadpoolctl
 - pip
 - pip:

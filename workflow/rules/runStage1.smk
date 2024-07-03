@@ -1,5 +1,5 @@
-# Stage 1 Rules
-for field in FIELDS:
+# Stage 1 Rule
+def create_rule(field):
     rule:
         name: f"stage1_{field}"
         input:
@@ -12,3 +12,6 @@ for field in FIELDS:
             f"""
             ./workflow/scripts/runStage1.py {field} --ncpu {{threads}}
             """
+
+# Create rules for all fields
+for field in FIELDS: create_rule(field)

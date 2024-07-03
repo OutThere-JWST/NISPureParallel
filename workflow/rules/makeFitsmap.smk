@@ -8,5 +8,5 @@ rule fmap:
     log:'logs/Fitsmap_{field}.log'
     shell:
         """
-        ./workflow/scripts/makeFitsmap.py {wildcards.field} --slowsegmap --ncpu {threads}}
+        ./workflow/scripts/makeFitsmap.py {wildcards.field} --slowsegmap --ncpu {threads}
         """
