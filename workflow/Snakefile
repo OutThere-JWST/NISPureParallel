@@ -1,8 +1,9 @@
-# Import packages
-import os
-from astropy.table import Table
+# Config file
+configfile: "config/config.yaml"
+report: "logs/workflow.rst"
 
 # Names of fields
+from astropy.table import Table
 with open('FIELDS/fields.txt') as f: FIELDS = f.read().splitlines()
 uncal = dict((f,Table.read('FIELDS/field-prods.fits',f)['productFilename'].tolist()) for f in FIELDS)
 
