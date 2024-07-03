@@ -1,5 +1,4 @@
 # Config file
-configfile: "config/config.yaml"
 report: "logs/workflow.rst"
 
 # Names of fields

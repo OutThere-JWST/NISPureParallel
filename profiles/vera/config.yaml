@@ -1,14 +1,31 @@
 # MPCDF Vera configuration file
-jobs: 200
+local-cores: 1
+
+# SnakeMake Conda settings
+use-conda: True
+conda-frontend: conda
+
+# Settings to continue running and keep incomplete
+keep-going: True
+keep-incomplete: True
+
+# Max number of jobs
+jobs: 20
+
+# Queue system
 executor: slurm
+
+# Default job requests
 default-resources:
     nodes: 1
     tasks: 1
     cpus_per_task: 36
     mem_mb: 250000
     runtime: 1440
-    slurm_partition: 'p.vera'
-rules *:
-    envmodules:
-        'texlive/2021',
-        'anaconda/3/2023.03'
+    slurm_partition: 'general'
+
+# Default rule settings
+rule *:
+    threads: 36
+    envmodules: 
+        'texlive/2021'

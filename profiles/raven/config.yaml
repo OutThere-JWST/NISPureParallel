@@ -1,6 +1,21 @@
 # MPCDF Raven configuration file
-jobs: 200
+local-cores: 1
+
+# SnakeMake Conda settings
+use-conda: True
+conda-frontend: conda
+
+# Settings to continue running and keep incomplete
+keep-going: True
+keep-incomplete: True
+
+# Max number of jobs
+jobs: 20
+
+# Queue system
 executor: slurm
+
+# Default job requests
 default-resources:
     nodes: 1
     tasks: 1
@@ -8,7 +23,9 @@ default-resources:
     mem_mb: 240000
     runtime: 1440
     slurm_partition: 'general'
+
+# Default rule settings
 rule *:
+    threads: 72
     envmodules: 
-        'texlive/2021',
-        'anaconda/3/2023.03'
+        'texlive/2021'

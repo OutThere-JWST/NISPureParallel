@@ -8,5 +8,5 @@ rule extract:
     log:'logs/Extract_{field}.log'
     shell:
         """
-        ./workflow/scripts/extract.py {wildcards.field} --ncpu $SLURM_CPUS_PER_TASK
+        ./workflow/scripts/extract.py {wildcards.field} --ncpu {threads}
         """

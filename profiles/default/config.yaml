@@ -8,3 +8,7 @@ conda-frontend: conda
 # Settings to continue running and keep incomplete
 keep-going: True
 keep-incomplete: True
+
+# Default rule settings
+rule *:
+    threads: 1

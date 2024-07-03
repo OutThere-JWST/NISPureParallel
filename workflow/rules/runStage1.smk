@@ -10,5 +10,5 @@ for field in FIELDS:
         log: f'logs/Stage1_{field}.log'
         shell: 
             f"""
-            ./workflow/scripts/runStage1.py {field} --ncpu $SLURM_CPUS_PER_TASK
+            ./workflow/scripts/runStage1.py {field} --ncpu {{threads}}
             """

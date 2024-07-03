@@ -8,5 +8,5 @@ rule zfit:
     log:'logs/Redshift_{field}.log'
     shell:
         """
-        ./workflow/scripts/redshiftFit.py {wildcards.field} --ncpu $SLURM_CPUS_PER_TASK
+        ./workflow/scripts/redshiftFit.py {wildcards.field} --ncpu {threads}
         """

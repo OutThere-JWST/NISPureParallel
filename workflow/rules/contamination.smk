@@ -8,5 +8,5 @@ rule contam:
     log:'logs/Contam_{field}.log'
     shell:
         """
-        ./workflow/scripts/contamination.py {wildcards.field} --ncpu $SLURM_CPUS_PER_TASK
+        ./workflow/scripts/contamination.py {wildcards.field} --ncpu {threads}
         """
