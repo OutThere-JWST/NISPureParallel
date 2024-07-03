@@ -9,7 +9,7 @@ uncal = dict((f,Table.read('FIELDS/field-prods.fits',f)['productFilename'].tolis
 # Final Rule
 rule all:
     input:
-        expand('FIELDS/{field}/logs/fmap.out',field=FIELDS)
+        expand('logs/{field}-fmap.log',field=FIELDS)
 
 # Include rules
 include: "rules/preprocess.smk"

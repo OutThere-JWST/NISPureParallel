@@ -1,14 +1,14 @@
 # Mosaic Rule
 rule mosaic:
     input:
-        'FIELDS/{field}/logs/proc.out'
+        'logs/{field}-proc.log'
     output:
-        'FIELDS/{field}/logs/mos.out'
-    conda:'../envs/grizli.yaml'
+        'logs/{field}-mos.log'
+    conda:
+        '../envs/grizli.yaml'
     log:
-        stdout='logs/{field}-mos.out',
-        stderr='logs/{field}-mos.err'
+        'logs/{field}-mos.log'
     shell:
         """
-        ./workflow/scripts/mosaic.py {wildcards.field} > {log.stdout} 2> {log.stderr}
+        ./workflow/scripts/mosaic.py {wildcards.field} &> {log}
         """

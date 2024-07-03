@@ -6,13 +6,13 @@ def create_rule(field):
             [f'UNCAL/{f}' for f in uncal[field]]
         output:
             [f'RATE/{f.replace('uncal','rate')}' for f in uncal[field]]
-        conda:'../envs/jwst.yaml'
+        conda:
+            '../envs/jwst.yaml'
         log: 
-            stdout = f'logs/{field}-stage1.log',
-            stderr = f'logs/{field}-stage1.err'
+            f'logs/{field}-stage1.log'
         shell: 
             f"""
-            ./workflow/scripts/runStage1.py {field} --ncpu {{threads}} > {{log.stdout}} 2> {{log.stderr}}
+            ./workflow/scripts/runStage1.py {field} --ncpu {{threads}} &> {{log}}
             """
 
 # Create rules for all fields

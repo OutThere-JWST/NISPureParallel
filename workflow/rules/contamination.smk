@@ -1,14 +1,14 @@
 # Contamination Rule
 rule contam:
     input:
-        'FIELDS/{field}/logs/mos.out'
+        'logs/{field}-mos.log'
     output:
-        'FIELDS/{field}/logs/contam.out'
-    conda:'../envs/grizli.yaml'
+        'logs/{field}-contam.log'
+    conda:
+        '../envs/grizli.yaml'
     log:
-        stdout='logs/{field}-contam.out',
-        stderr='logs/{field}-contam.err'
+        'logs/{field}-contam.log'
     shell:
         """
-        ./workflow/scripts/contamination.py {wildcards.field} --ncpu {threads} > {log.stdout} 2> {log.stderr}
+        ./workflow/scripts/contamination.py {wildcards.field} --ncpu {threads} &> {log}
         """

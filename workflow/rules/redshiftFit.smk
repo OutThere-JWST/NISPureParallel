@@ -1,14 +1,14 @@
 # Redshift Fitting Rule
 rule zfit:
     input:
-        'FIELDS/{field}/logs/extr.out'
+        'logs/{field}-extr.log'
     output:
-        'FIELDS/{field}/logs/zfit.out'
-    conda:'../envs/grizli.yaml'
+        'logs/{field}-zfit.log'
+    conda:
+        '../envs/grizli.yaml'
     log:
-        stdout='logs/{field}-zfit.out',
-        stderr='logs/{field}-zfit.err'
+        'logs/{field}-zfit.log'
     shell:
         """
-        ./workflow/scripts/redshiftFit.py {wildcards.field} --ncpu {threads} > {log.stdout} 2> {log.stderr}
+        ./workflow/scripts/redshiftFit.py {wildcards.field} --ncpu {threads} &> {log}
         """

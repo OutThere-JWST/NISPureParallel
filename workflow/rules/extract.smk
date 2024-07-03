@@ -1,14 +1,14 @@
 # Extraction Rule
 rule extract:
     input:
-        'FIELDS/{field}/logs/contam.out'
+        'logs/{field}-contam.log'
     output:
-        'FIELDS/{field}/logs/extr.out'
-    conda:'../envs/grizli.yaml'
+        'logs/{field}-extr.log'
+    conda:
+        '../envs/grizli.yaml'
     log:
-        stdout='logs/{field}-extr.out',
-        stderr='logs/{field}-extr.err'
+        'logs/{field}-extr.log'
     shell:
         """
-        ./workflow/scripts/extract.py {wildcards.field} --ncpu {threads} > {log.stdout} 2> {log.stderr}
+        ./workflow/scripts/extract.py {wildcards.field} --ncpu {threads} &> {log}
         """
