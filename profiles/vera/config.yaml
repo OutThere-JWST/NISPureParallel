@@ -11,4 +11,4 @@ default-resources:
 rules *:
     envmodules:
         'texlive/2021',
-        # 'anaconda/3/2023.03'
+        'anaconda/3/2023.03'

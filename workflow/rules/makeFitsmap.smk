@@ -4,7 +4,7 @@ rule fmap:
         'FIELDS/{field}/logs/zfit.out'
     output:
         'FIELDS/{field}/logs/fmap.out'
-    conda:'envs/fitsmap.yaml'
+    conda:'../envs/fitsmap.yaml'
     log:'logs/Fitsmap_{field}.log'
     shell:
         """

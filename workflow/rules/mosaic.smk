@@ -4,7 +4,7 @@ rule mosaic:
         'FIELDS/{field}/logs/proc.out'
     output:
         'FIELDS/{field}/logs/mos.out'
-    conda:'envs/grizli.yaml'
+    conda:'../envs/grizli.yaml'
     log:'logs/Mosaic_{field}.log'
     shell:
         """

@@ -4,7 +4,7 @@ rule extract:
         'FIELDS/{field}/logs/contam.out'
     output:
         'FIELDS/{field}/logs/extr.out'
-    conda:'envs/grizli.yaml'
+    conda:'../envs/grizli.yaml'
     log:'logs/Extract_{field}.log'
     shell:
         """

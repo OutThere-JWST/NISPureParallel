@@ -6,7 +6,7 @@ for field in FIELDS:
             [f'UNCAL/{f}' for f in uncal[field]]
         output:
             [f'RATE/{f.replace('uncal','rate')}' for f in uncal[field]]
-        conda:'envs/jwst.yaml'
+        conda:'../envs/jwst.yaml'
         log: f'logs/Stage1_{field}.log'
         shell: 
             f"""

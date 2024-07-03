@@ -4,7 +4,7 @@ rule contam:
         'FIELDS/{field}/logs/mos.out'
     output:
         'FIELDS/{field}/logs/contam.out'
-    conda:'envs/grizli.yaml'
+    conda:'../envs/grizli.yaml'
     log:'logs/Contam_{field}.log'
     shell:
         """
