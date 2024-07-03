@@ -5,8 +5,10 @@ rule zfit:
     output:
         'FIELDS/{field}/logs/zfit.out'
     conda:'../envs/grizli.yaml'
-    log:'logs/Redshift_{field}.log'
+    log:
+        stdout='logs/{field}-zfit.out',
+        stderr='logs/{field}-zfit.err'
     shell:
         """
-        ./workflow/scripts/redshiftFit.py {wildcards.field} --ncpu {threads}
+        ./workflow/scripts/redshiftFit.py {wildcards.field} --ncpu {threads} > {log.stdout} 2> {log.stderr}
         """

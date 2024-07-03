@@ -38,28 +38,22 @@ if __name__ == '__main__':
     cname = args.fieldname
     ncpu = args.ncpu
 
+    # Print version and step
+    print(f'Modelling Contamination {cname}')
+    print(f'grizli:{grizli.__version__}')
+
     # Get paths and get fields
     main = os.getcwd()
     fields = os.path.join(main,'FIELDS')
     home = os.path.join(fields,cname)
-    print(f'Modelling Contamination {cname}')
 
     # Subdirectories
-    logs = os.path.join(home,'logs')
     prep = os.path.join(home,'Prep')
     plots = os.path.join(home,'Plots')
     extract = os.path.join(home,'Extractions')
 
-    # Redirect stdout and stderr to file
-    if not args.verbose:
-        sys.stdout = open(os.path.join(logs,'contam.out'),'w')
-        sys.stderr = open(os.path.join(logs,'contam.err'),'w')
-
     # Go to prep directory
     os.chdir(prep)
-
-    # Print grizli and jwst versions
-    print(f'grizli:{grizli.__version__}')
 
     # Make a table with file information
     files = sorted(glob.glob('*rate.fits'))

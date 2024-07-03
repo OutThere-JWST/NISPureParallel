@@ -5,8 +5,10 @@ rule fmap:
     output:
         'FIELDS/{field}/logs/fmap.out'
     conda:'../envs/fitsmap.yaml'
-    log:'logs/Fitsmap_{field}.log'
+    log:
+        stdout='logs/{field}-fmap.out',
+        stderr='logs/{field}-fmap.err'
     shell:
         """
-        ./workflow/scripts/makeFitsmap.py {wildcards.field} --slowsegmap --ncpu {threads}
+        ./workflow/scripts/makeFitsmap.py {wildcards.field} --slowsegmap --ncpu {threads} > {log.stdout} 2> {log.stderr}
         """

@@ -67,12 +67,15 @@ if __name__ == '__main__':
     args = parser.parse_args()
     fname = args.fieldname
 
+    # Print grizli and jwst versions
+    print(f'Preprocessing {fname}')
+    print(f'grizli:{grizli.__version__}')
+
     # Get paths and get fields
     main = os.getcwd()
     fields = os.path.join(main,'FIELDS')
     prods = Table.read(os.path.join(fields,'field-prods.fits'),fname)
     home = os.path.join(fields,fname)
-    print(f'Preprocessing {fname}')
 
     # Get main paths
     rate = os.path.join(main,'RATE')
@@ -80,19 +83,13 @@ if __name__ == '__main__':
 
     # Subdirectories
     raw = os.path.join(home,'RAW')
-    logs = os.path.join(home,'logs')
     prep = os.path.join(home,'Prep')
     plots = os.path.join(home,'Plots')
     persist = os.path.join(home,'Persistence')
     extract = os.path.join(home,'Extractions')
-    for d in [raw,logs,prep,plots,persist,extract]:
+    for d in [raw,prep,plots,persist,extract]:
         if os.path.exists(d): shutil.rmtree(d)
         os.mkdir(d)
-
-    # Redirect stdout and stderr to file
-    if not args.verbose:
-        sys.stdout = open(os.path.join(logs,'proc.out'),'w')
-        sys.stderr = open(os.path.join(logs,'proc.err'),'w')
 
     # Plot the field in context
     hdul_obs = fits.open('FIELDS/field-obs.fits')

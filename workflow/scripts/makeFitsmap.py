@@ -35,14 +35,15 @@ if __name__ == '__main__':
     fname = args.fieldname
     ncpu = args.ncpu
 
+    # Print step
+    print(f'Fitsmapping {fname}')
+
     # Get paths and get fields
     main = os.getcwd()
     fields = os.path.join(main,'FIELDS')
     home = os.path.join(fields,fname)
-    print(f'Fitsmapping {fname}')
 
     # Subdirectories
-    logs = os.path.join(home,'logs')
     prep = os.path.join(home,'Prep')
     plots = os.path.join(home,'Plots')
     extract = os.path.join(home,'Extractions')
@@ -51,11 +52,6 @@ if __name__ == '__main__':
     # Remove last map
     if os.path.isdir(fitsmap): shutil.rmtree(fitsmap)
     os.mkdir(fitsmap)
-
-    # Redirect stdout and stderr to file
-    if not args.verbose:
-        sys.stdout = open(os.path.join(logs,'fmap.out'),'w')
-        sys.stderr = open(os.path.join(logs,'fmap.err'),'w')
 
     # Keep track of files for fitsmap creation
     files = []

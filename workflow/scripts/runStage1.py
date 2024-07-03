@@ -97,6 +97,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
     fname = args.fieldname
 
+    # Print version and step
+    print(f'Running Stage 1 {fname}')
+    print(f'jwst:{jwst.__version__}')
+
     # Get paths
     main = os.getcwd()
     uncal = os.path.join(main,'UNCAL')
@@ -111,9 +115,6 @@ if __name__ == '__main__':
     
     # Get list of inputs
     inputs = [(os.path.join(uncal,f),os.path.join(rate,f.replace('uncal','rate'))) for f in files]
-
-    # Print version
-    print(f'jwst:{jwst.__version__}')
 
     # Multiprocessing
     with Pool(processes=args.ncpu) as pool:

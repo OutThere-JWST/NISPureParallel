@@ -5,8 +5,10 @@ rule mosaic:
     output:
         'FIELDS/{field}/logs/mos.out'
     conda:'../envs/grizli.yaml'
-    log:'logs/Mosaic_{field}.log'
+    log:
+        stdout='logs/{field}-mos.out',
+        stderr='logs/{field}-mos.err'
     shell:
         """
-        ./workflow/scripts/mosaic.py {wildcards.field}
+        ./workflow/scripts/mosaic.py {wildcards.field} > {log.stdout} 2> {log.stderr}
         """

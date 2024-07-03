@@ -32,28 +32,22 @@ if __name__ == '__main__':
     args = parser.parse_args()
     cname = args.fieldname
 
+    # Print version and step
+    print(f'Mosaicing {cname}')
+    print(f'grizli:{grizli.__version__}')
+
     # Get paths and get fields
     main = os.getcwd()
     fields = os.path.join(main,'FIELDS')
     obs = Table.read(os.path.join(fields,'field-obs.fits'),cname)
     home = os.path.join(fields,cname)
-    print(f'Mosaicing {cname}')
 
     # Subdirectories
-    logs = os.path.join(home,'logs')
     prep = os.path.join(home,'Prep')
     plots = os.path.join(home,'Plots')
 
-    # Redirect stdout and stderr to file
-    if not args.verbose:
-        sys.stdout = open(os.path.join(logs,'mos.out'),'w')
-        sys.stderr = open(os.path.join(logs,'mos.err'),'w')
-
     # Go to prep directory
     os.chdir(prep)
-
-    # Print grizli and jwst versions
-    print(f'grizli:{grizli.__version__}')
 
     # Make a table with file information
     files = sorted(glob.glob('*rate.fits'))

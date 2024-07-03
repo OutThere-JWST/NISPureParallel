@@ -5,8 +5,10 @@ rule contam:
     output:
         'FIELDS/{field}/logs/contam.out'
     conda:'../envs/grizli.yaml'
-    log:'logs/Contam_{field}.log'
+    log:
+        stdout='logs/{field}-contam.out',
+        stderr='logs/{field}-contam.err'
     shell:
         """
-        ./workflow/scripts/contamination.py {wildcards.field} --ncpu {threads}
+        ./workflow/scripts/contamination.py {wildcards.field} --ncpu {threads} > {log.stdout} 2> {log.stderr}
         """

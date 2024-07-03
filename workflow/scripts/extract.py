@@ -29,25 +29,19 @@ if __name__ == '__main__':
     fname = args.fieldname
     ncpu = args.ncpu
 
+    # Print version and step
+    print(f'Extracting {fname}')
+    print(f'grizli:{grizli.__version__}')
+
     # Get paths and get fields
     main = os.getcwd()
     fields = os.path.join(main,'FIELDS')
     home = os.path.join(fields,fname)
-    print(f'Extracting {fname}')
 
     # Subdirectories
-    logs = os.path.join(home,'logs')
     plots = os.path.join(home,'Plots')
     extract = os.path.join(home,'Extractions')
     os.chdir(extract)
-
-    # Redirect stdout and stderr to file
-    if not args.verbose:
-        sys.stdout = open(os.path.join(logs,'extr.out'),'w')
-        sys.stderr = open(os.path.join(logs,'extr.err'),'w')
-
-    # Print grizli and jwst versions
-    print(f'grizli:{grizli.__version__}')
 
     # Load GroupFLT
     grp = multifit.GroupFLT(
