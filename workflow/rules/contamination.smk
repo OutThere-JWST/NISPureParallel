@@ -4,10 +4,12 @@ rule contam:
         'logs/{field}-mos.log'
     output:
         'logs/{field}-contam.log'
-    conda:
-        '../envs/grizli.yaml'
     log:
         'logs/{field}-contam.log'
+    group:
+        lambda wildcards: f'contam-{groups[wildcards.field]}'
+    conda:
+        '../envs/grizli.yaml'
     shell:
         """
         ./workflow/scripts/contamination.py {wildcards.field} --ncpu {threads} &> {log}

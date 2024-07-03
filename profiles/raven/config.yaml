@@ -10,7 +10,7 @@ keep-going: True
 keep-incomplete: True
 
 # Max number of jobs
-jobs: 20
+jobs: 15
 
 # Queue system
 executor: slurm

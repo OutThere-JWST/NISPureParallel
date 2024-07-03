@@ -4,10 +4,12 @@ rule mosaic:
         'logs/{field}-proc.log'
     output:
         'logs/{field}-mos.log'
-    conda:
-        '../envs/grizli.yaml'
     log:
         'logs/{field}-mos.log'
+    group:
+        lambda wildcards: f'mos-{groups[wildcards.field]}'
+    conda:
+        '../envs/grizli.yaml'
     shell:
         """
         ./workflow/scripts/mosaic.py {wildcards.field} &> {log}

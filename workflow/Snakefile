@@ -1,10 +1,17 @@
-# Config file
-report: "logs/workflow.rst"
+# Import packages
+import numpy as np
+from math import ceil
+from astropy.table import Table
 
 # Names of fields
-from astropy.table import Table
 with open('FIELDS/fields.txt') as f: FIELDS = f.read().splitlines()
+
+# List of UNCAL files
 uncal = dict((f,Table.read('FIELDS/field-prods.fits',f)['productFilename'].tolist()) for f in FIELDS)
+
+# Define groups (max number from profile jobs)
+groupSize = ceil(len(FIELDS) / (workflow.resource_settings.nodes if not workflow.resource_settings.nodes is None else 1)) 
+groups = {f : i // groupSize for i,f in enumerate(np.array(FIELDS)[np.argsort([len(uncal[f]) for f in FIELDS])])}
 
 # Final Rule
 rule all:

@@ -4,10 +4,12 @@ rule fmap:
         'logs/{field}-zfit.log'
     output:
         'logs/{field}-fmap.log'
+    log:
+        'logs/{field}-fmap.log'
+    group:
+        lambda wildcards: f'fmap-{groups[wildcards.field]}'
     conda:
         '../envs/fitsmap.yaml'
-    log:
-        'logs/{field}-fmap.log',
     shell:
         """
         ./workflow/scripts/makeFitsmap.py {wildcards.field} --slowsegmap --ncpu {threads} &> {log}

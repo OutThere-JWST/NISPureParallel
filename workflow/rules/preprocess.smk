@@ -4,10 +4,12 @@ rule preProcess:
         lambda wildcards: [f'RATE/{f.replace('uncal','rate')}' for f in uncal[wildcards.field]]
     output:
         'logs/{field}-proc.log'
-    conda:
-        '../envs/grizli.yaml'
     log:
         'logs/{field}-proc.log'
+    group:
+        lambda wildcards: f'proc-{groups[wildcards.field]}'
+    conda:
+        '../envs/grizli.yaml'
     shell:
         """
         ./workflow/scripts/preprocess.py {wildcards.field} &> {log}
