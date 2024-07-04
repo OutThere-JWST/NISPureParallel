@@ -11,7 +11,8 @@ with open('FIELDS/fields.txt') as f: FIELDS = np.array(f.read().splitlines())
 uncal = dict((f,Table.read('FIELDS/field-prods.fits',f)['productFilename'].tolist()) for f in FIELDS)
 
 # Split into groups so each group has roughly same compute time
-Njobs = workflow.resource_settings.cores # Number of jobs/cores
+Njobs = workflow.resource_settings.nodes # Number of jobs
+if Njobs is None: Njobs = 1 # Default to 1 if not on a cluster
 labels = KMeans(n_clusters=Njobs,random_state=0).fit(np.array([len(uncal[f]) for f in FIELDS]).reshape(-1,1)).labels_ # KMeans
 groups = {FIELDS[i]:l for i,l in enumerate(labels)}
 
