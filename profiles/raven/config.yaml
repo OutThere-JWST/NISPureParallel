@@ -18,5 +18,5 @@ use-envmodules: True
 
 # Default job requests
 default-resources:
-    mem_mb_per_cpu: 1666
     runtime: 1440
+    mem_mb_per_cpu: 1666

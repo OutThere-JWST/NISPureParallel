@@ -10,7 +10,9 @@ rule zfit:
         lambda wildcards: f'zfit-{groups[wildcards.field]}'
     conda:
         '../envs/grizli.yaml'
+    resources:
+        tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:
         """
-        ./workflow/scripts/redshiftFit.py {wildcards.field} --ncpu {threads} &> {log}
+        ./workflow/scripts/redshiftFit.py {wildcards.field} --ncpu {resources.tasks} &> {log}
         """

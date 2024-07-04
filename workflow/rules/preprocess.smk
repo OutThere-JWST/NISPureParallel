@@ -10,7 +10,9 @@ rule preProcess:
         lambda wildcards: f'proc-{groups[wildcards.field]}'
     conda:
         '../envs/grizli.yaml'
+    resources:
+        tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:
         """
-        ./workflow/scripts/preprocess.py {wildcards.field} &> {log}
+        ./workflow/scripts/preprocess.py {resources.tasks} &> {log}
         """

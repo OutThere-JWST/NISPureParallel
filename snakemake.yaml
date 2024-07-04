@@ -9,6 +9,7 @@ dependencies:
 - mamba
 - scipy
 - astropy
+- scikit-learn
 - bioconda::snakemake
 - snakemake-executor-plugin-slurm
 - pip:

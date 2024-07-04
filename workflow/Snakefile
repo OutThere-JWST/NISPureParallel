@@ -1,17 +1,29 @@
 # Import packages
+import yaml
 import numpy as np
-from math import ceil
 from astropy.table import Table
+from sklearn.cluster import KMeans
 
 # Names of fields
-with open('FIELDS/fields.txt') as f: FIELDS = f.read().splitlines()
+with open('FIELDS/fields.txt') as f: FIELDS = np.array(f.read().splitlines())
 
 # List of UNCAL files
 uncal = dict((f,Table.read('FIELDS/field-prods.fits',f)['productFilename'].tolist()) for f in FIELDS)
 
-# Define groups (max number from profile jobs)
-groupSize = ceil(len(FIELDS) / (workflow.resource_settings.nodes if not workflow.resource_settings.nodes is None else 1)) 
-groups = {f : i // groupSize for i,f in enumerate(np.array(FIELDS)[np.argsort([len(uncal[f]) for f in FIELDS])])}
+# Split into groups so each group has roughly same compute time
+Njobs = workflow.resource_settings.cores # Number of jobs/cores
+Njobs = 15
+labels = KMeans(n_clusters=Njobs,random_state=0).fit(np.array([len(uncal[f]) for f in FIELDS]).reshape(-1,1)).labels_ # KMeans
+groups = {FIELDS[i]:l for i,l in enumerate(labels)}
+
+# Creat configuration file for group components
+rules = ['stage1','proc','mos','contam','extr','zfit','fmap']
+config = {f'{r}_{i}':int((labels==i).sum()) for r in rules for i in range(Njobs)}
+config = {'group-components':config}
+with open('FIELDS/config.yaml','w') as f: yaml.dump(config,f)
+
+# Configuration file
+configfile: "FIELDS/config.yaml"
 
 # Final Rule
 rule all:
@@ -19,10 +31,10 @@ rule all:
         expand('logs/{field}-fmap.log',field=FIELDS)
 
 # Include rules
+include: "rules/runStage1.smk"
 include: "rules/preprocess.smk"
 include: "rules/mosaic.smk"
 include: "rules/contamination.smk"
 include: "rules/extract.smk"
-include: "rules/makeFitsmap.smk"
 include: "rules/redshiftFit.smk"
-include: "rules/runStage1.smk"
+include: "rules/makeFitsmap.smk"

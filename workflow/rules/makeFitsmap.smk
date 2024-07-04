@@ -10,7 +10,9 @@ rule fmap:
         lambda wildcards: f'fmap-{groups[wildcards.field]}'
     conda:
         '../envs/fitsmap.yaml'
+    resources:
+        tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:
         """
-        ./workflow/scripts/makeFitsmap.py {wildcards.field} --slowsegmap --ncpu {threads} &> {log}
+        ./workflow/scripts/makeFitsmap.py {wildcards.field} --slowsegmap --ncpu {resources.tasks} &> {log}
         """
