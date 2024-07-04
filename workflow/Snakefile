@@ -12,7 +12,6 @@ uncal = dict((f,Table.read('FIELDS/field-prods.fits',f)['productFilename'].tolis
 
 # Split into groups so each group has roughly same compute time
 Njobs = workflow.resource_settings.cores # Number of jobs/cores
-Njobs = 15
 labels = KMeans(n_clusters=Njobs,random_state=0).fit(np.array([len(uncal[f]) for f in FIELDS]).reshape(-1,1)).labels_ # KMeans
 groups = {FIELDS[i]:l for i,l in enumerate(labels)}
 
