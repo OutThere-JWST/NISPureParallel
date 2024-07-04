@@ -14,6 +14,7 @@ jobs: 15
 
 # Queue system
 executor: slurm
+use-envmodules: True
 
 # Default job requests
 default-resources:
