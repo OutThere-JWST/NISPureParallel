@@ -24,9 +24,5 @@ default-resources:
     mem_mb: 240000
     runtime: 1440
     slurm_partition: 'general'
-
-# Default rule settings
-rule *:
-    threads: 72
-    envmodules: 
+    envmodules:
         'texlive/2021'
