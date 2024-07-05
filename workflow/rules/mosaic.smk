@@ -14,5 +14,5 @@ rule mosaic:
     #     tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:
         """
-        ./workflow/scripts/mosaic.py {resources.cpus_per_task} &> {log}
+        ./workflow/scripts/mosaic.py {wildcards.field} &> {log}
         """
