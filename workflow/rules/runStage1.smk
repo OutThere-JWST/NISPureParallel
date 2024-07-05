@@ -12,11 +12,11 @@ def create_rule(field):
             f'stage1-{groups[field]}'
         conda:
             '../envs/jwst.yaml'
-        resources:
-            tasks = len(uncal[field])
+        # resources:
+        #     tasks = len(uncal[field])
         shell: 
             f"""
-            ./workflow/scripts/runStage1.py {field} --ncpu {{resources.tasks}} &> {{log}}
+            ./workflow/scripts/runStage1.py {field} --ncpu {{resources.cpus_per_task}} &> {{log}}
             """
 
 # Create rules for all fields

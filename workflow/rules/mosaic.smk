@@ -10,9 +10,9 @@ rule mosaic:
         lambda wildcards: f'mos-{groups[wildcards.field]}'
     conda:
         '../envs/grizli.yaml'
-    resources:
-        tasks = lambda wildcards: len(uncal[wildcards.field])
+    # resources:
+    #     tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:
         """
-        ./workflow/scripts/mosaic.py {resources.tasks} &> {log}
+        ./workflow/scripts/mosaic.py {resources.cpus_per_task} &> {log}
         """

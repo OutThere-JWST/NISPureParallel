@@ -10,9 +10,9 @@ rule contam:
         lambda wildcards: f'contam-{groups[wildcards.field]}'
     conda:
         '../envs/grizli.yaml'
-    resources:
-        tasks = lambda wildcards: len(uncal[wildcards.field])
+    # resources:
+    #     tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:
         """
-        ./workflow/scripts/contamination.py {wildcards.field} --ncpu {resources.tasks} &> {log}
+        ./workflow/scripts/contamination.py {wildcards.field} --ncpu {resources.cpus_per_task} &> {log}
         """

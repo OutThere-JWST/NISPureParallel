@@ -10,5 +10,5 @@ keep-going: True
 keep-incomplete: True
 
 # Default rule settings
-rule *:
-    threads: 1
+default-resources:
+    cpus_per_task: 1

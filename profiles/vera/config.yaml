@@ -18,5 +18,8 @@ use-envmodules: True
 
 # Default job requests
 default-resources:
+    nodes: 1
+    tasks: 1
+    cpus_per_task: 36
     runtime: 1440
-    mem_mb_per_cpu: 3472
+    mem_mb: 250000
