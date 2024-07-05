@@ -14,5 +14,5 @@ rule contam:
     #     tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:
         """
-        ./workflow/scripts/contamination.py {wildcards.field} --ncpu {resources.cpus_per_task} &> {log}
+        ./workflow/scripts/contamination.py {wildcards.field} --ncpu {resources.cpus_per_task} > {log} 2>&1
         """

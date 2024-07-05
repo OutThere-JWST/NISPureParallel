@@ -14,5 +14,5 @@ rule preProcess:
     #     tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:
         """
-        ./workflow/scripts/preprocess.py {wildcards.field} &> {log}
+        ./workflow/scripts/preprocess.py {wildcards.field} > {log} 2>&1
         """

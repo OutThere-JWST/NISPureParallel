@@ -14,5 +14,5 @@ rule extract:
     #     tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:
         """
-        ./workflow/scripts/extract.py {wildcards.field} --ncpu {resources.cpus_per_task} &> {log}
+        ./workflow/scripts/extract.py {wildcards.field} --ncpu {resources.cpus_per_task} > {log} 2>&1
         """
