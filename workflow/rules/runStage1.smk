@@ -16,7 +16,7 @@ def create_rule(field):
         #     tasks = len(uncal[field])
         shell: 
             f"""
-            ./workflow/scripts/runStage1.py {field} --ncpu {{resources.cpus_per_task}} &> {{log}}
+            ./workflow/scripts/runStage1.py {field} --ncpu {{resources.cpus_per_task}} > {{log}} 2>&1
             """
 
 # Create rules for all fields
