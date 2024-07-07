@@ -202,6 +202,7 @@ if __name__ == '__main__':
                 f'{fname}_{str(i).zfill(5)}.{suffix}.png'
                 for suffix in ['stack', 'line', 'full']
             ]
+            imgs = [i for i in imgs if os.path.exists(os.path.join(extract, i))]
             allims.extend(imgs)
 
             # Append to list of extracted links
