@@ -2,7 +2,6 @@
 
 # Import packages
 import os
-import sys
 import glob
 import shutil
 import argparse
@@ -12,16 +11,13 @@ import numpy as np
 # Packages for Plotting
 from sregion import SRegion
 from shapely import union_all
-from matplotlib import pyplot,patches
+from matplotlib import pyplot, patches
 
 # Astropy packages
 from astropy.io import fits
 from astropy.table import Table
 from astropy.coordinates import Angle
-from astropy.io.fits import getheader,getdata
-
-# Silence warnings
-warnings.filterwarnings('ignore')
+from astropy.io.fits import getheader, getdata
 
 # grizli packages
 import grizli
@@ -30,36 +26,36 @@ from grizli import jwst_utils
 from grizli.aws import visit_processor
 from grizli.pipeline import auto_script
 
+# Silence warnings
+warnings.filterwarnings('ignore')
+
 # Plot Shapely Object
-def plot_shapely(r,ax,ec='r',fc='r'):
-
+def plot_shapely(r, ax, ec='r', fc='r'):
     # If MultiPolygon, plot each
-    if hasattr(r,'geoms'):
-
+    if hasattr(r, 'geoms'):
         # Loop over geoms
-        ras,decs = [],[] # Keep track of coordinates
+        ras, decs = [], []  # Keep track of coordinates
         for g in r.geoms:
-
             # Plot each geom
-            ra,dec = plot_shapely(g,ax,ec=ec,fc=fc)
+            ra, dec = plot_shapely(g, ax, ec=ec, fc=fc)
             ras.append(ra)
             decs.append(dec)
 
         # Return list of all coordinates
-        return np.concatenate(ras),np.concatenate(decs)
+        return np.concatenate(ras), np.concatenate(decs)
 
     # Get ra,dec of exterior
     coords = np.array(r.exterior.xy)
-    
+
     # Plot main polygon in red
-    patch = patches.Polygon(coords.T, closed=True, edgecolor=ec,facecolor=fc,lw=3)
+    patch = patches.Polygon(coords.T, closed=True, edgecolor=ec, facecolor=fc, lw=3)
     ax.add_patch(patch)
 
     # Return ra,dec
     return coords
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
     # Parse arguements
     parser = argparse.ArgumentParser()
     parser.add_argument('fieldname', type=str)
@@ -73,58 +69,84 @@ if __name__ == '__main__':
 
     # Get paths and get fields
     main = os.getcwd()
-    fields = os.path.join(main,'FIELDS')
-    prods = Table.read(os.path.join(fields,'field-prods.fits'),fname)
-    home = os.path.join(fields,fname)
+    fields = os.path.join(main, 'FIELDS')
+    prods = Table.read(os.path.join(fields, 'field-prods.fits'), fname)
+    home = os.path.join(fields, fname)
 
     # Get main paths
-    rate = os.path.join(main,'RATE')
-    if not os.path.exists(home): os.mkdir(home)
+    rate = os.path.join(main, 'RATE')
+    if not os.path.exists(home):
+        os.mkdir(home)
 
     # Subdirectories
-    raw = os.path.join(home,'RAW')
-    prep = os.path.join(home,'Prep')
-    plots = os.path.join(home,'Plots')
-    persist = os.path.join(home,'Persistence')
-    extract = os.path.join(home,'Extractions')
-    for d in [raw,prep,plots,persist,extract]:
-        if os.path.exists(d): shutil.rmtree(d)
+    raw = os.path.join(home, 'RAW')
+    prep = os.path.join(home, 'Prep')
+    plots = os.path.join(home, 'Plots')
+    persist = os.path.join(home, 'Persistence')
+    extract = os.path.join(home, 'Extractions')
+    for d in [raw, prep, plots, persist, extract]:
+        if os.path.exists(d):
+            shutil.rmtree(d)
         os.mkdir(d)
 
     # Plot the field in context
     hdul_obs = fits.open('FIELDS/field-obs.fits')
-    
+
     # Create figure
-    fig,ax = pyplot.subplots(figsize=(12,12))
+    fig, ax = pyplot.subplots(figsize=(12, 12))
 
     # Plot current region in red
-    ra,dec = plot_shapely(union_all([SRegion(sr).shapely[0] for sr in Table(hdul_obs[fname].data)['s_region']]),ax,ec='#009F81',fc='#00FCCF')
+    ra, dec = plot_shapely(
+        union_all(
+            [SRegion(sr).shapely[0] for sr in Table(hdul_obs[fname].data)['s_region']]
+        ),
+        ax,
+        ec='#009F81',
+        fc='#00FCCF',
+    )
 
     # Get scale on sphere
-    scale = np.cos(np.deg2rad(np.max(dec)+np.min(dec))/2)
-    
+    scale = np.cos(np.deg2rad(np.max(dec) + np.min(dec)) / 2)
+
     # Plot all regions (except region we are on) in gray
     for hdu in hdul_obs[1:]:
-        if hdu.name == fname: continue
-        plot_shapely(union_all([SRegion(sr).shapely[0] for sr in Table(hdu.data)['s_region']]),ax,ec='k',fc='gray')
+        if hdu.name == fname:
+            continue
+        plot_shapely(
+            union_all([SRegion(sr).shapely[0] for sr in Table(hdu.data)['s_region']]),
+            ax,
+            ec='k',
+            fc='gray',
+        )
 
     # Axis labels and limits
-    pad = 5/60
-    ax.set(xlabel='Right Ascension (ICRS)',xlim=(np.max(ra)+pad/scale,np.min(ra)-pad/scale)) # Reverse xlim
-    ax.set(ylabel='Declination (ICRS)',ylim=(np.min(dec)-pad,np.max(dec)+pad))
-    ax.set(title=fname.lower().replace('-',r'$-$'))
+    pad = 5 / 60
+    ax.set(
+        xlabel='Right Ascension (ICRS)',
+        xlim=(np.max(ra) + pad / scale, np.min(ra) - pad / scale),
+    )  # Reverse xlim
+    ax.set(ylabel='Declination (ICRS)', ylim=(np.min(dec) - pad, np.max(dec) + pad))
+    ax.set(title=fname.lower().replace('-', r'$-$'))
 
     # Format labels correctly
-    ax.xaxis.set_major_formatter(lambda x,_: Angle(x,unit='deg').to_string(unit='hour', sep=[r'$^\textrm{'+s+'}$' for s in 'hms']))
+    ax.xaxis.set_major_formatter(
+        lambda x, _: Angle(x, unit='deg').to_string(
+            unit='hour', sep=[r'$^\textrm{' + s + '}$' for s in 'hms']
+        )
+    )
     ax.tick_params(axis='x', labelrotation=25)
-    ax.yaxis.set_major_formatter(lambda x,_: Angle(x,unit='deg').to_string(unit='degree', sep=(r'$^\circ$',r"$'$",r"$''$")).replace('-',r'$-$'))
+    ax.yaxis.set_major_formatter(
+        lambda x, _: Angle(x, unit='deg')
+        .to_string(unit='degree', sep=(r'$^\circ$', r"$'$", r"$''$"))
+        .replace('-', r'$-$')
+    )
 
     # Add grid
-    ax.grid(True,which='major',ls='--',color='k',alpha=0.5)
-    ax.grid(True,which='minor',ls=':',color='k',alpha=0.25)
+    ax.grid(True, which='major', ls='--', color='k', alpha=0.5)
+    ax.grid(True, which='minor', ls=':', color='k', alpha=0.25)
 
     # Save figure
-    fig.savefig(os.path.join(plots,f'{fname}-region.pdf'))
+    fig.savefig(os.path.join(plots, f'{fname}-region.pdf'))
     pyplot.close(fig)
 
     # Change to working directory
@@ -134,48 +156,44 @@ if __name__ == '__main__':
     print(f'grizli:{grizli.__version__}')
 
     # Initialize image
-    files = [os.path.join(rate,f).replace('uncal','rate') for f in prods['productFilename']]
+    files = [
+        os.path.join(rate, f).replace('uncal', 'rate') for f in prods['productFilename']
+    ]
     for f in files:
-
         # Copy raw file
-        f = shutil.copy(f,raw)
+        f = shutil.copy(f, raw)
 
         # Initialize image
         jwst_utils.initialize_jwst_image(f)
-        jwst_utils.set_jwst_to_hst_keywords(f,reset=True)
+        jwst_utils.set_jwst_to_hst_keywords(f, reset=True)
 
     # Parse Visits
-    visits, all_groups, info = auto_script.parse_visits(field_root=fname,RAW_PATH=raw)
+    visits, all_groups, info = auto_script.parse_visits(field_root=fname, RAW_PATH=raw)
 
     # Get color cycle
-    ls_dic = {
-        'CLEAR':'--',
-        'GR150R':'-.',
-        'GR150C':':'
-    }
+    ls_dic = {'CLEAR': '--', 'GR150R': '-.', 'GR150C': ':'}
     colors = {
-        'F200W-CLEAR' :'#A40122',
-        'F200W-GR150R':'#E20134',
-        'F200W-GR150C':'#FF6E3A',
-        'F150W-CLEAR' :'#9F0162',
-        'F150W-GR150R':'#FF5AAF',
-        'F150W-GR150C':'#FFB2FD',
-        'F115W-CLEAR' :'#8400CD',
-        'F115W-GR150R':'#008DF9',
-        'F115W-GR150C':'#00C2F9'
+        'F200W-CLEAR': '#A40122',
+        'F200W-GR150R': '#E20134',
+        'F200W-GR150C': '#FF6E3A',
+        'F150W-CLEAR': '#9F0162',
+        'F150W-GR150R': '#FF5AAF',
+        'F150W-GR150C': '#FFB2FD',
+        'F115W-CLEAR': '#8400CD',
+        'F115W-GR150R': '#008DF9',
+        'F115W-GR150C': '#00C2F9',
     }
 
     # Create figure
-    fig, ax = pyplot.subplots(1,1,figsize=(12,12))
+    fig, ax = pyplot.subplots(1, 1, figsize=(12, 12))
 
     # Enumerate visits
-    ras,decs = [],[]
+    ras, decs = [], []
     for i, v in enumerate(visits):
-
         # Get region box
         sr = utils.SRegion(v['footprint'])
         for coords in sr.xy:
-            ra,dec = coords.T
+            ra, dec = coords.T
             ras.append(ra)
             decs.append(dec)
 
@@ -183,7 +201,14 @@ if __name__ == '__main__':
         fg = '-'.join(v['product'].split('-')[-2:]).upper()
 
         # Place patches for region
-        for patch in sr.patch(ec=colors[fg],fc='None',alpha=0.5,lw=3,ls=ls_dic[fg[6:]],label=fg.replace('-','$-$')):
+        for patch in sr.patch(
+            ec=colors[fg],
+            fc='None',
+            alpha=0.5,
+            lw=3,
+            ls=ls_dic[fg[6:]],
+            label=fg.replace('-', '$-$'),
+        ):
             ax.add_patch(patch)
 
     # Concatenate coordinates
@@ -191,30 +216,41 @@ if __name__ == '__main__':
     dec = np.concatenate(decs)
 
     # Add legend
-    ax.legend(fontsize=20,frameon=True)
+    ax.legend(fontsize=20, frameon=True)
 
     # Set axis parameters
-    pad = 5/3600
-    scale = np.cos(np.deg2rad(np.max(dec)+np.min(dec))/2)
-    ax.set(xlabel='Right Ascension (ICRS)',xlim=(np.max(ra)+pad/scale,np.min(ra)-pad/scale)) # Reverse xlim
-    ax.set(ylabel='Declination (ICRS)',ylim=(np.min(dec)-pad,np.max(dec)+pad))
-    ax.set(title=fname.lower().replace('-',r'$-$'))
+    pad = 5 / 3600
+    scale = np.cos(np.deg2rad(np.max(dec) + np.min(dec)) / 2)
+    ax.set(
+        xlabel='Right Ascension (ICRS)',
+        xlim=(np.max(ra) + pad / scale, np.min(ra) - pad / scale),
+    )  # Reverse xlim
+    ax.set(ylabel='Declination (ICRS)', ylim=(np.min(dec) - pad, np.max(dec) + pad))
+    ax.set(title=fname.lower().replace('-', r'$-$'))
 
     # Format labels correctly
-    ax.xaxis.set_major_formatter(lambda x,_: Angle(x,unit='deg').to_string(unit='hour', sep=[r'$^\textrm{'+s+'}$' for s in 'hms']))
+    ax.xaxis.set_major_formatter(
+        lambda x, _: Angle(x, unit='deg').to_string(
+            unit='hour', sep=[r'$^\textrm{' + s + '}$' for s in 'hms']
+        )
+    )
     ax.tick_params(axis='x', labelrotation=25)
-    ax.yaxis.set_major_formatter(lambda x,_: Angle(x,unit='deg').to_string(unit='degree', sep=(r'$^\circ$',r"$'$",r"$''$")).replace('-',r'$-$'))
+    ax.yaxis.set_major_formatter(
+        lambda x, _: Angle(x, unit='deg')
+        .to_string(unit='degree', sep=(r'$^\circ$', r"$'$", r"$''$"))
+        .replace('-', r'$-$')
+    )
 
     # Add grid
-    ax.grid(True,which='major',ls='--',color='k',alpha=0.5)
-    ax.grid(True,which='minor',ls=':',color='k',alpha=0.25)
+    ax.grid(True, which='major', ls='--', color='k', alpha=0.5)
+    ax.grid(True, which='minor', ls=':', color='k', alpha=0.25)
 
     # Save figure
-    fig.savefig(os.path.join(plots,f'{fname}-visits.pdf'),bbox_inches='tight')
+    fig.savefig(os.path.join(plots, f'{fname}-visits.pdf'), bbox_inches='tight')
     pyplot.close(fig)
 
     # Make visit associations
-    assoc = info['EXPSTART','EXPTIME','INSTRUME']
+    assoc = info['EXPSTART', 'EXPTIME', 'INSTRUME']
     assoc['filter'] = ['-'.join(f.split('-')[:0:-1]) for f in info['FILTER']]
 
     # Find footprints
@@ -222,43 +258,55 @@ if __name__ == '__main__':
     for f in sorted(glob.glob(f'{raw}/*rate.fits')):
         for v in visits:
             if os.path.basename(f) in v['files']:
-                footprints.append(v['footprints'][v['files'].index(os.path.basename(f))])
+                footprints.append(
+                    v['footprints'][v['files'].index(os.path.basename(f))]
+                )
                 break
 
     # Fill out association table
-    assoc['t_max'] = [int(getheader(f,1)['MJD-END']) for f in files]
-    assoc['proposal_id'] = [int(getheader(f,0)['PROGRAM']) for f in files]
+    assoc['t_max'] = [int(getheader(f, 1)['MJD-END']) for f in files]
+    assoc['proposal_id'] = [int(getheader(f, 0)['PROGRAM']) for f in files]
     assoc['footprint'] = footprints
-    assoc['dataURL'] = [f"mast:JWST/product/{os.path.split(f)[1].replace('uncal','rate')}" for f in files]
+    assoc['dataURL'] = [
+        f"mast:JWST/product/{os.path.split(f)[1].replace('uncal','rate')}"
+        for f in files
+    ]
 
     # Rename columns
-    assoc.rename_columns(['EXPSTART','EXPTIME','INSTRUME'],['t_min','exptime','instrument_name'])
+    assoc.rename_columns(
+        ['EXPSTART', 'EXPTIME', 'INSTRUME'], ['t_min', 'exptime', 'instrument_name']
+    )
 
     # Visit process arguements
-    prep_args = {
-        'tweak_max_dist':5,
-        'oneoverf_kwargs':None,
-        'snowball_kwargs':None
-    }
+    prep_args = {'tweak_max_dist': 5, 'oneoverf_kwargs': None, 'snowball_kwargs': None}
 
     # Other arguements
     other_args = {
-        'is_parallel_field':True,
+        'is_parallel_field': True,
     }
 
     # Process visit
     visit_processor.ROOT_PATH = fields
-    visit_processor.process_visit(fname,tab=assoc,prep_args=prep_args,other_args=other_args,clean=False, sync=False,with_db=False,visit_split_shift=2,combine_same_pa=True)
+    visit_processor.process_visit(
+        fname,
+        tab=assoc,
+        prep_args=prep_args,
+        other_args=other_args,
+        clean=False,
+        sync=False,
+        with_db=False,
+        visit_split_shift=2,
+        combine_same_pa=True,
+    )
 
     # Plot Science Images
-    files = glob.glob(os.path.join(prep,'*drz_sci.fits'))
+    files = glob.glob(os.path.join(prep, '*drz_sci.fits'))
     for file in files:
-
         # Split path
         f = os.path.split(file)[1]
 
-        # Create figure 
-        fig, ax = pyplot.subplots(1,1,figsize=(8,8))
+        # Create figure
+        fig, ax = pyplot.subplots(1, 1, figsize=(8, 8))
 
         # Get image data
         data = getdata(file)
@@ -267,7 +315,7 @@ if __name__ == '__main__':
         vm = np.nanpercentile(data, [5, 95])
 
         # Plot images
-        ax.imshow(data, vmin=-0.1*vm[1], vmax=vm[1], cmap='gray_r')
+        ax.imshow(data, vmin=-0.1 * vm[1], vmax=vm[1], cmap='gray_r')
 
         # Set axis
         ax.set_title(f)
@@ -275,5 +323,7 @@ if __name__ == '__main__':
         ax.set_aspect(1)
 
         # Save and close
-        fig.savefig(os.path.join(plots,f.replace('.fits','.pdf')),bbox_inches='tight')
+        fig.savefig(
+            os.path.join(plots, f.replace('.fits', '.pdf')), bbox_inches='tight'
+        )
         pyplot.close(fig)

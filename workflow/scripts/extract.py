@@ -2,28 +2,24 @@
 
 # Import packages
 import os
-import sys
-import json
 import glob
 import warnings
 import argparse
 import numpy as np
-from tqdm import tqdm
 from astropy.table import Table
-
-# Silence warnings
-warnings.filterwarnings('ignore')
 
 # Import grizli
 import grizli
 from grizli import multifit
-    
-if __name__ == '__main__':
 
+# Silence warnings
+warnings.filterwarnings('ignore')
+
+if __name__ == '__main__':
     # Parse arguements
     parser = argparse.ArgumentParser()
     parser.add_argument('fieldname', type=str)
-    parser.add_argument('--ncpu', type=int,default=1)
+    parser.add_argument('--ncpu', type=int, default=1)
     parser.add_argument('--verbose', action='store_true')
     args = parser.parse_args()
     fname = args.fieldname
@@ -35,19 +31,21 @@ if __name__ == '__main__':
 
     # Get paths and get fields
     main = os.getcwd()
-    fields = os.path.join(main,'FIELDS')
-    home = os.path.join(fields,fname)
+    fields = os.path.join(main, 'FIELDS')
+    home = os.path.join(fields, fname)
 
     # Subdirectories
-    plots = os.path.join(home,'Plots')
-    extract = os.path.join(home,'Extractions')
+    plots = os.path.join(home, 'Plots')
+    extract = os.path.join(home, 'Extractions')
     os.chdir(extract)
 
     # Load GroupFLT
     grp = multifit.GroupFLT(
         grism_files=glob.glob('*GrismFLT.fits'),
         catalog=f'{fname}-ir.cat.fits',
-        cpu_count=ncpu, sci_extn=1, pad=800
+        cpu_count=ncpu,
+        sci_extn=1,
+        pad=800,
     )
 
     # # Move files
@@ -74,18 +72,21 @@ if __name__ == '__main__':
     # Iterate over IDs
     extracted = []
     for i in ids:
-
         # Get beams from group
         beams = grp.get_beams(i, size=32, min_mask=0, min_sens=0.01)
-        if len(beams) == 0: continue # Skip if no beams
+        if len(beams) == 0:
+            continue  # Skip if no beams
 
         # Extract beam
-        mb = multifit.MultiBeam(beams, fcontam=0.1, min_sens=0.01, min_mask=0, group_name=fname)
+        mb = multifit.MultiBeam(
+            beams, fcontam=0.1, min_sens=0.01, min_mask=0, group_name=fname
+        )
         mb.write_master_fits()
 
         # Keep track of extracted objects
         extracted.append(i)
 
     # Write catalog of extracted objects
-    Table([extracted],names=['NUMBER']).write(f'{fname}-extracted.fits',overwrite=True)
-
+    Table([extracted], names=['NUMBER']).write(
+        f'{fname}-extracted.fits', overwrite=True
+    )
