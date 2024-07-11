@@ -42,7 +42,7 @@ def parametric_arc(a, b):
 
 # Distance between two arcs (result in radians)
 def distance_between_arcs(a, b, c, d):
-    # If points are the same, skip, essentially
+    # If points are (essentially) the same, skip
     if np.dot(a, b) > 1 or np.dot(c, d) > 1:
         return np.inf
 

@@ -220,7 +220,7 @@ if __name__ == '__main__':
     ffiles = [os.path.join(fitsmap, f) for f in files]
     convert.files_to_map(
         ffiles,
-        out_dir=path.join(fitsmap, 'map'),
+        out_dir=path.join(fitsmap, fname),
         norm_kwargs=norm_kwargs,
         cat_wcs_fits_file=path.join(fitsmap, f'{filts[0]}.fits'),
         task_procs=len(ffiles),
@@ -228,12 +228,12 @@ if __name__ == '__main__':
     )
 
     # Copy spectra images over
-    os.mkdir(path.join(fitsmap, 'map', 'spectra'))
+    os.mkdir(path.join(fitsmap, fname, 'spectra'))
     for f in allims:
-        shutil.copy(path.join(extract, f), path.join(fitsmap, 'map', 'spectra'))
+        shutil.copy(path.join(extract, f), path.join(fitsmap, fname, 'spectra'))
 
     # FitsMap Add Ons
-    with open(path.join(fitsmap, 'map/js/index.js'), 'r') as f:
+    with open(path.join(fitsmap, fname, 'js/index.js'), 'r') as f:
         js = f.readlines()
 
     # Fix menu labels
@@ -268,18 +268,18 @@ if __name__ == '__main__':
             break
 
     # Save
-    with open(path.join(fitsmap, 'map/js/index.js'), 'w+') as f:
+    with open(path.join(fitsmap, fname, 'js/index.js'), 'w+') as f:
         f.write(''.join(js))
 
     # Add Settings Sliders (Bit of a Hack)
     settings_button = path.join(main, 'resources', 'fitsmap_settings_button')
     shutil.copy(
         path.join(settings_button, 'SettingsControl.css'),
-        path.join(fitsmap, 'map', 'css'),
+        path.join(fitsmap, fname, 'css'),
     )
     shutil.copy(
         path.join(settings_button, 'settingsControl.js'),
-        path.join(fitsmap, 'map', 'js'),
+        path.join(fitsmap, fname, 'js'),
     )
     i = js.index(
         '// Map event setup =============================================================\n'
@@ -295,9 +295,9 @@ if __name__ == '__main__':
         ]
         + js[i:]
     )
-    with open(path.join(fitsmap, 'map/js/index.js'), 'w+') as f:
+    with open(path.join(fitsmap, fname, 'js/index.js'), 'w+') as f:
         f.write(''.join(js))
-    with open(path.join(fitsmap, 'map/index.html'), 'r') as f:
+    with open(path.join(fitsmap, fname, 'index.html'), 'r') as f:
         html = f.readlines()
     i = html.index(
         "    <link rel='preload' href='css/TileNearestNeighbor.min.css'  as='style' onload='this.rel=\"stylesheet\"'/>\n"
@@ -308,5 +308,5 @@ if __name__ == '__main__':
     )
     i = html.index("    <script defer src='js/index.js'></script>\n")
     html.insert(i, "    <script defer src='js/settingsControl.js'></script>\n")
-    with open(path.join(fitsmap, 'map/index.html'), 'w+') as f:
+    with open(path.join(fitsmap, fname, 'index.html'), 'w+') as f:
         f.write(''.join(html))
