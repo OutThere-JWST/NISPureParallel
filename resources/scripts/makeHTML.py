@@ -101,7 +101,7 @@ tab.write('HTML.html', format='html', overwrite=True)
 
 # Read and delete the HTML file
 with open('HTML.html', 'r') as f:
-    table = f.read()
+    table = ''.join(f.readlines()[6:-3])
 os.remove('HTML.html')
 
 # Replace relevant data
@@ -120,11 +120,12 @@ with open('resources/html5up-phantom/table.html', 'w') as f:
     f.write(html)
 
 # Create Image HTML template
+# 
 image_blank = """<article class="style0">
     <span class="image">
-        <img src="maps/{fname}/RGB.png" alt="" />
+        <img src="maps/{fname}/RGB/0/0/0.png" onerror="if (this.src != 'images/error.png') this.src = 'images/error.png';" />
     </span>
-    <a href="maps/{fname}/index.html">
+    <a href="maps/{fname}/index.html" target="_blank">
         <h2>{fname}</h2>
         <div class="content">
             <p>{info}</p>
@@ -139,8 +140,8 @@ for i, hdu in enumerate(hdul[1:]):
     fname = hdu.header['EXTNAME']
 
     # Replace relevant data
-    images.append(image_blank.format(fname=fname, info=f'PIDs:{tab[i]['PIDs']}'))
-imag4es = '\n'.join(images)
+    images.append(image_blank.format(fname=fname, info=f'PIDs: {tab[i]['PIDs']}'))
+images = '\n'.join(images)
 
 # Read and replace the images in the HTML template
 with open('resources/html5up-phantom/images-blank.html', 'r') as f:
