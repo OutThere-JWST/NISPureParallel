@@ -37,6 +37,9 @@ for hdu in hdul[1:]:
     fname = hdu.header['EXTNAME']
     obs = Table(hdu.data)
 
+    # Get link to field
+    flink = f'<a href="maps/{fname}/index.html" target="_blank">{fname}</a>'
+
     # Get field area
     reg = union_all([SRegion(o).shapely[0] for o in obs['s_region']])
     area = np.round(get_area(reg) * (60**4), 1)  # In arcsec^2
@@ -74,7 +77,7 @@ for hdu in hdul[1:]:
 
     # Get row
     rows.append(
-        [fname, '', ra, dec, area, exptime, gfs, t_start, t_end, prop_ids, prim_ids]
+        [flink, '', ra, dec, area, exptime, gfs, t_start, t_end, prop_ids, prim_ids]
     )
 
 # Transpose list of lists
@@ -114,4 +117,34 @@ with open('resources/html5up-phantom/table-blank.html', 'r') as f:
     html = f.read()
     html = html.replace('<!-- TABLE HERE -->', table)
 with open('resources/html5up-phantom/table.html', 'w') as f:
+    f.write(html)
+
+# Create Image HTML template
+image_blank = """<article class="style0">
+    <span class="image">
+        <img src="maps/{fname}/RGB.png" alt="" />
+    </span>
+    <a href="maps/{fname}/index.html">
+        <h2>{fname}</h2>
+        <div class="content">
+            <p>{info}</p>
+        </div>
+    </a>
+</article>"""
+
+# Create Images HTML
+images = []
+for i, hdu in enumerate(hdul[1:]):
+    # Get field name
+    fname = hdu.header['EXTNAME']
+
+    # Replace relevant data
+    images.append(image_blank.format(fname=fname, info=f'PIDs:{tab[i]['PIDs']}'))
+imag4es = '\n'.join(images)
+
+# Read and replace the images in the HTML template
+with open('resources/html5up-phantom/images-blank.html', 'r') as f:
+    html = f.read()
+    html = html.replace('<!-- IMAGES HERE -->', images)
+with open('resources/html5up-phantom/images.html', 'w') as f:
     f.write(html)
