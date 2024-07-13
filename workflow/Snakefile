@@ -29,7 +29,7 @@ configfile: "FIELDS/config.yaml"
 # Final Rule
 rule all:
     input:
-        expand('logs/{field}-fmap.log',field=FIELDS)
+        expand('logs/{field}.fmap.log',field=FIELDS)
 
 # Include rules
 include: "rules/runStage1.smk"
