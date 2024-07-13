@@ -3,7 +3,6 @@ channels:
 - conda-forge
 dependencies:
 - python=3.12.*
-- texlive-core
 - pip
 - pip:
   - git+https://github.com/spacetelescope/jwst.git
