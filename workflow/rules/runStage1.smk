@@ -7,7 +7,7 @@ def create_rule(field):
         output:
             [f'RATE/{f.replace('uncal','rate')}' for f in uncal[field]]
         log: 
-            f'logs/{field}-stage1.log'
+            f'logs/{field}.stage1.log'
         group:
             f'stage1-{groups[field]}'
         conda:
