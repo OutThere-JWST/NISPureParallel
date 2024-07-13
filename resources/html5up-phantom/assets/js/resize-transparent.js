@@ -23,7 +23,7 @@ window.onload = function() {
             for (let x = 0; x < canvas.width; x++) {
                 const index = (y * canvas.width + x) * 4;
                 const alpha = pixels[index + 3];
-                if (alpha > 0) {
+                if (alpha < 255) {
                     if (x < minX) minX = x;
                     if (x > maxX) maxX = x;
                     if (y < minY) minY = y;
