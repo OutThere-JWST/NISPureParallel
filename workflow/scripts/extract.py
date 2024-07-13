@@ -15,7 +15,8 @@ from grizli import multifit
 # Silence warnings
 warnings.filterwarnings('ignore')
 
-if __name__ == '__main__':
+
+def main():
     # Parse arguements
     parser = argparse.ArgumentParser()
     parser.add_argument('fieldname', type=str)
@@ -35,7 +36,7 @@ if __name__ == '__main__':
     home = os.path.join(fields, fname)
 
     # Subdirectories
-    plots = os.path.join(home, 'Plots')
+    # plots = os.path.join(home, 'Plots')
     extract = os.path.join(home, 'Extractions')
     os.chdir(extract)
 
@@ -90,3 +91,7 @@ if __name__ == '__main__':
     Table([extracted], names=['NUMBER']).write(
         f'{fname}-extracted.fits', overwrite=True
     )
+
+
+if __name__ == '__main__':
+    main()

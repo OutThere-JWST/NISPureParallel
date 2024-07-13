@@ -15,23 +15,7 @@ from grizli.pipeline import auto_script
 # Silence warnings
 warnings.filterwarnings('ignore')
 
-# Fit Redshift
-def zfit(i):
-    # Fit
-    fitting.run_all_parallel(i, zr=[0.1, 5], args_file='fit_args.npy', verbose=True)
-
-    # # Create oned spectrum figure
-    # fig = mb.oned_figure()
-    # fig.savefig(os.path.join(extract_plots,f'{i}_oned.png'))
-    # pyplot.close(fig)
-
-    # # Create 2d spectrum figure
-    # hdu,fig = mb.drizzle_grisms_and_PAs(size=38, scale=0.5, diff=True, kernel='square', pixfrac=0.5)
-    # fig.savefig(os.path.join(extract_plots,f'{i}_twod.png'))
-    # pyplot.close(fig)
-
-
-if __name__ == '__main__':
+def main():
     # Parse arguements
     parser = argparse.ArgumentParser()
     parser.add_argument('fieldname', type=str)
@@ -51,7 +35,7 @@ if __name__ == '__main__':
     home = os.path.join(fields, fname)
 
     # Subdirectories
-    plots = os.path.join(home, 'Plots')
+    # plots = os.path.join(home, 'Plots')
     extract = os.path.join(home, 'Extractions')
     os.chdir(extract)
 
@@ -73,15 +57,33 @@ if __name__ == '__main__':
     # Multiprocessing pool
     with Pool(processes=ncpu) as pool:
         result = pool.map_async(zfit, ids)
-        output = result.get()
+        _ = result.get()
         pool.close()
         pool.join()
 
     # Create fitting catalog
-    out = vstack(
+    _ = vstack(
         [
             Table.read(f'{fname}_{str(i).zfill(5)}.row.fits')
             for i in ids
             if os.path.exists(f'{fname}_{str(i).zfill(5)}.row.fits')
         ]
     ).write(f'{fname}_fitresults.fits', overwrite=True)
+
+# Fit Redshift
+def zfit(i):
+    # Fit
+    fitting.run_all_parallel(i, zr=[0.1, 5], args_file='fit_args.npy', verbose=True)
+
+    # # Create oned spectrum figure
+    # fig = mb.oned_figure()
+    # fig.savefig(os.path.join(extract_plots,f'{i}_oned.png'))
+    # pyplot.close(fig)
+
+    # # Create 2d spectrum figure
+    # hdu,fig = mb.drizzle_grisms_and_PAs(size=38, scale=0.5, diff=True, kernel='square', pixfrac=0.5)
+    # fig.savefig(os.path.join(extract_plots,f'{i}_twod.png'))
+    # pyplot.close(fig)
+
+if __name__ == '__main__':
+    main()

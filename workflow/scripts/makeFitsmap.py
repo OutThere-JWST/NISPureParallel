@@ -19,7 +19,7 @@ from reproject import reproject_interp
 from astropy.io import fits
 from astropy.table import Table, join
 
-if __name__ == '__main__':
+def main():
     # Parse arguements
     parser = argparse.ArgumentParser()
     parser.add_argument('fieldname', type=str)
@@ -267,46 +267,5 @@ if __name__ == '__main__':
 
             break
 
-    # Save
-    with open(path.join(fitsmap, fname, 'js/index.js'), 'w+') as f:
-        f.write(''.join(js))
-
-    # Add Settings Sliders (Bit of a Hack)
-    settings_button = path.join(main, 'resources', 'fitsmap_settings_button')
-    shutil.copy(
-        path.join(settings_button, 'SettingsControl.css'),
-        path.join(fitsmap, fname, 'css'),
-    )
-    shutil.copy(
-        path.join(settings_button, 'settingsControl.js'),
-        path.join(fitsmap, fname, 'js'),
-    )
-    i = js.index(
-        '// Map event setup =============================================================\n'
-    )
-    js = (
-        js[:i]
-        + [
-            'const settingsControl = L.control.settings({\n',
-            "    position: 'topleft',\n",
-            '    // catalogs:catalogs,\n',
-            '}).addTo(map);\n',
-            '\n',
-        ]
-        + js[i:]
-    )
-    with open(path.join(fitsmap, fname, 'js/index.js'), 'w+') as f:
-        f.write(''.join(js))
-    with open(path.join(fitsmap, fname, 'index.html'), 'r') as f:
-        html = f.readlines()
-    i = html.index(
-        "    <link rel='preload' href='css/TileNearestNeighbor.min.css'  as='style' onload='this.rel=\"stylesheet\"'/>\n"
-    )
-    html.insert(
-        i + 1,
-        '    <link href="css/SettingsControl.css" rel="stylesheet" type="text/css"/>\n',
-    )
-    i = html.index("    <script defer src='js/index.js'></script>\n")
-    html.insert(i, "    <script defer src='js/settingsControl.js'></script>\n")
-    with open(path.join(fitsmap, fname, 'index.html'), 'w+') as f:
-        f.write(''.join(html))
+if __name__ == '__main__':
+    main()

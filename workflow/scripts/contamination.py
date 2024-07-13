@@ -25,7 +25,8 @@ from grizli.pipeline import auto_script
 # Silence warnings
 warnings.filterwarnings('ignore')
 
-if __name__ == '__main__':
+
+def main():
     # Parse arguements
     parser = argparse.ArgumentParser()
     parser.add_argument('fieldname', type=str)
@@ -181,3 +182,7 @@ if __name__ == '__main__':
             fig.tight_layout(pad=0)
             fig.savefig(filename, pad_inches=0, bbox_inches='tight')
             pyplot.close(fig)
+
+
+if __name__ == '__main__':
+    main()

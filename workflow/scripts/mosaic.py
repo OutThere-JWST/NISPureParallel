@@ -22,7 +22,8 @@ from grizli.pipeline import auto_script
 # Silence warnings
 warnings.filterwarnings('ignore')
 
-if __name__ == '__main__':
+
+def main():
     # Parse arguements
     parser = argparse.ArgumentParser()
     parser.add_argument('fieldname', type=str)
@@ -146,9 +147,13 @@ if __name__ == '__main__':
         filter_combinations={'ir': ['F115WN-CLEAR', 'F150WN-CLEAR', 'F200WN-CLEAR']},
     )
     # grizli.prep.make_SEP_catalog(f'{root}-ir', threshold=1.2)
-    phot = auto_script.multiband_catalog(
+    _ = auto_script.multiband_catalog(
         field_root=cname,
         detection_filter='ir',
         get_all_filters=True,
         rescale_weight=True,
     )
+
+
+if __name__ == '__main__':
+    main()
