@@ -1,5 +1,5 @@
 # Number of cores allowed on the system
-cores: 1
+cores: 2
 
 # SnakeMake Conda settings
 use-conda: True
@@ -11,4 +11,4 @@ keep-incomplete: True
 
 # Default rule settings
 default-resources:
-    cpus_per_task: 1
+    cpus_per_task: 2
