@@ -7,7 +7,8 @@ import argparse
 import numpy as np
 from os import path
 from glob import glob
-from tqdm import trange, tqdm
+import networkx as nx
+from tqdm import trange
 from multiprocessing import cpu_count
 
 # Image processing
@@ -19,15 +20,14 @@ from reproject import reproject_interp
 from astropy.io import fits
 from astropy.table import Table, join
 
+
 def main():
     # Parse arguements
     parser = argparse.ArgumentParser()
     parser.add_argument('fieldname', type=str)
     parser.add_argument('--ncpu', type=int, default=(cpu_count() - 2))
-    parser.add_argument('--slowsegmap', action='store_true')
     parser.add_argument('--verbose', action='store_true')
     args = parser.parse_args()
-    slowsegmap = args.slowsegmap
     fname = args.fieldname
     ncpu = args.ncpu
 
@@ -104,8 +104,22 @@ def main():
             shutil.copy(outproj, outfile)
             files.append(outfile)
 
-    # Create Segmap (if it doesn't exist)
+    # Create Segmap
     print('Creating Segmentation Image')
+
+    # Get segmentation array
+    seg = fits.getdata(path.join(prep, f'{fname}-ir_seg.fits'))[::-1]
+
+    # Create a graph from the segmentation array
+    graph = array_to_graph(seg)
+
+    # Color the graph
+    color_map = greedy_coloring_ordered(graph)
+
+    # Map the segmentation to the palette index using color_graph
+    mapped_indices = np.vectorize(color_map.get)(seg)
+
+    # Define palette
     palette = [
         [226, 1, 52],
         [0, 141, 249],
@@ -114,64 +128,17 @@ def main():
         [255, 90, 175],
         [159, 1, 98],
     ]
-    if not path.exists(path.join(plots, 'Segmentation.png')):
-        # Either slow-segmap coloring with 4 Color Theorem (Fast Version)
-        # Or fast-segmap coloring with simple coloring
-        if slowsegmap:
-            # Load Segmap
-            seg = fits.getdata(path.join(prep, f'{fname}-ir_seg.fits'))[
-                ::-1
-            ]  # Flip for orientation
 
-            # Four color theorem
-            verts = {}
-            for b in trange(1, seg.max() + 1):
-                # Create list of edges
-                verts[b] = []
+    # Create segmap image
+    im = np.zeros(seg.shape + (3,), dtype='uint8')
 
-                # Iterate over all pixels in bin
-                locs = np.where(seg == b)
-                for x, y in zip(*locs):
-                    # Iterate over all touching edges
-                    for i in [-1, 1]:
-                        # Horizontal touches
-                        h = seg[x + i, y]
-                        if (h != b) and (h != 0) and (h not in verts[b]):
-                            verts[b].append(h)
+    # Apply the palette to the image
+    for i in range(mapped_indices.max()):
+        im[mapped_indices == i + 1] = palette[i]
 
-                        # Vertical Touches
-                        v = seg[x, y + i]
-                        if (v != b) and (v != 0) and (v not in verts[b]):
-                            verts[b].append(v)
-
-            # Color Vertices
-            vertices = sorted((list(verts.keys())))
-            color_graph = {}
-            for vertex in tqdm(vertices):
-                unused_colors = len(vertices) * [True]
-                for neighbor in verts[vertex]:
-                    if neighbor in color_graph:
-                        color = color_graph[neighbor]
-                        unused_colors[color] = False
-                for color, unused in enumerate(unused_colors):
-                    if unused:
-                        color_graph[vertex] = color
-                        break
-
-            # Create segmap image
-            im = np.zeros(seg.shape + (3,), dtype='uint8')
-            for c in tqdm(color_graph):
-                im[seg == c] = palette[color_graph[c]]
-
-        else:
-            # Easy Color
-            im = np.zeros(seg.shape + (3,), dtype='uint8')
-            for i, p in enumerate(palette):
-                im[seg % len(palette) == i + 1] = p
-
-        # Save figure
-        out = Image.fromarray(im, 'RGB')
-        out.save(path.join(plots, 'Segmentation.png'))
+    # Save figure
+    out = Image.fromarray(im, 'RGB')
+    out.save(path.join(plots, 'Segmentation.png'))
 
     # Copy over
     files.append(path.join(plots, 'Segmentation.png'))
@@ -266,6 +233,65 @@ def main():
             js[i + 1] = ','.join(menuitems)
 
             break
+
+
+# Define function to convert array to graph
+def array_to_graph(array):
+    # Get the shape of the array
+    rows, cols = array.shape
+
+    # Create an empty graph
+    graph = nx.Graph()
+
+    # Iterate over the array
+    for r in trange(rows):
+        for c in range(cols):
+            # Get the current value
+            current_value = array[r, c]
+
+            # Check the right neighbor
+            if c + 1 < cols:
+                right_value = array[r, c + 1]
+
+                # If the values are different, add an edge
+                if current_value != right_value:
+                    graph.add_edge(current_value, right_value)
+
+            # Check the bottom neighbor
+            if r + 1 < rows:
+                bottom_value = array[r + 1, c]
+
+                # If the values are different, add an edge
+                if current_value != bottom_value:
+                    graph.add_edge(current_value, bottom_value)
+
+    return graph
+
+
+# Define function to color the graph
+def greedy_coloring_ordered(graph, max_colors=6):
+    # Sort the nodes by degree
+    color_map = {}
+    nodes_sorted_by_degree = sorted(
+        graph.nodes(), key=lambda x: graph.degree(x), reverse=True
+    )
+
+    # Greedy coloring algorithm
+    for node in nodes_sorted_by_degree:
+        # Get the colors of the neighbors
+        neighbor_colors = {
+            color_map[neighbor]
+            for neighbor in graph.neighbors(node)
+            if neighbor in color_map
+        }
+
+        # Assign the first available color
+        for color in range(max_colors):
+            if color not in neighbor_colors:
+                color_map[node] = color
+                break
+    return color_map
+
 
 if __name__ == '__main__':
     main()
