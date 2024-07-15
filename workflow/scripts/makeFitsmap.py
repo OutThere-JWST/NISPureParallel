@@ -110,11 +110,8 @@ def main():
     # Get segmentation array
     seg = fits.getdata(path.join(prep, f'{fname}-ir_seg.fits'))[::-1]
 
-    # Create a graph from the segmentation array
-    graph = array_to_graph(seg)
-
-    # Color the graph
-    color_map = greedy_coloring_ordered(graph)
+    # Color the segmentation array
+    color_map = greedy_coloring_ordered(seg)
 
     # Map the segmentation to the palette index using color_graph
     mapped_indices = np.vectorize(color_map.get)(seg)
@@ -236,7 +233,7 @@ def main():
 
 
 # Define function to convert array to graph
-def array_to_graph(array):
+def greedy_coloring_ordered(array, max_colors=6):
     # Get the shape of the array
     rows, cols = array.shape
 
@@ -265,11 +262,6 @@ def array_to_graph(array):
                 if current_value != bottom_value:
                     graph.add_edge(current_value, bottom_value)
 
-    return graph
-
-
-# Define function to color the graph
-def greedy_coloring_ordered(graph, max_colors=6):
     # Sort the nodes by degree
     color_map = {}
     nodes_sorted_by_degree = sorted(
