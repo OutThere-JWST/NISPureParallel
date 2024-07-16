@@ -15,9 +15,10 @@ The workflow described here will install all of the necessary software for you, 
 
 ### Set Up NISPureParallel
 This comes in three steps:
-1) Clone this GitHub repository, note that the end products of this process can use of order ~TB.
+1) Clone this GitHub repository, note that the end products of this process can take up a few TB of disk space.
 2) `cd NISPureParallel`
-3) Create the snakemake environment: `conda/mamba env create -f snakemake.yaml`. This environment includes the code necessary to run our Snakemake workflow, but also to download the NIRISS data and compute the overlapping regions, etc. 
+3) Pull the submodules (this command should be run whenever a change upstream has been committed to the submodules): `git submodule update --init --recursive`
+4) Create the snakemake environment: `conda/mamba env create -f snakemake.yaml`. This environment includes the code necessary to run our Snakemake workflow, but also to download the NIRISS data and compute the overlapping regions, etc. 
 
 ### Fetch NIRISS Data
 After activating the Snakemake environment, we can run the conveniently provided helper script. Make sure to run this from the top-level directory as such: `python ./resources/scripts/getFields.py`. This will download all UNCAL data associated with the pure-parallel programs. Warning this will take quite a while! 

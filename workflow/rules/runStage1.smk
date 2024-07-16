@@ -13,7 +13,7 @@ def create_rule(field):
         conda:
             '../envs/jwst.yaml'
         resources:
-            cpus_per_task = 15
+            cpus_per_task = 10
         shell: 
             """
             echo {input} | tr ' ' '\\n' |\\
