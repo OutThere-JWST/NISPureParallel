@@ -5,8 +5,8 @@ dependencies:
 - python=3.12.*
 - pip
 - pip:
-  - -e ./jwst/
+  - -e ../../workflow/envs/jwst/
   - git+https://github.com/karllark/dust_attenuation.git
   - git+https://github.com/gbrammer/eazy-py.git
   - reproject
-  - -e "./grizli[jwst]"
+  - -e "../../workflow/envs/grizli[jwst]"

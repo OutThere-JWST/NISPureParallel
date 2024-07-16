@@ -7,6 +7,6 @@ dependencies:
 - parallel
 - pip
 - pip:
-  - -e ./jwst
+  - -e ../../workflow/envs/jwst
   - columnjump # For Stage 1 Pipeline
   - snowblind # For Stage 1 Pipeline
