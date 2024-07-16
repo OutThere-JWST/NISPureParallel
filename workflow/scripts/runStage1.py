@@ -60,7 +60,8 @@ def cal(file, out):
     dark = Detector1Pipeline.call(file, steps=steps)
 
     # Custom Column Jump
-    cjump = ColumnJumpStep.call(dark, nsigma1jump=5.00, nsigma2jumps=5)
+    # cjump = ColumnJumpStep.call(dark, nsigma1jump=5.00, nsigma2jumps=5)
+    cjump = dark
 
     # Jump step
     jump = JumpStep.call(
