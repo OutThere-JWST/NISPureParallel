@@ -7,6 +7,6 @@ dependencies:
 - parallel
 - pip
 - pip:
-  - git+https://github.com/spacetelescope/jwst.git
+  - -e ./jwst
   - columnjump # For Stage 1 Pipeline
   - snowblind # For Stage 1 Pipeline

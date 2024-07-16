@@ -1,6 +1,6 @@
 [submodule "resources/pymodules/jwst"]
-	path = resources/pymodules/jwst
+	path = workflow/envs/jwst
 	url = https://github.com/spacetelescope/jwst.git
 [submodule "resources/pymodules/grizli"]
-	path = resources/pymodules/grizli
+	path = workflow/envs/grizli
 	url = https://github.com/TheSkyentist/grizli.git
