@@ -1,0 +1,6 @@
+[submodule "resources/pymodules/jwst"]
+	path = resources/pymodules/jwst
+	url = https://github.com/spacetelescope/jwst.git
+[submodule "resources/pymodules/grizli"]
+	path = resources/pymodules/grizli
+	url = https://github.com/TheSkyentist/grizli.git
