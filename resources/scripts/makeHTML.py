@@ -27,6 +27,53 @@ def get_area(reg):
     return SingleSphericalPolygon.from_radec(*xy, center=np.mean(xy, 1)).area()
 
 
+# Alias of fields
+aliases = {
+    'boo-03': 'EGS',
+    'cet-00': 'UDS104425',
+    'crv-00': 'NGC4038',
+    'dor-00': 'LMC',
+    'dor-01': 'LMC',
+    'leo-03': 'MACSJ1149',
+    'leo-07': 'MACSJ1149',
+    'sex-00': 'COSMOS',
+    'sex-01': 'COSMOS',
+    'sex-02': 'WISP',
+    'sex-04': 'COSMOS',
+    'sex-05': 'COSMOS',
+    'sex-06': 'COSMOS',
+    'sex-07': 'COSMOS',
+    'sex-08': 'COSMOS',
+    'sex-09': 'COSMOS',
+    'sex-10': 'COSMOS',
+    'sex-13': 'COSMOS',
+    'sex-14': 'COSMOS',
+    'sex-15': 'COSMOS',
+    'sex-16': 'COSMOS',
+    'sex-17': 'COSMOS',
+    'sex-18': 'COSMOS',
+    'sex-19': 'COSMOS',
+    'sex-20': 'COSMOS',
+    'sex-21': 'COSMOS',
+    'sex-22': 'COSMOS',
+    'sex-23': 'COSMOS',
+    'sex-25': 'COSMOS',
+    'sex-26': 'COSMOS',
+    'sex-27': 'COSMOS',
+    'sex-29': 'COSMOS',
+    'sex-30': 'COSMOS',
+    'sex-32': 'COSMOS',
+    'sex-33': 'COSMOS',
+    'tri-00': 'M31',
+    'tri-02': 'M31',
+    'tri-03': 'M31',
+    'uma-02': 'HUDF',
+    'uma-03': 'HUDF',
+    'uma-05': 'GOODSN',
+    'uma-06': 'M101',
+    'uma-07': 'M101',
+}
+
 # Open products file
 hdul = fits.open('FIELDS/field-obs.fits')
 
@@ -36,6 +83,9 @@ for hdu in hdul[1:]:
     # Get field name
     fname = hdu.header['EXTNAME']
     obs = Table(hdu.data)
+
+    # Get alias of field
+    alias = aliases[fname] if fname in aliases.keys() else '\u200B'
 
     # Get link to field
     flink = f'<a href="maps/{fname}/index.html" target="_blank">{fname}</a>'
@@ -77,7 +127,7 @@ for hdu in hdul[1:]:
 
     # Get row
     rows.append(
-        [flink, '', ra, dec, area, exptime, gfs, t_start, t_end, prop_ids, prim_ids]
+        [flink, alias, ra, dec, area, exptime, gfs, t_start, t_end, prop_ids, prim_ids]
     )
 
 # Transpose list of lists
@@ -120,7 +170,7 @@ with open('resources/html5up-phantom/table.html', 'w') as f:
     f.write(html)
 
 # Create Image HTML template
-# 
+#
 image_blank = """<article class="style0">
     <span class="image">
         <img src="maps/{fname}/RGB/0/0/0.png" onerror="if (this.src != 'images/error.png') this.src = 'images/error.png';" />
