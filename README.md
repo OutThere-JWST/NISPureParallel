@@ -44,6 +44,8 @@ And that's it! Snakemake will distribute this workflow over the clusters for you
 - `--force-all`: Snakemake can recognize when it needs to re-run a rule in many cases, such as a change in the conda/mamba environment used for the rule, or a change in the Snakemake rule (see below). But it's always good to have a hammer when you want to force a full rerun.
 - `--rerun-incomplete`: Sometimes a job/rule will fail, leaving behind bad files. Running with this option will get rid of pesky errors related to this, and force those jobs to rerun. 
 
+Note: For cluster users, you will need to make sure that the required environment modules are loaded in your bashrc/profile. There should be a way to do it with snakemake but I haven't managed to get it to work yet. Importantly, conda and TeX are needed for running this pipeline, which are available to the MPIA Cluster as modules.
+
 ## Pipeline
 The following is a brief description of Snakemake and the pipeline developed in this repository. All of the relevant data and files are contained within the `workflow` directory. Snakemake begins by reading the Snakefile which describes the rules necessary to create output files based on input files. Snakemake then computes the DAG necessary to create all requested output files and distributes them in parallel where possible. Each rule requires inputs, outputs, and code necessary to produce inputs from outputs. Here I briefly describe the stages of our:
 

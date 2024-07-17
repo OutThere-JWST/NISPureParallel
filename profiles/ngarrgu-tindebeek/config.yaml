@@ -1,0 +1,25 @@
+# MPCDF Raven configuration file
+local-cores: 1
+
+# SnakeMake Conda settings
+use-conda: True
+conda-frontend: mamba
+
+# Settings to continue running and keep incomplete
+keep-going: True
+keep-incomplete: True
+
+# Max number of jobs
+jobs: 200
+
+# Queue system
+executor: slurm
+use-envmodules: True
+
+# Default job requests
+default-resources:
+    nodes: 1
+    tasks: 1
+    cpus_per_task: 72
+    runtime: 1440
+    mem_mb: 2456000
