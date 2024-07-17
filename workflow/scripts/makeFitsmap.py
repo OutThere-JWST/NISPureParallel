@@ -110,21 +110,25 @@ def main():
     # Get segmentation array
     seg = fits.getdata(path.join(prep, f'{fname}-ir_seg.fits'))[::-1]
 
+    # Define palette
+    palette = [
+        [226, 1, 52],  # Alizarin Crimson
+        [0, 141, 249],  # Dodger Blue
+        [0, 159, 129],  # Jeepers Creepers
+        [255, 195, 59],  # Bright Spark
+        [255, 90, 175],  # Barbie Pink
+        [159, 1, 98],  # Jazzberry Jam
+        [255, 178, 253],  # Plum
+        [132, 0, 205],  # French Violet
+        [0, 252, 207],  # Aquamarine
+        [164, 1, 34],  # Carmine
+    ]
+
     # Color the segmentation array
-    color_map = greedy_coloring_ordered(seg)
+    color_map = greedy_coloring_ordered(seg, len(palette))
 
     # Map the segmentation to the palette index using color_graph
     mapped_indices = np.vectorize(color_map.get)(seg)
-
-    # Define palette
-    palette = [
-        [226, 1, 52],
-        [0, 141, 249],
-        [0, 159, 129],
-        [255, 195, 59],
-        [255, 90, 175],
-        [159, 1, 98],
-    ]
 
     # Create segmap image
     im = np.zeros(seg.shape + (3,), dtype='uint8')
@@ -233,7 +237,7 @@ def main():
 
 
 # Define function to convert array to graph
-def greedy_coloring_ordered(array, max_colors=6):
+def greedy_coloring_ordered(array, max_colors):
     # Get the shape of the array
     rows, cols = array.shape
 
