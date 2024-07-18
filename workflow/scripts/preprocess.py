@@ -190,9 +190,6 @@ def plot_field(fname, plots):
         fc='#00FCCF',
     )
 
-    # Get scale on sphere
-    scale = np.cos(np.deg2rad(np.max(dec) + np.min(dec)) / 2)
-
     # Plot all regions (except region we are on) in gray
     for hdu in hdul_obs[1:]:
         if hdu.name == fname:
@@ -205,12 +202,16 @@ def plot_field(fname, plots):
         )
 
     # Axis labels and limits
-    pad = 5 / 60
-    ax.set(
-        xlabel='Right Ascension (ICRS)',
-        xlim=(np.max(ra) + pad / scale, np.min(ra) - pad / scale),
-    )  # Reverse xlim
-    ax.set(ylabel='Declination (ICRS)', ylim=(np.min(dec) - pad, np.max(dec) + pad))
+    ra_cen, dec_cen = (np.max(ra) + np.min(ra)) / 2, (np.max(dec) + np.min(dec)) / 2
+    scale = np.cos(np.deg2rad(dec_cen)) # Scale for RA
+    pad = 1 / 6  # Total padding along one axis in degrees (10 arcmin)
+    δra, δdec = (np.max(ra) - np.min(ra) + pad) / scale, np.max(dec) - np.min(dec) + pad
+    if δra > δdec:
+        δdec = δra * scale
+    else:
+        δra = δdec / scale
+    ax.set(xlabel='Right Ascension (ICRS)', xlim=(ra_cen + δra / 2, ra_cen - δra / 2))
+    ax.set(ylabel='Declination (ICRS)', ylim=(dec_cen - δdec / 2, dec_cen + δdec / 2))
     ax.set(title=fname.lower().replace('-', r'$-$'))
 
     # Format labels correctly
@@ -286,13 +287,16 @@ def plot_visits(visits, fname, plots):
     ax.legend(fontsize=20, frameon=True)
 
     # Set axis parameters
-    pad = 5 / 3600
-    scale = np.cos(np.deg2rad(np.max(dec) + np.min(dec)) / 2)
-    ax.set(
-        xlabel='Right Ascension (ICRS)',
-        xlim=(np.max(ra) + pad / scale, np.min(ra) - pad / scale),
-    )  # Reverse xlim
-    ax.set(ylabel='Declination (ICRS)', ylim=(np.min(dec) - pad, np.max(dec) + pad))
+    ra_cen, dec_cen = (np.max(ra) + np.min(ra)) / 2, (np.max(dec) + np.min(dec)) / 2
+    scale = np.cos(np.deg2rad(dec_cen))
+    pad = 1 / 360  # Total padding along one axis in degrees (10 arcsec)
+    δra, δdec = (np.max(ra) - np.min(ra) + pad) / scale, np.max(dec) - np.min(dec) + pad
+    if δra > δdec:
+        δdec = δra * scale
+    else:
+        δra = δdec / scale
+    ax.set(xlabel='Right Ascension (ICRS)', xlim=(ra_cen + δra / 2, ra_cen - δra / 2))
+    ax.set(ylabel='Declination (ICRS)', ylim=(dec_cen - δdec / 2, dec_cen + δdec / 2))
     ax.set(title=fname.lower().replace('-', r'$-$'))
 
     # Format labels correctly
