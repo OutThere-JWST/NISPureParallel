@@ -69,6 +69,7 @@ aliases = {
     'tri-03': 'M31',
     'uma-02': 'HUDF',
     'uma-03': 'HUDF',
+    'uma-04': 'M101',
     'uma-05': 'GOODSN',
     'uma-06': 'M101',
     'uma-07': 'M101',
