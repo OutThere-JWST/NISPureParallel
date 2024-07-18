@@ -194,9 +194,10 @@ def main():
     )
 
     # Copy spectra images over
-    os.mkdir(path.join(fitsmap, fname, 'spectra'))
-    for f in allims:
-        shutil.copy(path.join(extract, f), path.join(fitsmap, fname, 'spectra'))
+    if path.exists(results_file):
+        os.mkdir(path.join(fitsmap, fname, 'spectra'))
+        for f in allims:
+            shutil.copy(path.join(extract, f), path.join(fitsmap, fname, 'spectra'))
 
     # FitsMap Add Ons
     with open(path.join(fitsmap, fname, 'js/index.js'), 'r') as f:

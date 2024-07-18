@@ -38,6 +38,11 @@ def main():
     extract = os.path.join(home, 'Extractions')
     os.chdir(extract)
 
+    # Return if directory is empty
+    if len(os.listdir()) == 0:
+        print('No extracted spectra found')
+        return
+
     # Generate fit arguements
     pline = {
         'kernel': 'square',

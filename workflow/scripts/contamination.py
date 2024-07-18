@@ -74,6 +74,9 @@ def main():
         grism_files = [
             '{dataset}_rate.fits'.format(**row) for row in res[is_grism & un[filt]]
         ]
+        if len(grism_files) == 0:
+            print(f'No grism files for {filt}')
+            continue
 
         # Force detection image
         for f in filt_ref[filt]:

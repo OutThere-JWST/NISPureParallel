@@ -40,6 +40,10 @@ def main():
     os.chdir(extract)
 
     # Load GroupFLT
+    grism_files = glob.glob('*GrismFLT.fits')
+    if len(grism_files) == 0:
+        print('No GrismFLT files found')
+        return
     grp = multifit.GroupFLT(
         grism_files=glob.glob('*GrismFLT.fits'),
         catalog=f'{fname}-ir.cat.fits',
