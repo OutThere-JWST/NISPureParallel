@@ -9,7 +9,6 @@ from os import path
 from glob import glob
 import networkx as nx
 from tqdm import trange
-from multiprocessing import cpu_count
 
 # Image processing
 from PIL import Image
@@ -25,8 +24,7 @@ def main():
     # Parse arguements
     parser = argparse.ArgumentParser()
     parser.add_argument('fieldname', type=str)
-    parser.add_argument('--ncpu', type=int, default=(cpu_count() - 2))
-    parser.add_argument('--verbose', action='store_true')
+    parser.add_argument('--ncpu', type=int, default=1)
     args = parser.parse_args()
     fname = args.fieldname
     ncpu = args.ncpu

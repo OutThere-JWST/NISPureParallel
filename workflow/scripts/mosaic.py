@@ -27,19 +27,19 @@ def main():
     # Parse arguements
     parser = argparse.ArgumentParser()
     parser.add_argument('fieldname', type=str)
-    parser.add_argument('--verbose', action='store_true')
+    parser.add_argument('--ncpu', type=int, default=1)
     args = parser.parse_args()
-    cname = args.fieldname
+    fname = args.fieldname
 
     # Print version and step
-    print(f'Mosaicing {cname}')
+    print(f'Mosaicing {fname}')
     print(f'grizli:{grizli.__version__}')
 
     # Get paths and get fields
     main = os.getcwd()
     fields = os.path.join(main, 'FIELDS')
-    obs = Table.read(os.path.join(fields, 'field-obs.fits'), cname)
-    home = os.path.join(fields, cname)
+    obs = Table.read(os.path.join(fields, 'field-obs.fits'), fname)
+    home = os.path.join(fields, fname)
 
     # Subdirectories
     prep = os.path.join(home, 'Prep')
@@ -61,7 +61,7 @@ def main():
 
     # Drizzle full mosaics
     visit_processor.cutout_mosaic(
-        cname,
+        fname,
         res=res[~is_grism],  # Just direct
         ir_wcs=ref_wcs,
         half_optical=False,  # Otherwise will make JWST exposures at half pixel scale of ref_wcs
@@ -91,13 +91,13 @@ def main():
         if k not in filts:
             # Copy file
             shutil.copyfile(
-                f'{cname}-{filts[0]}_drc_sci.fits', f'{cname}-{k}_drc_sci.fits'
+                f'{fname}-{filts[0]}_drc_sci.fits', f'{fname}-{k}_drc_sci.fits'
             )
-            todelete.append(f'{cname}-{k}_drc_sci.fits')
+            todelete.append(f'{fname}-{k}_drc_sci.fits')
 
     # Create RGB Figure
     _, _, _, fig = auto_script.field_rgb(
-        root=cname,
+        root=fname,
         HOME_PATH=None,
         force_rgb=scales.keys(),
         suffix='.rgb',
@@ -129,10 +129,10 @@ def main():
 
     # Save figure
     fig.tight_layout(pad=0)
-    fig.savefig(f'{cname}.rgb.png', pad_inches=0, bbox_inches='tight')
+    fig.savefig(f'{fname}.rgb.png', pad_inches=0, bbox_inches='tight')
     pyplot.close(fig)
     os.rename(
-        os.path.join(prep, f'{cname}.rgb.png'), os.path.join(plots, f'{cname}.rgb.png')
+        os.path.join(prep, f'{fname}.rgb.png'), os.path.join(plots, f'{fname}.rgb.png')
     )
 
     # Delete extras
@@ -141,14 +141,14 @@ def main():
 
     # Create combined catalog
     auto_script.make_filter_combinations(
-        cname,
+        fname,
         weight_fnu=True,
         min_count=1,
         filter_combinations={'ir': ['F115WN-CLEAR', 'F150WN-CLEAR', 'F200WN-CLEAR']},
     )
     # grizli.prep.make_SEP_catalog(f'{root}-ir', threshold=1.2)
     _ = auto_script.multiband_catalog(
-        field_root=cname,
+        field_root=fname,
         detection_filter='ir',
         get_all_filters=True,
         rescale_weight=True,

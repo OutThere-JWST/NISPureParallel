@@ -31,19 +31,18 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('fieldname', type=str)
     parser.add_argument('--ncpu', type=int, default=1)
-    parser.add_argument('--verbose', action='store_true')
     args = parser.parse_args()
-    cname = args.fieldname
+    fname = args.fieldname
     ncpu = args.ncpu
 
     # Print version and step
-    print(f'Modelling Contamination {cname}')
+    print(f'Modelling Contamination {fname}')
     print(f'grizli:{grizli.__version__}')
 
     # Get paths and get fields
     main = os.getcwd()
     fields = os.path.join(main, 'FIELDS')
-    home = os.path.join(fields, cname)
+    home = os.path.join(fields, fname)
 
     # Subdirectories
     prep = os.path.join(home, 'Prep')
@@ -78,15 +77,15 @@ def main():
 
         # Force detection image
         for f in filt_ref[filt]:
-            obs = Table.read(os.path.join(fields, 'field-obs.fits'), cname)
+            obs = Table.read(os.path.join(fields, 'field-obs.fits'), fname)
             if f'CLEAR;{f}' in np.unique(obs['filters']):
                 ref_filt = f
                 break
-        ref = f'{cname}-{ref_filt.lower()}n-clear_drc_sci.fits'
+        ref = f'{fname}-{ref_filt.lower()}n-clear_drc_sci.fits'
 
         # Create grism model
         grp = auto_script.grism_prep(
-            field_root=cname,
+            field_root=fname,
             PREP_PATH=prep,
             EXTRACT_PATH=extract,
             refine_niter=3,
@@ -97,21 +96,21 @@ def main():
             files=grism_files,
             model_kwargs={'compute_size': False, 'size': 48},
             subtract_median_filter=False,
-            use_jwst_crds=True,
+            use_jwst_crds=False,
             force_ref=ref,
             cpu_count=ncpu,
             # sep_background_kwargs={}
         )
 
         # Drizzle grism models
-        grp.drizzle_grism_models(root=cname, kernel='square', scale=0.04, pixfrac=0.75)
+        grp.drizzle_grism_models(root=fname, kernel='square', scale=0.04, pixfrac=0.75)
 
     # Copy grism model plots
     for f in glob.glob(os.path.join(extract, '*grism*png')):
         shutil.copy(f, plots)
 
     # Reference header
-    with fits.open(os.path.join(prep, f'{cname}-ir_drc_sci.fits')) as f:
+    with fits.open(os.path.join(prep, f'{fname}-ir_drc_sci.fits')) as f:
         ref = WCS(f[0].header)
         size = f[0].data.shape
 
@@ -120,12 +119,12 @@ def main():
         suffix = f'_grism_{end}.fits'
 
         # Get files
-        files = sorted(glob.glob(os.path.join(extract, f'{cname}-*{suffix}')))[::-1]
+        files = sorted(glob.glob(os.path.join(extract, f'{fname}-*{suffix}')))[::-1]
 
         # Get filters
         filters, grisms = [], []
         for f in files:
-            clean = f.replace(cname, '').replace(suffix, '').split('-')
+            clean = f.replace(fname, '').replace(suffix, '').split('-')
             filters.append(clean[-2])
             grisms.append(clean[-1])
         filters, grisms = np.array(filters), np.array(grisms)
@@ -141,7 +140,7 @@ def main():
             all_filts = ['f200w', 'f150w', 'f115w']
             ims = [
                 reproject(
-                    f'{cname}-{gf}-{grism}{suffix}', ref, size, conserve_flux=True
+                    f'{fname}-{gf}-{grism}{suffix}', ref, size, conserve_flux=True
                 )[0]
                 if gf in gfilts
                 else np.zeros(size)
@@ -149,8 +148,14 @@ def main():
             ]
 
             # Make RGB
-            filename = os.path.join(plots, f'{cname}-grism.{grism}_{end}.png')
-            rgb = make_lupton_rgb(*ims, filename=filename, Q=20, stretch=0.1)
+            filename = os.path.join(plots, f'{fname}-grism.{grism}_{end}.png')
+            rgb = make_lupton_rgb(*ims, filename=None, Q=20, stretch=0.1)
+
+            # Transform to use different colors to be colorblind friendly
+            transform = np.array(
+                [[246, 2, 57], [255, 110, 58], [255, 172, 59]]
+            )  # 255,220,61
+            rgb = np.dot(rgb, transform / 255).clip(0, 255).astype(np.uint8)
 
             # Get diemsnions
             xsize = 8
@@ -170,7 +175,7 @@ def main():
                     0.03 + 0.1 * i,
                     0.97,
                     f.upper(),
-                    color='rgb'[i],
+                    color=transform[i] / 255,
                     bbox=dict(facecolor='w', alpha=1),
                     size=14,
                     ha='left',

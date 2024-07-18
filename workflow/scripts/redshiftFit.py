@@ -4,8 +4,8 @@
 import os
 import warnings
 import argparse
+from multiprocessing import Pool
 from astropy.table import Table, vstack
-from multiprocessing import Pool, cpu_count
 
 # Import grizli
 import grizli
@@ -19,8 +19,7 @@ def main():
     # Parse arguements
     parser = argparse.ArgumentParser()
     parser.add_argument('fieldname', type=str)
-    parser.add_argument('--ncpu', type=int, default=(cpu_count() - 2))
-    parser.add_argument('--verbose', action='store_true')
+    parser.add_argument('--ncpu', type=int, default=1)
     args = parser.parse_args()
     fname = args.fieldname
     ncpu = args.ncpu

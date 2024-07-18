@@ -21,7 +21,6 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('fieldname', type=str)
     parser.add_argument('--ncpu', type=int, default=1)
-    parser.add_argument('--verbose', action='store_true')
     args = parser.parse_args()
     fname = args.fieldname
     ncpu = args.ncpu

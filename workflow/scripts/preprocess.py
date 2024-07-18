@@ -35,7 +35,6 @@ def main():
     # Parse arguements
     parser = argparse.ArgumentParser()
     parser.add_argument('fieldname', type=str)
-    parser.add_argument('--verbose', action='store_true')
     args = parser.parse_args()
     fname = args.fieldname
 

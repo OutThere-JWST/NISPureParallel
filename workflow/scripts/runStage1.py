@@ -43,7 +43,7 @@ def cal(file, out):
     # Define Detector 1 steps (skip everything before jump)
     steps = dict(
         persistence=dict(
-            save_trapsfilled=False  # Don't save trapsfilled file
+            skip=True  # Not implemented
         ),
         jump=dict(
             skip=True,
