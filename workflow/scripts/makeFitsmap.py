@@ -17,7 +17,6 @@ from fitsmap import convert
 from reproject import reproject_interp
 
 # Astropy Packages
-from astropy import wcs
 from astropy.io import fits
 from astropy.table import Table, join
 
@@ -244,7 +243,7 @@ def main():
         task_procs=len(ffiles),
         procs_per_task=max(ncpu // (len(ffiles) + 1), 1),
         units_are_pixels=False,
-        pixel_scale=0.04, # Same as in mosaic/contam
+        pixel_scale=0.04,  # Same as in mosaic/contam
     )
 
     # Copy spectra images over
