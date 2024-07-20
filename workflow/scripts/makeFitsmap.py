@@ -17,6 +17,7 @@ from fitsmap import convert
 from reproject import reproject_interp
 
 # Astropy Packages
+from astropy import wcs
 from astropy.io import fits
 from astropy.table import Table, join
 
@@ -75,6 +76,8 @@ def main():
         )
         files.append(outfile)
 
+        # continue # Skip exposure time maps for now
+
         # Load context map
         hdul = fits.open(path.join(prep, f'{fname}-{f.lower()}n-clear_drc_ctx.fits'))
         ctx, h = hdul[0].data, hdul[0].header
@@ -123,6 +126,8 @@ def main():
             shutil.copy(outproj, outfile)
             files.append(outfile)
 
+            # continue # Skip exposure time maps for now
+
             # Load context map
             hdul = fits.open(pa.replace('sci', 'ctx'))
             ctx, h = hdul[0].data, hdul[0].header
@@ -136,6 +141,9 @@ def main():
 
                 # Set exposure time if bit i is set in ctx
                 exptime[np.bitwise_and(ctx, 2**i) > 0] += t
+
+            # Reproject exposure time map
+            exptime, _ = reproject_interp((exptime, h), ref)
 
             # Save exposure time map
             outfile = path.join(
@@ -229,11 +237,14 @@ def main():
     ffiles = [os.path.join(fitsmap, f) for f in files]
     convert.files_to_map(
         ffiles,
+        title=f'{fname} FitsMap',
         out_dir=path.join(fitsmap, fname),
         norm_kwargs=norm_kwargs,
         cat_wcs_fits_file=path.join(fitsmap, f'{filts[0]}.fits'),
         task_procs=len(ffiles),
         procs_per_task=max(ncpu // (len(ffiles) + 1), 1),
+        units_are_pixels=False,
+        pixel_scale=0.04, # Same as in mosaic/contam
     )
 
     # Copy spectra images over
