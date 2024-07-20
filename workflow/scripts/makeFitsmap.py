@@ -279,9 +279,9 @@ def main():
 
             break
 
-        # Save
-        with open(path.join(fitsmap, fname, 'js/index.js'), 'w+') as f:
-            f.write(''.join(js))
+    # Save
+    with open(path.join(fitsmap, fname, 'js/index.js'), 'w+') as f:
+        f.write(''.join(js))
 
 
 # Define function to convert array to graph
