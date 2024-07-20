@@ -72,6 +72,7 @@ def main():
         make_exptime_map=False,
         weight_type='jwst',
         skip_existing=False,
+        ctx_out=True,
     )
 
     # Get filters for RGB

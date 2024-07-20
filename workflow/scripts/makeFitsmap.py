@@ -2,6 +2,7 @@
 
 # Import packages
 import os
+import math
 import shutil
 import argparse
 import numpy as np
@@ -67,10 +68,30 @@ def main():
     # Create image files (FITS)
     filts = [f.split(';')[1] for f in filters if 'CLEAR' in f]
     for f in filts:
+        # Direct image
         outfile = path.join(fitsmap, f'{f}.fits')
         shutil.copy(
             path.join(prep, f'{fname}-{f.lower()}n-clear_drc_sci.fits'), outfile
         )
+        files.append(outfile)
+
+        # Load context map
+        hdul = fits.open(path.join(prep, f'{fname}-{f.lower()}n-clear_drc_ctx.fits'))
+        ctx, h = hdul[0].data, hdul[0].header
+
+        # Make exposure time map
+        exptime = np.zeros(ctx.shape)
+        for i in range(math.ceil(np.log2(ctx.max()))):  # Iterate over bits
+            # Get exposure time of file
+            file = path.join(prep, h[f'FLT{str(i+1).zfill(5)}'])
+            t = fits.getval(file, 'EXPTIME')
+
+            # Set exposure time if bit i is set in ctx
+            exptime[np.bitwise_and(ctx, 2**i) > 0] += t
+
+        # Save exposure time map
+        outfile = path.join(fitsmap, f'{f}_exp.fits')
+        fits.PrimaryHDU(exptime, header=h).writeto(outfile)
         files.append(outfile)
 
     # Create grism files
@@ -97,9 +118,31 @@ def main():
             # Copy file to fitsmap
             outfile = path.join(
                 fitsmap,
-                f"{g}-{pa.split('/')[-1].split('_')[0].replace(f'{pre}','')}.fits",
+                f"{g}-{path.basename(pa).split('_')[0].replace(f'{pre}','')}.fits",
             )
             shutil.copy(outproj, outfile)
+            files.append(outfile)
+
+            # Load context map
+            hdul = fits.open(pa.replace('sci', 'ctx'))
+            ctx, h = hdul[0].data, hdul[0].header
+
+            # Make exposure time map
+            exptime = np.zeros(ctx.shape)
+            for i in range(math.ceil(np.log2(ctx.max()))):  # Iterate over bits
+                # Get exposure time of file
+                file = path.join(prep, h[f'FLT{str(i+1).zfill(5)}'])
+                t = fits.getval(file, 'EXPTIME')
+
+                # Set exposure time if bit i is set in ctx
+                exptime[np.bitwise_and(ctx, 2**i) > 0] += t
+
+            # Save exposure time map
+            outfile = path.join(
+                fitsmap,
+                f"{g}-{path.basename(pa).split('_')[0].replace(f'{pre}','')}_exp.fits",
+            )
+            fits.PrimaryHDU(exptime, header=h).writeto(outfile)
             files.append(outfile)
 
     # Create Segmap
@@ -190,7 +233,7 @@ def main():
         norm_kwargs=norm_kwargs,
         cat_wcs_fits_file=path.join(fitsmap, f'{filts[0]}.fits'),
         task_procs=len(ffiles),
-        procs_per_task=ncpu // (len(ffiles) + 1),
+        procs_per_task=max(ncpu // (len(ffiles) + 1), 1),
     )
 
     # Copy spectra images over
@@ -215,7 +258,7 @@ def main():
             # Iterate over menuitems
             for j, m in enumerate(menuitems):
                 if '_' not in m:
-                    continue  # Ignoreif we don't have to do anything
+                    continue  # Ignore if we don't have to do anything
 
                 # Get keypair
                 keypair = m.split(':')
@@ -224,7 +267,9 @@ def main():
                 label = keypair[0].split('_')
 
                 # Fix label
-                keypair[0] = f'{label[0]} ({label[1]}.{label[2][:-1]})"'
+                keypair[0] = f'{label[0]} ({".".join(label[1:])})'.replace(
+                    '")', ')"'
+                ).replace('.exp', ' exp')
 
                 # Join and replace\
                 menuitems[j] = ':'.join(keypair)
@@ -233,6 +278,10 @@ def main():
             js[i + 1] = ','.join(menuitems)
 
             break
+
+        # Save
+        with open(path.join(fitsmap, fname, 'js/index.js'), 'w+') as f:
+            f.write(''.join(js))
 
 
 # Define function to convert array to graph

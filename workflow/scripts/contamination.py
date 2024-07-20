@@ -106,7 +106,9 @@ def main():
         )
 
         # Drizzle grism models
-        grp.drizzle_grism_models(root=fname, kernel='square', scale=0.04, pixfrac=0.75)
+        grp.drizzle_grism_models(
+            root=fname, kernel='square', scale=0.04, pixfrac=0.75, ctx_out=True
+        )
 
     # Copy grism model plots
     for f in glob.glob(os.path.join(extract, '*grism*png')):

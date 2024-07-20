@@ -70,9 +70,6 @@ def main():
     # Change to working directory
     os.chdir(fields)
 
-    # Print grizli and jwst versions
-    print(f'grizli:{grizli.__version__}')
-
     # Initialize image
     files = [
         os.path.join(rate, f).replace('uncal', 'rate') for f in prods['productFilename']
