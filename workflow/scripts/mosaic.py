@@ -143,8 +143,7 @@ def main():
     # Create combined catalog
     auto_script.make_filter_combinations(
         fname,
-        weight_fnu=True,
-        min_count=1,
+        weight_fnu=2,  # No scaling
         filter_combinations={'ir': ['F115WN-CLEAR', 'F150WN-CLEAR', 'F200WN-CLEAR']},
     )
     # grizli.prep.make_SEP_catalog(f'{root}-ir', threshold=1.2)
