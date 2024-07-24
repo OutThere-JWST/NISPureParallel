@@ -9,10 +9,11 @@ dependencies:
 - mamba
 - scipy
 - astropy
+- astroquery
+- libarchive
 - scikit-learn
 - bioconda::snakemake
 - snakemake-executor-plugin-slurm
 - pip:
   - sregion
   - spherical_geometry
-  - git+https://github.com/astropy/astroquery.git # Flat downloads
