@@ -34,6 +34,7 @@ aliases = {
     'crv-00': 'NGC4038',
     'dor-00': 'LMC',
     'dor-01': 'LMC',
+    'dor-02': 'LMC',
     'leo-03': 'MACSJ1149',
     'leo-07': 'MACSJ1149',
     'sex-00': 'COSMOS',
