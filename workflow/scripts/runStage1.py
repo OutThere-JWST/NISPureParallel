@@ -3,19 +3,15 @@
 # Import packages
 import os
 import argparse
-
-# Multiprocessing
+import subprocess
 from threadpoolctl import threadpool_limits
 
 # JWST Pipeline
 import jwst
+from jwst.step import RampFitStep
 from columnjump import ColumnJumpStep
-from jwst.pipeline import Detector1Pipeline
-from snowblind import SnowblindStep, JumpPlusStep
-from jwst.step import JumpStep, RampFitStep
 
 
-# Run pipeline in parallel
 def main():
     # Parse arguements
     parser = argparse.ArgumentParser()
@@ -38,53 +34,76 @@ def main():
 # Detector 1 Pipeline
 @threadpool_limits.wrap(limits=1, user_api='blas')
 def cal(file, out):
+    # Print version
     print(f'Processing {file} with jwst: {jwst.__version__}')
 
-    # Define Detector 1 steps (skip everything before jump)
-    steps = dict(
-        persistence=dict(
-            skip=True  # Not implemented
-        ),
-        jump=dict(
-            skip=True,
-        ),
-        ramp_fit=dict(
-            skip=True,
-        ),
-        gain_scale=dict(
-            skip=True,
-        ),
-    )
+    # Steps to process
+    steps = [
+        'group_scale',
+        'dq_init',
+        'saturation',
+        'superbias',
+        'refpix',
+        'linearity',
+        'dark_current',
+        'charge_migration',
+        'column',
+        'jump',
+    ]
 
-    # Run the pipeline up until the jump step
-    dark = Detector1Pipeline.call(file, steps=steps)
+    # Arguements
+    args = {
+        'jump': {
+            'rejection_threshold': 5.0,
+        },
+    }
 
-    # Custom Column Jump
-    cjump = ColumnJumpStep.call(dark, nsigma1jump=5.00, nsigma2jumps=5)
+    # Keep track of original file
+    orig = file
 
-    # Jump step
-    jump = JumpStep.call(
-        cjump,
-        flag_4_neighbors=True,
-        expand_large_events=False,  # False if using snowblind
-        min_jump_to_flag_neighbors=20,
-        rejection_threshold=5.0,
-        after_jump_flag_time1=0,
-    )
+    # Loop over steps
+    for step in steps:
+        # Special handling of column jump
+        if step == 'column':
+            cjump = ColumnJumpStep.call(file, nsigma1jump=5.00, nsigma2jumps=5)
+            cjump.save(orig.replace('uncal', step))
 
-    # Flag Snowballs w/ Snowblind
-    sblind = SnowblindStep.call(jump, min_radius=3, after_jumps=5)
+        # Run step
+        else:
+            # Process arguments
+            process = ['strun', step, file, '--output_dir', 'UNCAL', '--suffix', step]
 
-    # Jump Plus
-    jplus = JumpPlusStep.call(sblind)
+            # Ignore sufficx for jump
+            if step == 'jump':
+                process = process[:-2]
+
+            # Additional arguments
+            if step in args:
+                for k, v in args[step].items():
+                    process.extend(['--' + k, str(v)])
+
+            # Run step
+            subprocess.run(process)
+
+        # Remove old file unless it is the original
+        if file != orig:
+            print('Removing', file)
+            os.remove(file)
+
+        # Update file
+        file = orig.replace('uncal', step)
 
     # Ramp Fit
-    rate, _ = RampFitStep.call(jplus)
+    file = file.replace('jump', 'column_jump')
+    rate, _ = RampFitStep.call(file)
+
+    # Remove old file
+    os.remove(file)
 
     # Save results
     rate.save(out)
 
-    print(f'Finished {file}')
+    print(f'Finished {out}')
 
     return
 
