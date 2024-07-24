@@ -12,8 +12,8 @@ def create_rule(field):
             f'stage1-{groups[field]}'
         conda:
             '../envs/jwst.yaml'
-        resources:
-            cpus_per_task = 10
+    # resources:
+    #     tasks = lambda wildcards: len(uncal[wildcards.field])
         shell: 
             """
             echo {input} | tr ' ' '\\n' |\\
