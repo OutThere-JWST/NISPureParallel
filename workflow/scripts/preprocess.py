@@ -24,6 +24,7 @@ import grizli
 from grizli import utils
 from grizli import jwst_utils
 from grizli.aws import visit_processor
+from grizli.prep import visit_grism_sky
 from grizli.pipeline import auto_script
 
 # Silence warnings
@@ -116,8 +117,20 @@ def main():
         ['EXPSTART', 'EXPTIME', 'INSTRUME'], ['t_min', 'exptime', 'instrument_name']
     )
 
+    # Subtract background from direct images
+    os.chdir(raw)
+    for group in all_groups:
+        if 'direct' in group:  #
+            visit_grism_sky(grism=group['direct'], column_average=False, ignoreNA=True)
+    os.chdir(fields)
+
     # Visit process arguements
-    prep_args = {'tweak_max_dist': 5, 'oneoverf_kwargs': None, 'snowball_kwargs': None}
+    prep_args = {
+        'tweak_max_dist': 5,
+        'oneoverf_kwargs': None,
+        'snowball_kwargs': None,
+        'imaging_bkg_params': None,
+    }
 
     # Other arguements
     other_args = {
@@ -199,7 +212,7 @@ def plot_field(fname, plots):
 
     # Axis labels and limits
     ra_cen, dec_cen = (np.max(ra) + np.min(ra)) / 2, (np.max(dec) + np.min(dec)) / 2
-    scale = np.cos(np.deg2rad(dec_cen)) # Scale for RA
+    scale = np.cos(np.deg2rad(dec_cen))  # Scale for RA
     pad = 1 / 6  # Total padding along one axis in degrees (10 arcmin)
     δra, δdec = (np.max(ra) - np.min(ra) + pad) / scale, np.max(dec) - np.min(dec) + pad
     if δra > δdec:
