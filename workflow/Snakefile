@@ -6,7 +6,7 @@ from astropy.table import Table
 from sklearn.cluster import KMeans
 
 # Make sure RATE directory exists, if not create it
-if not os.path.isdir('RATE'): os.makedir('RATE')
+if not os.path.isdir('RATE'): os.mkdir('RATE')
 
 # Names of fields
 with open('FIELDS/fields.txt') as f: FIELDS = np.array(f.read().splitlines())
