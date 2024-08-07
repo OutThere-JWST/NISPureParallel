@@ -11,7 +11,6 @@ from threadpoolctl import threadpool_limits
 import jwst
 from columnjump import ColumnJumpStep
 from jwst.pipeline import Detector1Pipeline
-from snowblind import SnowblindStep, JumpPlusStep
 from jwst.step import JumpStep, RampFitStep
 
 
@@ -29,6 +28,7 @@ def main():
 
     # If exists and not forcing from scratch, skip
     if os.path.exists(rate) and not args.scratch:
+        print(f'{rate} exists, skipping')
         return
 
     # Run pipeline
@@ -60,31 +60,21 @@ def cal(file, out):
     dark = Detector1Pipeline.call(file, steps=steps)
 
     # Custom Column Jump
-    cjump = ColumnJumpStep.call(dark, nsigma1jump=5.00, nsigma2jumps=5)
+    cjump = ColumnJumpStep.call(dark, nsigma1jump=5.0, nsigma2jumps=5.0)
 
     # Jump step
     jump = JumpStep.call(
         cjump,
-        flag_4_neighbors=True,
-        expand_large_events=False,  # False if using snowblind
-        min_jump_to_flag_neighbors=20,
         rejection_threshold=5.0,
-        after_jump_flag_time1=0,
     )
 
-    # Flag Snowballs w/ Snowblind
-    sblind = SnowblindStep.call(jump, min_radius=3, after_jumps=5)
-
-    # Jump Plus
-    jplus = JumpPlusStep.call(sblind)
-
     # Ramp Fit
-    rate, _ = RampFitStep.call(jplus)
+    rate, _ = RampFitStep.call(jump)
 
     # Save results
     rate.save(out)
 
-    print(f'Finished {file}')
+    print(f'Finished {out}')
 
     return
 

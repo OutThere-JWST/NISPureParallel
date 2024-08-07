@@ -9,4 +9,3 @@ dependencies:
 - pip:
   - git+https://github.com/spacetelescope/jwst.git
   - columnjump # For Stage 1 Pipeline
-  - snowblind # For Stage 1 Pipeline
