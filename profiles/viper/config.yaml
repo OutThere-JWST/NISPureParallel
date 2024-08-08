@@ -1,4 +1,4 @@
-# MPCDF Vera configuration file
+# MPCDF Viper configuration file
 local-cores: 1
 
 # SnakeMake Conda settings

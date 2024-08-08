@@ -12,12 +12,18 @@ def create_rule(field):
             f'stage1-{groups[field]}'
         conda:
             '../envs/jwst.yaml'
-    # resources:
-    #     tasks = lambda wildcards: len(uncal[wildcards.field])
         shell: 
             """
+            # Use half of the cpus (memory constraints)
+            cpus=$(echo "{resources.cpus_per_task} / 2" | bc)
+            
+            # Ensure cpus is at least 1
+            if (( $(echo "$cpus < 1" | bc -l) )); then
+                cpus=1
+            fi
+            
             echo {input} | tr ' ' '\\n' |\\
-            parallel -j {resources.cpus_per_task} ./workflow/scripts/runStage1.py --scratch > {log} 2>&1
+            parallel -j $cpus ./workflow/scripts/runStage1.py --scratch > {log} 2>&1
             """
 
 # Create rules for all fields
