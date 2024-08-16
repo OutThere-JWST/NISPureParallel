@@ -2,7 +2,6 @@
 
 # Python Packages
 import os
-import glob
 import shutil
 import argparse
 from tqdm import tqdm
@@ -278,10 +277,7 @@ if __name__ == '__main__':
             os.mkdir('UNCAL')
 
         # Get list of files to download
-        todo = np.setdiff1d(
-            prods['productFilename'],
-            [os.path.basename(f) for f in glob.glob('UNCAL/*.fits')],
-        )
+        todo = np.setdiff1d(prods['productFilename'], os.listdir('UNCAL'))
 
         # Download products if not already downloaded
         if len(todo) > 0:
