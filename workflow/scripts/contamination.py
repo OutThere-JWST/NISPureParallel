@@ -2,12 +2,14 @@
 
 # Import packages
 import os
+import re
 import glob
 import shutil
 import argparse
 import warnings
 import numpy as np
 from matplotlib import pyplot
+from scipy import stats, optimize
 from reproject import reproject_adaptive as reproject
 
 # Astropy packages
@@ -44,6 +46,10 @@ def main():
     fields = os.path.join(main, 'FIELDS')
     home = os.path.join(fields, fname)
 
+    # Load observations (direct vs grism)
+    obs = Table.read(os.path.join(fields, 'field-obs.fits'), fname)
+    obs['filters'] = [re.sub(r'150[RC]', '', f) for f in obs['filters']]
+
     # Subdirectories
     prep = os.path.join(home, 'Prep')
     plots = os.path.join(home, 'Plots')
@@ -64,6 +70,24 @@ def main():
         F150W=['F150W', 'F200W'],
         F200W=['F200W'],
     )
+
+    # Determine catalog depth
+    cat = Table.read(os.path.join(prep, f'{fname}-ir.cat.fits'))
+    mag = cat['MAG_AUTO']
+    kde = stats.gaussian_kde(mag[np.invert(mag.mask)])  # KDE Estimate
+    mode_mag = optimize.minimize(lambda x: -kde(x), np.median(mag)).x  # Modes
+
+    # Determine exposure time offset
+    times = {
+        f: (obs['t_exptime'][obs['filters'] == f]).sum()
+        for f in np.unique(obs['filters'])
+    }
+    t_clear = np.sum([times[f] for f in times if 'CLEAR' in f])  # Total Direct
+    t_grism = np.max([times[f] for f in times if 'GR' in f])  # Max Grism
+    offset = 2.5 * np.log10(np.sqrt(t_grism / t_clear))  # Scales with sqrt(t)
+
+    # Determine extraction depth
+    extract_mag = mode_mag + offset - 1.5  # 1.5 mag fainter than mode
 
     # Iterate over filters
     for filt in un.values:
@@ -92,8 +116,8 @@ def main():
             PREP_PATH=prep,
             EXTRACT_PATH=extract,
             refine_niter=3,
-            refine_mag_limits=[16, 24],
-            prelim_mag_limit=26,
+            refine_mag_limits=[mag.min() - 1, extract_mag - 2],
+            prelim_mag_limit=extract_mag,
             init_coeffs=[1, -0.6],
             pad=(1024, 1024),
             files=grism_files,
