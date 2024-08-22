@@ -139,8 +139,13 @@ if __name__ == '__main__':
             for ob in og.findall(f'{ns}Observation'):
                 # Get Observation number
                 if oid == ob.find(f'{ns}Number').text.zfill(3):
-                    # Get primary ID
-                    pids.append(ob.find(f'{ns}PureParallelSlotGroupName').text[:4])
+                    # Get primary ID from label
+                    pid = ob.find(f'{ns}Label').text[:4]
+                    # If it can't be found here, get it from the slot 
+                    # This is just a fix because parallel to 2302 is weird.
+                    if pid.startswith('F'):
+                        pid = ob.find(f'{ns}PureParallelSlotGroupName').text[:4]
+                    pids.append(pid)
                     found = True
                     break
 
