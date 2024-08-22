@@ -123,7 +123,7 @@ def main():
         for f in np.unique(obs['filters'])
     }
     t_clear = np.sum([times[f] for f in times if 'CLEAR' in f])  # Total Direct
-    t_grism = np.max([times[f] for f in times if 'GR' in f])  # Max Grism
+    t_grism = np.max([times[f] for f in times if 'GR' in f]+[0])  # Max Grism
     offset = 2.5 * np.log10(np.sqrt(t_grism / t_clear))  # Scales with sqrt(t)
 
     # Determine extraction depth

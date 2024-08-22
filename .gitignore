@@ -16,6 +16,9 @@ FIELDS/
 # Ignore macOS Journaling files
 *.DS_Store
 
+# Ignore test files
+test.*
+
 # Ignore built HTML files
 table.html
 images.html
