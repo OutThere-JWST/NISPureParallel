@@ -2,6 +2,7 @@
 
 # Import packages
 import os
+import yaml
 import numpy as np
 
 # Astropy packages
@@ -28,53 +29,8 @@ def get_area(reg):
 
 
 # Alias of fields
-aliases = {
-    'boo-03': 'EGS',
-    'cet-00': 'UDS104425',
-    'crv-00': 'NGC4038',
-    'dor-00': 'LMC',
-    'dor-01': 'LMC',
-    'dor-02': 'LMC',
-    'leo-03': 'MACSJ1149',
-    'leo-07': 'MACSJ1149',
-    'sex-00': 'COSMOS',
-    'sex-01': 'COSMOS',
-    'sex-02': 'WISP',
-    'sex-04': 'COSMOS',
-    'sex-05': 'COSMOS',
-    'sex-06': 'COSMOS',
-    'sex-07': 'COSMOS',
-    'sex-08': 'COSMOS',
-    'sex-09': 'COSMOS',
-    'sex-10': 'COSMOS',
-    'sex-13': 'COSMOS',
-    'sex-14': 'COSMOS',
-    'sex-15': 'COSMOS',
-    'sex-16': 'COSMOS',
-    'sex-17': 'COSMOS',
-    'sex-18': 'COSMOS',
-    'sex-19': 'COSMOS',
-    'sex-20': 'COSMOS',
-    'sex-21': 'COSMOS',
-    'sex-22': 'COSMOS',
-    'sex-23': 'COSMOS',
-    'sex-25': 'COSMOS',
-    'sex-26': 'COSMOS',
-    'sex-27': 'COSMOS',
-    'sex-29': 'COSMOS',
-    'sex-30': 'COSMOS',
-    'sex-32': 'COSMOS',
-    'sex-33': 'COSMOS',
-    'tri-00': 'M31',
-    'tri-02': 'M31',
-    'tri-03': 'M31',
-    'uma-02': 'HUDF',
-    'uma-03': 'HUDF',
-    'uma-04': 'M101',
-    'uma-05': 'GOODSN',
-    'uma-06': 'M101',
-    'uma-07': 'M101',
-}
+with open('resources/aliases.yaml', 'r') as file:
+    aliases = yaml.safe_load(file)
 
 # Open products file
 hdul = fits.open('FIELDS/field-obs.fits')

@@ -56,6 +56,16 @@ def main():
     print(f'Extracting {fname}')
     print(f'grizli:{grizli.__version__}')
 
+    # Skip if in a stellar field
+    sfields = ['LMC', 'M31', 'M101']
+    with open('resources/aliases.yaml', 'r') as file:
+        aliases = yaml.safe_load(file)
+    if fname in aliases and np.logical_or.reduce(
+        [f == aliases[fname] for f in sfields]
+    ):
+        print('Stellar field, skipping')
+        return
+
     # Get paths and get fields
     main = os.getcwd()
     fields = os.path.join(main, 'FIELDS')
