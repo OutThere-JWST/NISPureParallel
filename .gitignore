@@ -17,7 +17,7 @@ FIELDS/
 *.DS_Store
 
 # Ignore test files
-test.*
+test*
 
 # Ignore built HTML files
 table.html

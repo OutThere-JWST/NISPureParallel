@@ -114,7 +114,7 @@ def main():
     # Determine catalog depth
     cat = Table.read(os.path.join(extract, f'{fname}-ir.cat.fits'))
     mag = cat['MAG_AUTO'][np.invert(cat['MAG_AUTO'].mask)]
-    kde = stats.gaussian_kde(mag[np.invert(mag.mask)])  # KDE Estimate
+    kde = stats.gaussian_kde(mag)  # KDE Estimate
     mode_mag = optimize.minimize(lambda x: -kde(x), np.median(mag)).x  # Modes
 
     # Determine exposure time offset
