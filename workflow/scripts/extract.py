@@ -33,12 +33,6 @@ def extract_id(i, grp, fname):
     )
     mb.write_master_fits()
 
-    # # Write extracted spectra
-    # oned = mb.oned_spectrum()
-    # vstack([oned[k] for k in sorted(oned.keys())]).write(
-    #     f'{fname}_{str(i).zfill(5)}.oned.fits', overwrite=True
-    # )
-
     # Keep track of extracted objects
     return i
 
@@ -95,22 +89,6 @@ def main():
         pad=800,
     )
 
-    # # Move files
-    # for f in glob(f'{root}_*{str(i).rjust(5,"0")}.*.png'):
-    #     new = f.replace('full','zfit').replace('stack','twod')
-    #     new = '.'.join(new.split('.')[-2:])
-    #     os.rename(f,os.path.join(extract_plots,f'{str(i)}.{new}'))
-
-    # # Create oned spectrum figure
-    # fig = mb.oned_figure()
-    # fig.savefig(os.path.join(extract_plots,f'{i}_oned.png'))
-    # pyplot.close(fig)
-
-    # # Create 2d spectrum figure
-    # hdu,fig = mb.drizzle_grisms_and_PAs(size=38, scale=0.5, diff=True, kernel='square', pixfrac=0.5)
-    # fig.savefig(os.path.join(extract_plots,f'{i}_twod.png'))
-    # pyplot.close(fig)
-
     # Determine catalog depth
     cat = Table.read(os.path.join(extract, f'{fname}-ir.cat.fits'))
     mag = cat['MAG_AUTO'][np.invert(cat['MAG_AUTO'].mask)]
@@ -123,7 +101,7 @@ def main():
         for f in np.unique(obs['filters'])
     }
     t_clear = np.sum([times[f] for f in times if 'CLEAR' in f])  # Total Direct
-    t_grism = np.max([times[f] for f in times if 'GR' in f]+[0])  # Max Grism
+    t_grism = np.max([times[f] for f in times if 'GR' in f] + [0])  # Max Grism
     offset = 2.5 * np.log10(np.sqrt(t_grism / t_clear))  # Scales with sqrt(t)
 
     # Determine extraction depth
