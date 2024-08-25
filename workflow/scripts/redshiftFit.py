@@ -2,10 +2,8 @@
 
 # Import packages
 import os
-import yaml
 import warnings
 import argparse
-import numpy as np
 from multiprocessing import Pool
 from astropy.table import Table, vstack
 
@@ -31,16 +29,6 @@ def main():
     print(f'Fitting {fname}')
     print(f'grizli:{grizli.__version__}')
 
-    # Skip if in a stellar field
-    sfields = ['LMC', 'M31', 'M87', 'M101']
-    with open('resources/aliases.yaml', 'r') as file:
-        aliases = yaml.safe_load(file)
-    if fname in aliases and np.logical_or.reduce(
-        [f == aliases[fname] for f in sfields]
-    ):
-        print('Stellar field, skipping')
-        return
-
     # Get paths and get fields
     main = os.getcwd()
     fields = os.path.join(main, 'FIELDS')
@@ -52,7 +40,7 @@ def main():
     os.chdir(extract)
 
     # Return if directory is empty
-    if len(os.listdir()) == 0:
+    if not os.path.exists(f'{fname}-extracted.fits'):
         print('No extracted spectra found')
         return
 
