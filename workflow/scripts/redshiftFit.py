@@ -2,8 +2,10 @@
 
 # Import packages
 import os
+import yaml
 import warnings
 import argparse
+import numpy as np
 from multiprocessing import Pool
 from astropy.table import Table, vstack
 
@@ -14,6 +16,7 @@ from grizli.pipeline import auto_script
 
 # Silence warnings
 warnings.filterwarnings('ignore')
+
 
 def main():
     # Parse arguements
@@ -27,6 +30,16 @@ def main():
     # Print version and step
     print(f'Fitting {fname}')
     print(f'grizli:{grizli.__version__}')
+
+    # Skip if in a stellar field
+    sfields = ['LMC', 'M31', 'M87', 'M101']
+    with open('resources/aliases.yaml', 'r') as file:
+        aliases = yaml.safe_load(file)
+    if fname in aliases and np.logical_or.reduce(
+        [f == aliases[fname] for f in sfields]
+    ):
+        print('Stellar field, skipping')
+        return
 
     # Get paths and get fields
     main = os.getcwd()
@@ -74,6 +87,7 @@ def main():
         ]
     ).write(f'{fname}_fitresults.fits', overwrite=True)
 
+
 # Fit Redshift
 def zfit(i):
     # Fit
@@ -88,6 +102,7 @@ def zfit(i):
     # hdu,fig = mb.drizzle_grisms_and_PAs(size=38, scale=0.5, diff=True, kernel='square', pixfrac=0.5)
     # fig.savefig(os.path.join(extract_plots,f'{i}_twod.png'))
     # pyplot.close(fig)
+
 
 if __name__ == '__main__':
     main()

@@ -51,7 +51,7 @@ def main():
     print(f'grizli:{grizli.__version__}')
 
     # Skip if in a stellar field
-    sfields = ['LMC', 'M31', 'M101']
+    sfields = ['LMC', 'M31', 'M87', 'M101']
     with open('resources/aliases.yaml', 'r') as file:
         aliases = yaml.safe_load(file)
     if fname in aliases and np.logical_or.reduce(
