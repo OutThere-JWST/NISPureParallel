@@ -105,7 +105,7 @@ def main():
         extracted = results.get()
 
     # Write catalog of extracted objects
-    Table([np.sorted([e for e in extracted if e is not None])], names=['NUMBER']).write(
+    Table([sorted([e for e in extracted if e is not None])], names=['NUMBER']).write(
         f'{fname}-extracted.fits', overwrite=True
     )
 
