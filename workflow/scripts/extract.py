@@ -10,7 +10,7 @@ import argparse
 import numpy as np
 from astropy.io import fits
 from astropy.table import Table
-from multiprocessing import Pool
+# from multiprocessing import Pool
 
 # Import grizli
 import grizli
@@ -99,11 +99,28 @@ def main():
     mag = cat['MAG_AUTO'].filled(np.inf)
     ids = cat['NUMBER'][mag <= extract_mag]
 
-    # Multiprocess
-    with Pool(ncpu) as pool:
-        # Iterate over IDs
-        results = pool.starmap_async(extract_id, [(i, grp, fname) for i in ids])
-        extracted = results.get()
+    # Extract
+    extracted = []
+    for i in ids:
+        # Get beams from group
+        beams = grp.get_beams(i, size=32, min_mask=0, min_sens=0.01)
+        if len(beams) == 0:
+            continue  # Skip if no beams
+
+        # Extract beam
+        mb = multifit.MultiBeam(
+            beams, fcontam=0.1, min_sens=0.01, min_mask=0, group_name=fname
+        )
+        mb.write_master_fits()
+
+        # Keep track of extracted objects
+        extracted.append(i)
+
+    # # Multiprocess
+    # with Pool(ncpu) as pool:
+    #     # Iterate over IDs
+    #     results = pool.starmap_async(extract_id, [(i, grp, fname) for i in ids])
+    #     extracted = results.get()
 
     # Write catalog of extracted objects
     Table([sorted([e for e in extracted if e is not None])], names=['NUMBER']).write(
