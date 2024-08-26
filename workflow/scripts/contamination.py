@@ -64,6 +64,11 @@ def main():
     is_grism = np.array(['GR' in filt for filt in res['filter']])
     un = utils.Unique(res['pupil'])
 
+    # Skip if no grism
+    if not np.any(is_grism):
+        print('No grism files, skipping')
+        return
+
     # Set priority of filters
     filt_ref = dict(
         F115W=['F115W', 'F150W', 'F200W'],
