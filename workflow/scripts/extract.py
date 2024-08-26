@@ -8,9 +8,9 @@ import glob
 import warnings
 import argparse
 import numpy as np
+from astropy.io import fits
 from astropy.table import Table
 from multiprocessing import Pool
-from scipy import stats, optimize
 
 # Import grizli
 import grizli
@@ -32,6 +32,8 @@ def extract_id(i, grp, fname):
         beams, fcontam=0.1, min_sens=0.01, min_mask=0, group_name=fname
     )
     mb.write_master_fits()
+
+    del beams, mb
 
     # Keep track of extracted objects
     return i
@@ -70,7 +72,6 @@ def main():
     obs['filters'] = [re.sub(r'150[RC]', '', f) for f in obs['filters']]
 
     # Subdirectories
-    # plots = os.path.join(home, 'Plots')
     extract = os.path.join(home, 'Extractions')
     os.chdir(extract)
 
@@ -89,23 +90,8 @@ def main():
         pad=800,
     )
 
-    # Determine catalog depth
-    cat = Table.read(os.path.join(extract, f'{fname}-ir.cat.fits'))
-    mag = cat['MAG_AUTO'][np.invert(cat['MAG_AUTO'].mask)]
-    kde = stats.gaussian_kde(mag)  # KDE Estimate
-    mode_mag = optimize.minimize(lambda x: -kde(x), np.median(mag)).x  # Modes
-
-    # Determine exposure time offset
-    times = {
-        f: (obs['t_exptime'][obs['filters'] == f]).sum()
-        for f in np.unique(obs['filters'])
-    }
-    t_clear = np.sum([times[f] for f in times if 'CLEAR' in f])  # Total Direct
-    t_grism = np.max([times[f] for f in times if 'GR' in f] + [0])  # Max Grism
-    offset = 2.5 * np.log10(np.sqrt(t_grism / t_clear))  # Scales with sqrt(t)
-
-    # Determine extraction depth
-    extract_mag = mode_mag + offset - 1.5  # 1.5 mag fainter than mode
+    # Read extraction depth
+    extract_mag = fits.getdata(os.path.join(extract, 'extract_mag.fits'))[0]
 
     # Get IDs
     cat = Table.read(f'{fname}-ir.cat.fits')
@@ -115,10 +101,11 @@ def main():
     # Multiprocess
     with Pool(ncpu) as pool:
         # Iterate over IDs
-        extracted = pool.starmap(extract_id, [(i, grp, fname) for i in ids])
+        results = pool.starmap_async(extract_id, [(i, grp, fname) for i in ids])
+        extracted = results.get()
 
     # Write catalog of extracted objects
-    Table([[e for e in extracted if e is not None]], names=['NUMBER']).write(
+    Table([np.sorted([e for e in extracted if e is not None])], names=['NUMBER']).write(
         f'{fname}-extracted.fits', overwrite=True
     )
 

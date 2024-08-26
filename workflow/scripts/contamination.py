@@ -89,6 +89,11 @@ def main():
     # Determine extraction depth
     extract_mag = mode_mag + offset - 1.5  # 1.5 mag fainter than mode
 
+    # Save extraction depth
+    fits.PrimaryHDU(data=[extract_mag]).writeto(
+        os.path.join(extract, 'extract_mag.fits'), overwrite=True
+    )
+
     # Iterate over filters
     for filt in un.values:
         # Change directory
