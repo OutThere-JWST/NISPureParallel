@@ -95,6 +95,7 @@ def main():
 
     # Get IDs
     cat = Table.read(f'{fname}-ir.cat.fits')
+    cat = Table(cat, masked=True, copy=False)
     mag = cat['MAG_AUTO'].filled(np.inf)
     ids = cat['NUMBER'][mag <= extract_mag]
 
