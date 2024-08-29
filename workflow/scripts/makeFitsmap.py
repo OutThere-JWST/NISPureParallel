@@ -35,17 +35,17 @@ def main():
 
     # Get paths and get fields
     main = os.getcwd()
-    fields = os.path.join(main, 'FIELDS')
-    home = os.path.join(fields, fname)
+    fields = path.join(main, 'FIELDS')
+    home = path.join(fields, fname)
 
     # Subdirectories
-    prep = os.path.join(home, 'Prep')
-    plots = os.path.join(home, 'Plots')
-    extract = os.path.join(home, 'Extractions')
+    prep = path.join(home, 'Prep')
+    plots = path.join(home, 'Plots')
+    extract = path.join(home, 'Extractions')
     fitsmap = path.join(home, 'fitsmap')
 
     # Remove last map
-    if os.path.isdir(fitsmap):
+    if path.isdir(fitsmap):
         shutil.rmtree(fitsmap)
     os.mkdir(fitsmap)
 
@@ -62,7 +62,7 @@ def main():
         files.append(path.join(fitsmap, f'RGB-{pa}.png'))
 
     # Get Observations and filters
-    obs = Table.read(os.path.join(fields, 'field-obs.fits'), fname)
+    obs = Table.read(path.join(fields, 'field-obs.fits'), fname)
     filters = np.unique(obs['filters'])
 
     # Create image files (FITS)
@@ -218,7 +218,7 @@ def main():
                 f'{fname}_{str(i).zfill(5)}.{suffix}.png'
                 for suffix in ['stack', 'line', 'full']
             ]
-            imgs = [i for i in imgs if os.path.exists(os.path.join(extract, i))]
+            imgs = [i for i in imgs if path.exists(path.join(extract, i))]
             allims.extend(imgs)
 
             # Append to list of extracted links
@@ -233,7 +233,7 @@ def main():
 
     # Create map
     norm_kwargs = dict(stretch='log', min_percent=30, max_percent=99.9)
-    ffiles = [os.path.join(fitsmap, f) for f in files]
+    ffiles = [path.join(fitsmap, f) for f in files]
     convert.files_to_map(
         ffiles,
         title=f'{fname} FitsMap',

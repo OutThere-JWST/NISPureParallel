@@ -15,4 +15,4 @@ dependencies:
   - numpy<2
   - protobuf<4.21
   - pip:
-    - fitsmap
+    - git+https://github.com/ryanhausen/fitsmap
