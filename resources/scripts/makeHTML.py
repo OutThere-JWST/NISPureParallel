@@ -43,10 +43,10 @@ for hdu in hdul[1:]:
     obs = Table(hdu.data)
 
     # Get alias of field
-    alias = aliases[fname] if fname in aliases.keys() else '\u200B'
+    alias = aliases[fname] if fname in aliases.keys() else '\u200b'
 
     # Get link to field
-    flink = f'<a href="maps/{fname}/index.html" target="_blank">{fname}</a>'
+    flink = f'<a href="s3/maps/{fname}/index.html" target="_blank">{fname}</a>'
 
     # Get field area
     reg = union_all([SRegion(o).shapely[0] for o in obs['s_region']])
@@ -81,7 +81,11 @@ for hdu in hdul[1:]:
 
     # JWST IDs
     prop_ids = ', '.join(np.unique([o[3:7] for o in obs['obs_id']]))
-    prim_ids = ', '.join(np.unique(obs['prim_id']))
+    prim_ids = np.unique(obs['prim_id'])
+    jwst_url = 'https://www.stsci.edu/jwst/science-execution/program-information?id='
+    prim_ids = ', '.join(
+        [f'<a href="{jwst_url}{i}" target="_blank">{i}</a>' for i in prim_ids]
+    )
 
     # Get row
     rows.append(
@@ -100,7 +104,7 @@ names = [
     'Start',
     'End',
     'PIDs',
-    'Prim IDs',
+    'Parallel',
 ]
 tab = Table(list(map(list, zip(*rows))), names=names)
 
@@ -131,9 +135,9 @@ with open('resources/html5up-phantom/table.html', 'w') as f:
 #
 image_blank = """<article class="style0">
     <span class="image">
-        <img src="maps/{fname}/RGB/0/0/0.png" onerror="if (this.src != 'images/error.png') this.src = 'images/error.png';" />
+        <img src="s3/maps/{fname}/RGB/0/0/0.png" onerror="if (this.src != 'images/error.png') this.src = 'images/error.png';" />
     </span>
-    <a href="maps/{fname}/index.html" target="_blank">
+    <a href="s3/maps/{fname}/index.html" target="_blank">
         <h2>{fname}</h2>
         <div class="content">
             <p>{info}</p>
