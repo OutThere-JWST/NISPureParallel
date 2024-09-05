@@ -103,7 +103,6 @@ for field in fields:
         f'{field}-f*n-clear*fits',
     ]
     catalogs = sum([glob.glob(path.join(prep_path, s)) for s in catstrings], [])
-    catalogs = [c for c in catalogs if 'proj' not in c]  # Remove proj
 
     # Copy Over Catalogs
     catalogs_remote_path = path.join(data_remote_path, field)
@@ -112,6 +111,7 @@ for field in fields:
     # Extraction Catalogs
     extract_path = path.join(field_path, 'Extractions')
     catalogs = glob.glob(path.join(extract_path, f'{field}-f*_grism_*.fits'))
+    catalogs = [c for c in catalogs if 'proj' not in c]  # Remove proj
     phot = path.join(extract_path, f'{field}_phot_apcorr.fits')
     if path.exists(phot):
         catalogs.append(phot)
