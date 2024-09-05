@@ -5,8 +5,14 @@ import numpy as np
 from astropy.table import Table
 from sklearn.cluster import KMeans
 
-# Make sure RATE directory exists, if not create it
-if not os.path.isdir('RATE'): os.mkdir('RATE')
+# Run compute Fields? 
+# with open('resources/scripts/computeFields.py') as file:
+#     exec(file.read())
+
+# Make sure necessary directories exist
+for d in ['UNCAL','RATE', 'logs']:
+    if not os.path.isdir(d):
+        os.mkdir(d)
 
 # Names of fields
 with open('FIELDS/fields.txt') as f: FIELDS = np.array(f.read().splitlines())
@@ -36,6 +42,7 @@ rule all:
         expand('logs/{field}.fmap.log',field=FIELDS)
 
 # Include rules
+include: "rules/download.smk"
 include: "rules/runStage1.smk"
 include: "rules/preprocess.smk"
 include: "rules/mosaic.smk"

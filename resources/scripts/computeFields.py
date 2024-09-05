@@ -14,7 +14,7 @@ from scipy.optimize import minimize
 # Astropy Packages
 from astropy.io import fits
 from astroquery.mast import Observations
-from astropy.table import Table, join, vstack
+from astropy.table import Table, vstack
 from astropy.coordinates import SkyCoord, get_constellation
 
 # Geometry packages
@@ -93,13 +93,26 @@ def distance_between_shapely(sA, sB, min_dist=1):
 
 
 if __name__ == '__main__':
-    # Parse arguements
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--download', action='store_true')
-    args = parser.parse_args()
+    # Get list of proposal ids from the user
+    parser = argparse.ArgumentParser(description='Compute Fields for JWST NIRISS')
+    parser.add_argument(
+        '--separation',
+        type=float,
+        help='Maximum separation between fields (in arcseconds)',
+        default=30,
+    )
+    parser.add_argument(
+        '--proposal_ids',
+        type=str,
+        nargs='+',
+        help='List of proposal IDs to download',
+        default=['1571', '3383', '4681'],
+    )
 
-    # Set proposal IDs
-    proposal_ids = ['1571', '3383', '4681']
+    # Parse arguements
+    args = parser.parse_args()
+    separation = args.separation
+    proposal_ids = args.proposal_ids
 
     # Query survey
     print('Querying MAST...')
@@ -141,7 +154,7 @@ if __name__ == '__main__':
                 if oid == ob.find(f'{ns}Number').text.zfill(3):
                     # Get primary ID from label
                     pid = ob.find(f'{ns}Label').text[:4]
-                    # If it can't be found here, get it from the slot 
+                    # If it can't be found here, get it from the slot
                     # This is just a fix because parallel to 2302 is weird.
                     if pid.startswith('F'):
                         pid = ob.find(f'{ns}PureParallelSlotGroupName').text[:4]
@@ -198,7 +211,7 @@ if __name__ == '__main__':
         # Check against all other fields
         for j in range(i + 1, len(fields)):
             # Check distance between regions
-            if distance_between_shapely(f_regs[i], f_regs[j]) < 30 / 3600:
+            if distance_between_shapely(f_regs[i], f_regs[j]) < separation / 3600:
                 # Combine fields
                 f_regs[i] = f_regs[i].union(f_regs.pop(j))
                 fields[i] = vstack([fields[i], fields.pop(j)])
@@ -269,23 +282,3 @@ if __name__ == '__main__':
     # Save FITS file
     obs_hdul.writeto('FIELDS/field-obs.fits', overwrite=True)
     prod_hdul.writeto('FIELDS/field-prods.fits', overwrite=True)
-
-    # Skip if download flag is not set
-    if args.download:
-        print('Downloading Products...')
-
-        # Get products to download
-        prods = vstack([Table(p.data) for p in prod_hdul[1:]])
-
-        # Create Download Directory
-        if not os.path.isdir('UNCAL'):
-            os.mkdir('UNCAL')
-
-        # Get list of files to download
-        todo = np.setdiff1d(prods['productFilename'], os.listdir('UNCAL'))
-
-        # Download products if not already downloaded
-        if len(todo) > 0:
-            Observations.download_products(
-                join(prods, Table([todo])), download_dir='UNCAL', flat=True
-            )
