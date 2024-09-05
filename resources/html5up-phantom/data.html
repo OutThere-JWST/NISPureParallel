@@ -49,14 +49,51 @@
 				<!-- Main -->
 					<div id="main">
 						<div class="inner">
-							<!-- <header>
-								<h1>This is Phantom, a free, fully responsive site<br />
-								template designed by <a href="http://html5up.net">HTML5 UP</a>.</h1>
-								<p>Etiam quis viverra lorem, in semper lorem. Sed nisl arcu euismod sit amet nisi euismod sed cursus arcu elementum ipsum arcu vivamus quis venenatis orci lorem ipsum et magna feugiat veroeros aliquam. Lorem ipsum dolor sit amet nullam dolore.</p>
-							</header> -->
-							<section class="tiles">
-<!-- IMAGES HERE -->
-							</section>
+							<h2>Data Access</h1>
+                            <p>The data is all hosted on S3. If you require direct access, please get in touch with Raphael Hviding and he can provide you with credentials. Otherwise, you can explore the data in the browser <a href="s3/data" target="_blank">here</a>.</p>
+
+                            <h2>Data Products</h1>
+                            <p>The following data products are available:</p>
+                            <h3>Top-Level Products</h3>
+                            <ul>
+                                <li>"photometry.fits": Concatenated table of all photometry for the combined dataset</li>
+                                <li>"spectra-fitting": Concatenated table of all spectroscopic fitting results for the combined dataset</li>
+                            </ul>
+                            <h3>Per-Field Products</h3>
+                            <ul>
+                                <li>Per Filter Direct and Grism Mosaics</li>
+                                <ul>
+                                    <li>sci.fits: Science Mosaic</li>
+                                    <li>ctx.fits: Context Mosaic </li>
+                                    <li>wht.fits: Weight Mosaic (Direct Only)</li>
+                                    <li>clean.fits: Contamination Subtracted Grism Mosaic (Grism Only)</li>
+                                    <li>bkg.fits: Background Image (Direct Only)</li>
+                                </ul>
+                                <li>Detection Image Results (Made from all available Imaging)</li>
+                                <ul>
+                                    <li>ir_drc_sci.fits: Detection Image</li>
+                                    <li>ir_drc_wht.fits: Detection Weight Image</li>
+                                    <li>ir_bkg.fits: Detection Background Image</li>
+                                    <li>ir.seg.fits: Segmentation Map</li>
+                                    <li>ir.cat.fits: Detection Catalog</li>
+                                </ul>
+                                <li>Photometry</li>
+                                <ul>
+                                    <li>phot_apcorr.fits: Photometry & Aperture Corrected Photometry</li>
+                                </ul>
+                                <li>Spectroscopy</li>
+                                <ul>
+                                    <li>fitresults.fits: Concatenated Spectroscopic Results</li>
+                                    <li>spectra/</li>
+                                    <ul>
+                                        <li>beams.fits: 2D Spectra from each pointing</li>
+                                        <li>stack.fits: stacked 2D Spectra</li>
+                                        <li>1d.fits: Extracted 1D Spectrum</li>
+                                        <li>full.fits: Detailed Fitting results and Line Maps</li>
+                                        <li>row.fits: Summarized Fitting Results</li>
+                                    </ul>
+                                </ul>
+                            </ul>
 						</div>
 					</div>
 
@@ -104,7 +141,6 @@
 			</div>
 
 		<!-- Scripts -->
-            <script src="assets/js/resize-transparent.js"></script>
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/browser.min.js"></script>
 			<script src="assets/js/breakpoints.min.js"></script>
