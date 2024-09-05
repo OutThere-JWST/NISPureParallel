@@ -138,7 +138,7 @@ for field in fields:
     copy_files(spectra, extract_path, spectra_remote_path)
 
 # Create total catalogs
-names = ['spectra-fitting.fits', 'phomoetry.fits']
+names = ['phomoetry.fits', 'spectra-fitting.fits']
 for cats, name in zip([phot_combined, zfit_combined], names):
     # Stack and save
     vstack(cats).write(name)
