@@ -49,12 +49,8 @@ def main():
     prods = Table.read(os.path.join(fields, 'field-prods.fits'), fname)
     home = os.path.join(fields, fname)
 
-    # Get main paths
-    rate = os.path.join(main, 'RATE')
-    if not os.path.exists(home):
-        os.mkdir(home)
-
     # Subdirectories
+    rate = os.path.join(home, 'RATE')
     raw = os.path.join(home, 'RAW')
     prep = os.path.join(home, 'Prep')
     plots = os.path.join(home, 'Plots')

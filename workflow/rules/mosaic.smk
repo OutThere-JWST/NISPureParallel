@@ -1,11 +1,11 @@
 # Mosaic Rule
 rule mosaic:
     input:
-        'logs/{field}.proc.log'
+        'FIELDS/{field}/logs/proc.log'
     output:
-        'logs/{field}.mos.log'
+        'FIELDS/{field}/logs/mos.log'
     log:
-        'logs/{field}.mos.log'
+        'FIELDS/{field}/logs/mos.log'
     group:
         lambda wildcards: f'mos-{groups[wildcards.field]}'
     conda:

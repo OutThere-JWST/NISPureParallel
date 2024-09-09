@@ -1,11 +1,11 @@
 # Contamination Rule
 rule contam:
     input:
-        'logs/{field}.mos.log'
+        'FIELDS/{field}/logs/mos.log'
     output:
-        'logs/{field}.contam.log'
+        'FIELDS/{field}/logs/contam.log'
     log:
-        'logs/{field}.contam.log'
+        'FIELDS/{field}/logs/contam.log'
     group:
         lambda wildcards: f'contam-{groups[wildcards.field]}'
     conda:

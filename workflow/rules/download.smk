@@ -3,13 +3,14 @@ def create_rule(field):
     rule:
         name: f"download_{field}"
         output:
-            [f'UNCAL/{f}' for f in uncal[field]]
+            [f'FIELDS/{field}/UNCAL/{f}' for f in uncal[field]]
         log: 
-            f'logs/{field}.download.log'
+            f'FIELDS/{field}/logs/download.log'
         group:
             f'download-{groups[field]}'
         shell: 
             f"""
+            mkdir -p FIELDS/{field}/logs
             ./workflow/scripts/download.py {field} --ncpu {{resources.cpus_per_task}} > {{log}} 2>&1
             """
 

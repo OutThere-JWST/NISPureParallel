@@ -19,12 +19,11 @@ def main():
     # Parse arguements
     parser = argparse.ArgumentParser()
     parser.add_argument('uncal', type=str)
+    parser.add_argument('rate', type=str)
     parser.add_argument('--scratch', action='store_true')
     args = parser.parse_args()
     uncal = args.uncal
-
-    # Get output path
-    rate = os.path.join('RATE', os.path.basename(uncal).replace('uncal', 'rate'))
+    rate = args.rate
 
     # If exists and not forcing from scratch, skip
     if os.path.exists(rate) and not args.scratch:

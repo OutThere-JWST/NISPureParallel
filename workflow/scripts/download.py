@@ -21,13 +21,24 @@ if __name__ == '__main__':
     fname = args.fieldname
     ncpu = args.ncpu
 
-    # Save FITS file
-    prods = Table.read('FIELDS/field-prods.fits', fname)
+    # Get paths
+    main = os.getcwd()
+    fields = os.path.join(main, 'FIELDS')
+    prods = Table.read(os.path.join(fields, 'field-prods.fits'), fname)
+    home = os.path.join(fields, fname)
+    uncal = os.path.join(home, 'UNCAL')
+
+    # Destination directory
+    home = os.path.join(fields, fname)
+
+    # Create directory tree if it doesn't exist
+    if not os.path.exists(home):
+        os.makedirs(home)
 
     print(f'Downloading Products for {fname}...')
 
     # Get list of files to download
-    todo = np.setdiff1d(prods['productFilename'], os.listdir('UNCAL'))
+    todo = np.setdiff1d(prods['productFilename'], os.listdir(uncal))
 
     # Download products if not already downloaded
     if len(todo) > 0:
@@ -39,13 +50,13 @@ if __name__ == '__main__':
             with ThreadPoolExecutor(ncpu) as executor:
                 executor.map(
                     lambda p: Observations.download_products(
-                        p, download_dir='UNCAL', flat=True
+                        p, download_dir=uncal, flat=True
                     ),
                     todo_prods,
                 )
 
         # Single-threaded download
         else:
-            Observations.download_products(todo_prods, download_dir='UNCAL', flat=True)
+            Observations.download_products(todo_prods, download_dir=uncal, flat=True)
     
     print(f'Downloaded Products for {fname}')

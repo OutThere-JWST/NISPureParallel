@@ -1,11 +1,11 @@
 # Extraction Rule
 rule extract:
     input:
-        'logs/{field}.contam.log'
+        'FIELDS/{field}/logs/contam.log'
     output:
-        'logs/{field}.extr.log'
+        'FIELDS/{field}/logs/extr.log'
     log:
-        'logs/{field}.extr.log'
+        'FIELDS/{field}/logs/extr.log'
     group:
         lambda wildcards: f'extr-{groups[wildcards.field]}'
     conda:
