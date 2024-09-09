@@ -5,10 +5,6 @@ import numpy as np
 from astropy.table import Table
 from sklearn.cluster import KMeans
 
-# Run compute Fields? 
-# with open('resources/scripts/computeFields.py') as file:
-#     exec(file.read())
-
 # Names of fields
 with open('FIELDS/fields.txt') as f: FIELDS = np.array(f.read().splitlines())
 

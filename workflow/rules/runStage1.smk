@@ -12,7 +12,7 @@ def create_rule(field):
         name: f"stage1_{field}"
         input:
             [f'FIELDS/{field}/UNCAL/{f}' for f in uncal[field]]
-        output:x
+        output:
             [f'FIELDS/{field}/RATE/{f.replace('uncal','rate')}' for f in uncal[field]]
         log: 
             f'FIELDS/{field}/logs/stage1.log'
