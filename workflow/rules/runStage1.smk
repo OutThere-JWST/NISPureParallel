@@ -1,12 +1,8 @@
-# High memory field resources
-high_mem_resurces = {field:{'cpus_per_task': 1} for field in ['vir-04','leo-11','boo-04','uma-02','leo-02']}
+# High memory fields
+high_memory_fields = ['vir-04','leo-11','boo-04','uma-02','leo-02']
 
 # Stage 1 Rule
 def create_rule(field):
-
-    # Swap in high_memory resources for high memory fields
-    default_resources = {'cpus_per_task': '{resources.cpus_per_task}'}
-    resources = high_mem_resurces.get(field, default_resources)
 
     rule:
         name: f"stage1_{field}"
@@ -21,7 +17,7 @@ def create_rule(field):
         conda:
             '../envs/jwst.yaml'
         resources:
-            cpus_per_task = resources['cpus_per_task']
+            cpus_per_task = lambda wildcards: 1 if field in high_memory_fields else config['default-resources']['cpus_per_task']
         shell: 
             """
             mkdir -p FIELDS/{field}/RATE
