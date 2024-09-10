@@ -22,10 +22,6 @@ groups = {FIELDS[i]:l for i,l in enumerate(labels)}
 rules = ['stage1','proc','mos','contam','extr','zfit','fmap']
 config = {f'{r}-{i}':int((labels==i).sum()) for r in rules for i in range(Njobs)}
 config = {'group_components':config}
-with open('FIELDS/config.yaml','w') as f: yaml.dump(config,f)
-
-# Configuration file
-configfile: "FIELDS/config.yaml"
 
 # Final Rule
 rule all:
