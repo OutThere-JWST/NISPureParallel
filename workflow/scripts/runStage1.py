@@ -30,10 +30,8 @@ def main():
         print(f'{rate} exists, skipping')
         return
 
-    print('Turning',uncal,'to',rate)
-
     # Run pipeline
-    # cal(uncal, rate)
+    cal(uncal, rate)
 
 
 # Detector 1 Pipeline
