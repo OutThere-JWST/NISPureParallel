@@ -56,11 +56,11 @@ If you've edited a step of the pipeline and want to force it to re-run just for 
 Note: For cluster users, you will need to make sure that the required environment modules are loaded in your bashrc/profile. There should be a way to do it with snakemake but I haven't managed to get it to work yet. Importantly, conda and TeX are needed for running this pipeline, which are available to the MPIA Cluster as modules.
 
 ## Pipeline
-The following is a brief description of Snakemake and the pipeline developed in this repository. All of the relevant data and files are contained within the `workflow` directory. Snakemake begins by reading the Snakefile which describes the rules necessary to create output files based on input files. Snakemake then computes the DAG necessary to create all requested output files and distributes them in parallel where possible. Each rule requires inputs, outputs, and code necessary to produce inputs from outputs. Here I briefly describe the stages of our:
+The following is a brief description of Snakemake and the pipeline developed in this repository. All of the relevant data and files are contained within the `workflow` directory. Snakemake begins by reading the Snakefile which describes the rules necessary to create output files based on input files. Snakemake then computes the DAG necessary to create all requested output files and distributes them in parallel where possible. Each rule requires inputs, outputs, and code necessary to produce inputs from outputs. Here I briefly describe the stages of our pipeline:
 
 0) Download Data. The UNCAL images for the field in question is downloaded. If the data exist, it will not re-download them. The download is parallelized.
 
-1) Stage1 Processing. Here we convert UNCAL files for NIRISS into RATE files. Here we perform two special operations that differ from the regular pipeline. Firstly, we apply Snowblind at the group stage to maximize our SNR in affected areas. Secondly, we implement the ColumnJump step which can offer improvements for NIRISS fields. 
+1) Stage1 Processing. Here we convert UNCAL files for NIRISS into RATE files. Here we use the latest version of the JWST pipeline and implement the ColumnJump step which can offer improvements for NIRISS fields. 
 
 2) Preprocessing. Here the data is pre-processed using `grizli`. In a nutshell, a modified version of the Stage2 pipeline is applied, and dithered frames are drizzled together.
 
@@ -68,7 +68,7 @@ The following is a brief description of Snakemake and the pipeline developed in 
 
 4) Contamination Modelling. Based on the direct image and detection catalog, we create a model of the dispersed image that can be used to model the contamination from overlapping traces. 
 
-5) Spectral Extraction. 2D Spectra are extracted from the dispered images. 
+5) Spectral Extraction. 2D Spectra are extracted from the dispersed images. 
 
 6) Redshift Fitting. 
 
