@@ -26,7 +26,7 @@ This pipeline processes data in `fields` which are computed in the following way
 - If two NIRISS fields overlap (computed using a Cartesian approximation) they are added to the same field.
 - If two NIRISS fields are within 30" of each other (computed using a spherical prescription), they are added to the same field. This is to account for the fact that the trace from a galaxy in one NIRISS field may fall into a non-contiguous field some distance away.
 - Fields are named based on the constellation they are in along with a numeric index that indicates the relative start of observation of the field (e.g. the first data for field uma-00 arrived before uma-01).
-After activating the Snakemake environment, we can run the conveniently provided helper script to compute these fields. Make sure to run this from the top-level directory as such: `python ./resources/scripts/getFields.py`. This will query all available NIRISS PP data from OutThere and PASSAGE and compute the resultant fields. 
+After activating the Snakemake environment, we can run the conveniently provided helper script to compute these fields. Make sure to run this from the top-level directory as such: `python ./resources/scripts/computeFields.py`. This will query all available NIRISS PP data from OutThere and PASSAGE and compute the resultant fields. 
 
 All data are processed in each of their fields. 
 
