@@ -13,6 +13,11 @@ The workflow described here will install all of the necessary software for you, 
 - Follow the [grizli installation instructions](https://grizli.readthedocs.io/en/latest/grizli/install.html), most importantly the part describing the downloading of configuration files and specifying path variables. Since grizli is pip-installable, I recommend making a venv or conda/mamba environment and pip installing and then downloading the relevant files. Make sure to download the JWST calibrations! 
 - You'll also need to set the [relevant CRDS environment variables](https://jwst-pipeline.readthedocs.io/en/latest/jwst/user_documentation/reference_files_crds.html). It may also be worth running the pipeline on a single UNCAL file independent of the following steps so that the correct CRDS files are fetched and placed in your specified cache directory.
 
+### Download Additional Calibrations
+- This Pipeline requires some additional calibration files to be placed in your grizli configuration directory:
+    1. Background Subtraction Files for Imaging and WFSS: https://zenodo.org/records/13741413. Make sure to unpack the non-unflat versions.
+    2. (Option) Updated Trace Configurations: https://zenodo.org/records/7628094
+
 ### Set Up NISPureParallel
 This comes in three steps:
 1) Clone this GitHub repository, note that the end products of this process can take up a few TB of disk space.
@@ -44,7 +49,7 @@ And that's it! Snakemake will distribute this workflow over the clusters for you
 - `--force-all`: Snakemake can recognize when it needs to re-run a rule in many cases, such as a change in the conda/mamba environment used for the rule, or a change in the Snakemake rule (see below). But it's always good to have a hammer when you want to force a full rerun.
 - `--rerun-incomplete`: Sometimes a job/rule will fail, leaving behind bad files. Running with this option will get rid of pesky errors related to this, and force those jobs to rerun. 
 
-If you just want to run a single field, simply provide the relevant field output file as input to the command: `snakemake logs/leo-00.fmap.log`.
+If you just want to run a single field, simply provide the relevant field output file as input to the command: `snakemake FIELDS/leo-00/logs/fmap.log`.
 
 If you've edited a step of the pipeline and want to force it to re-run just for that step, you can delete the relevant logfile from the log directory.
 
