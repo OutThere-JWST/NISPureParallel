@@ -2,7 +2,6 @@
 
 # Import packages
 import os
-import sys
 import argparse
 
 # Multiprocessing
