@@ -1,5 +1,5 @@
 # High memory fields
-high_memory_fields = ['boo-04','leo-02','leo-11','leo-13','sex-04','uma-02','vir-04']
+high_memory_fields = ['boo-04','leo-02','leo-11','leo-13','sex-04','sex-17','sex-22','sex-29','uma-02','vir-04']
 
 # Stage 1 Rule
 def create_rule(field):
@@ -29,7 +29,7 @@ def create_rule(field):
         shell: 
             """
             mkdir -p FIELDS/{field}/RATE
-            parallel -j {resources.cpus_per_task} ./workflow/scripts/runStage1.py --scratch ::: {input} ::: {output} > {log} 2>&1
+            parallel --link -j {resources.cpus_per_task} ./workflow/scripts/runStage1.py --scratch ::: {input} ::: {output} > {log} 2>&1
             """
 
 # Create rules for all fields
