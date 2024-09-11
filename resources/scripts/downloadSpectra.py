@@ -14,7 +14,7 @@ def download_spectrum(extract, local_dir, remote):
     """Download product from remote server."""
 
     # Product name
-    field = extract['root']
+    field = extract['field']
 
     # Remote URL
     remote_url = os.path.join(remote, field, 'spectra')
@@ -61,7 +61,7 @@ def main():
 
     # Create directories
     home = os.getcwd()
-    for field in np.unique(extracted['root']):
+    for field in np.unique(extracted['field']):
         os.makedirs(os.path.join(home, field, 'spectra'), exist_ok=True)
 
     # Multi-threaded download

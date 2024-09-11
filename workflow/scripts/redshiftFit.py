@@ -67,13 +67,15 @@ def main():
         pool.join()
 
     # Create fitting catalog
-    _ = vstack(
+    results = vstack(
         [
             Table.read(f'{fname}_{str(i).zfill(5)}.row.fits')
             for i in ids
             if os.path.exists(f'{fname}_{str(i).zfill(5)}.row.fits')
         ]
-    ).write(f'{fname}_fitresults.fits', overwrite=True)
+    )
+    results.rename_column('root', 'field')
+    results.write(f'{fname}_fitresults.fits', overwrite=True)
 
 
 # Fit Redshift
