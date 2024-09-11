@@ -1,5 +1,5 @@
 # High memory fields
-high_memory_fields = ['boo-04','leo-02','leo-11','leo-13','sex-04','sex-17','sex-22','sex-29','uma-02','vir-04']
+high_memory_fields = ['boo-04','leo-02','leo-11','leo-13','sex-04','sex-16','sex-17','sex-22','sex-29','uma-02','vir-04']
 
 # Stage 1 Rule
 def create_rule(field):
