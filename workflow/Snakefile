@@ -24,9 +24,10 @@ config = {f'{r}-{i}':int((labels==i).sum()) for r in rules for i in range(Njobs)
 config = {'group_components':config}
 
 # Final Rule
+rules = ['proc','mos','contam','extr','zfit','fmap']
 rule all:
     input:
-        expand('FIELDS/{field}/logs/fmap.log',field=FIELDS)
+        expand('FIELDS/{field}/logs/{log}.log',field=FIELDS,log=rules)
 
 # Include rules
 include: "rules/download.smk"
