@@ -99,7 +99,7 @@ def main():
     ids = cat['NUMBER'][mag <= extract_mag]
 
     # Multiprocess
-    if False:#ncpu > 1:
+    if ncpu > 1:
         from multiprocessing import Pool
 
         with Pool(ncpu) as pool:
