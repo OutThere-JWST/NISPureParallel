@@ -100,6 +100,7 @@ for field in fields:
     prep_path = path.join(field_path, 'Prep')
     catstrings = [
         f'{field}-ir*.fits',
+        f'{field}-ir.cat.reg',
         f'{field}-f*n-clear*fits',
     ]
     catalogs = sum([glob.glob(path.join(prep_path, s)) for s in catstrings], [])
@@ -112,6 +113,9 @@ for field in fields:
     extract_path = path.join(field_path, 'Extractions')
     catalogs = glob.glob(path.join(extract_path, f'{field}-f*_grism_*.fits'))
     catalogs = [c for c in catalogs if 'proj' not in c]  # Remove proj
+    catalogs += glob.glob(path.join(extract_path, f'{field}-extracted.reg'))
+
+    # Handle Photometric and Fit Results
     phot = path.join(extract_path, f'{field}_phot_apcorr.fits')
     if path.exists(phot):
         catalogs.append(phot)

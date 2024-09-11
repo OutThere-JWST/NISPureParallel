@@ -8,9 +8,10 @@ import glob
 import warnings
 import argparse
 import numpy as np
+import astropy.units as u
 from astropy.io import fits
-from astropy.table import Table
-# from multiprocessing import Pool
+from astropy.table import Table, join
+from regions import Regions, PixCoord, EllipsePixelRegion
 
 # Import grizli
 import grizli
@@ -123,9 +124,28 @@ def main():
     #     extracted = results.get()
 
     # Write catalog of extracted objects
-    Table([sorted([e for e in extracted if e is not None])], names=['NUMBER']).write(
-        f'{fname}-extracted.fits', overwrite=True
+    extracted = Table(
+        [sorted([e for e in extracted if e is not None])], names=['NUMBER']
     )
+    extracted.write(f'{fname}-extracted.fits', overwrite=True)
+
+    # Write DS9 region file
+    extracted = join(extracted, cat, keys='NUMBER')
+    Regions(
+        [
+            EllipsePixelRegion(
+                PixCoord(c['X_IMAGE'], c['Y_IMAGE']),
+                width=c['A_IMAGE'],
+                height=c['B_IMAGE'],
+                angle=c['THETA_IMAGE'] * u.rad,
+                visual={
+                    'color': '#E20134',
+                    'linewidth': 2,
+                },
+            )
+            for c in extracted
+        ]
+    ).write(f'{fname}-extracted.reg', format='ds9', overwrite=True)
 
 
 if __name__ == '__main__':

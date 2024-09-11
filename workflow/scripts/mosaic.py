@@ -10,8 +10,10 @@ import numpy as np
 from matplotlib import pyplot
 
 # Astropy packages
+import astropy.units as u
 from astropy.wcs import WCS
 from astropy.table import Table
+from regions import Regions, PixCoord, EllipsePixelRegion
 
 # grizli packages
 import grizli
@@ -147,13 +149,32 @@ def main():
         filter_combinations={'ir': ['F115WN-CLEAR', 'F150WN-CLEAR', 'F200WN-CLEAR']},
     )
     # grizli.prep.make_SEP_catalog(f'{root}-ir', threshold=1.2)
-    _ = auto_script.multiband_catalog(
+    cat = auto_script.multiband_catalog(
         field_root=fname,
         detection_filter='ir',
         get_all_filters=True,
         rescale_weight=True,
     )
 
+    # Write DS9 region file
+    Regions(
+        [
+            EllipsePixelRegion(
+                PixCoord(c['X_IMAGE'], c['Y_IMAGE']),
+                width=c['A_IMAGE'] * 3,
+                height=c['B_IMAGE'] * 3,
+                angle=c['THETA_IMAGE'] * u.rad,
+                visual={
+                    'color': '#008DF9',
+                    'linewidth': 2,
+                },
+                meta={
+                    'text': c['NUMBER'],
+                },
+            )
+            for c in cat
+        ]
+    ).write(f'{fname}-ir.reg', format='ds9', overwrite=True)
 
 if __name__ == '__main__':
     main()
