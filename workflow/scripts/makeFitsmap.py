@@ -78,7 +78,7 @@ def main():
         # continue # Skip exposure time maps for now
 
         # Load context map
-        hdul = fits.open(path.join(prep, f'{fname}-{f.lower()}n-clear_drc_ctx.fits'))
+        hdul = fits.open(path.join(extract, f'{fname}-{f.lower()}n-clear_drc_ctx.fits'))
         ctx, h = hdul[0].data, hdul[0].header
 
         # Make exposure time map
