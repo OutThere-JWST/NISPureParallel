@@ -2,6 +2,7 @@
 
 # Import packages
 import os
+import toml
 import glob
 import subprocess
 from os import path
@@ -27,6 +28,8 @@ def copy_files(filelist, local_dir, remote_dir, options=default_options):
 
     # Relative paths
     relfiles = [path.relpath(f, local_dir) for f in filelist]
+
+    return relfiles
 
     # Create a file with the list of files
     file = 'files.txt'
@@ -57,6 +60,7 @@ def copy_files(filelist, local_dir, remote_dir, options=default_options):
 # Function to sync directory
 def sync_dir(local_dir, remote_dir, options=default_options):
     """Function to rclone a list of files to the remote server."""
+    return
 
     # Copy command
     command = [
@@ -87,7 +91,10 @@ with open(path.join(local_path, 'fields.txt')) as f:
 # Iterate over fields
 phot_combined = []
 zfit_combined = []
+manifest = {}
 for field in fields:
+    if field != 'leo-11':
+        continue
     # Field Path
     field_path = path.join(local_path, field)
 
@@ -107,7 +114,7 @@ for field in fields:
 
     # Copy Over Catalogs
     catalogs_remote_path = path.join(data_remote_path, field)
-    copy_files(catalogs, prep_path, catalogs_remote_path)
+    files = copy_files(catalogs, prep_path, catalogs_remote_path)
 
     # Extraction Catalogs
     extract_path = path.join(field_path, 'Extractions')
@@ -128,7 +135,25 @@ for field in fields:
         zfit_combined.append(Table.read(zfit))
 
     # Copy Over Catalogs
-    copy_files(catalogs, extract_path, catalogs_remote_path)
+    files += copy_files(catalogs, extract_path, catalogs_remote_path)
+
+    # Create Manifest
+    manifest[field] = {
+        'direct': [f for f in files if 'clear' in f],
+        'grism': [f for f in files if 'grism' in f],
+        'detection': [f for f in files if '-ir_' in f],
+        'summary': [
+            f'{field}-ir.cat.fits',
+            f'{field}_fitresults.fits',
+            f'{field}_phot_apcorr.fits',
+        ],
+    }
+
+    # Save and copy over manifest
+    with open(path.join(field_path, f'MANIFEST-{field}.toml'), 'w') as f:
+        toml.dump(manifest['field'], f)
+    copy_files([path.join(field_path, 'MANIFEST.toml')], field_path, catalogs_remote_path)
+
 
     # Spectra Paths
     extensions = ['1D', 'beams', 'full', 'stack', 'row']
@@ -146,6 +171,12 @@ names = ['phomoetry.fits', 'spectra-fitting.fits']
 for cats, name in zip([phot_combined, zfit_combined], names):
     # Stack and save
     vstack(cats).write(name)
+
+# Save Manifest
+fname = 'MANIFEST.toml'
+with open('MANIFEST.toml', 'w') as f:
+    toml.dump(manifest, f)
+names += [fname]
 
 # Copy over the total catalogs
 copy_files(names, os.getcwd(), data_remote_path)
