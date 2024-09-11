@@ -127,6 +127,7 @@ def main():
     extracted = Table(
         [sorted([e for e in extracted if e is not None])], names=['NUMBER']
     )
+    extracted.add_column(fname, name='root', index=0)
     extracted.write(f'{fname}-extracted.fits', overwrite=True)
 
     # Write DS9 region file

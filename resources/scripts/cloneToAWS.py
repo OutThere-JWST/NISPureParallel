@@ -49,7 +49,6 @@ def copy_files(filelist, local_dir, remote_dir, options=default_options):
     # Execute Command
     try:
         subprocess.run(command + options, check=True)
-        print(' '.join(command + options))
     except subprocess.CalledProcessError as e:
         print(f'Failed to copy to {remote_dir}. Error: {e}')
 
@@ -120,7 +119,7 @@ for field in fields:
     extract_path = path.join(field_path, 'Extractions')
     catalogs = glob.glob(path.join(extract_path, f'{field}-f*_grism_*.fits'))
     catalogs = [c for c in catalogs if 'proj' not in c]  # Remove proj
-    catalogs += glob.glob(path.join(extract_path, f'{field}-extracted.reg'))
+    catalogs += glob.glob(path.join(extract_path, f'{field}-extracted.*'))
 
     # Handle Photometric and Fit Results
     phot = path.join(extract_path, f'{field}_phot_apcorr.fits')
@@ -143,17 +142,24 @@ for field in fields:
         'grism': [f for f in files if 'grism' in f],
         'detection': [f for f in files if '-ir_' in f],
         'summary': [
-            f'{field}-ir.cat.fits',
-            f'{field}_fitresults.fits',
-            f'{field}_phot_apcorr.fits',
+            f
+            for f in [
+                f'{field}-ir.cat.fits',
+                f'{field}-extracted.fits',
+                f'{field}_fitresults.fits',
+                f'{field}_phot_apcorr.fits',
+            ]
+            if f in files
         ],
+        'regions': [f for f in files if f.endswith('.reg')],
     }
 
     # Save and copy over manifest
     with open(path.join(field_path, f'MANIFEST-{field}.toml'), 'w') as f:
         toml.dump(manifest['field'], f)
-    copy_files([path.join(field_path, 'MANIFEST.toml')], field_path, catalogs_remote_path)
-
+    copy_files(
+        [path.join(field_path, 'MANIFEST.toml')], field_path, catalogs_remote_path
+    )
 
     # Spectra Paths
     extensions = ['1D', 'beams', 'full', 'stack', 'row']
