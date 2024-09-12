@@ -2,7 +2,6 @@
 
 # Import packages
 import os
-import math
 import shutil
 import argparse
 import numpy as np
@@ -14,7 +13,6 @@ from tqdm import trange
 # Image processing
 from PIL import Image
 from fitsmap import convert
-from reproject import reproject_interp
 
 # Astropy Packages
 from astropy.io import fits
@@ -75,81 +73,36 @@ def main():
         )
         files.append(outfile)
 
-        # continue # Skip exposure time maps for now
-
-        # Load context map
-        hdul = fits.open(path.join(extract, f'{fname}-{f.lower()}n-clear_drc_ctx.fits'))
-        ctx, h = hdul[0].data, hdul[0].header
-
-        # Make exposure time map
-        exptime = np.zeros(ctx.shape)
-        for i in range(math.ceil(np.log2(ctx.max()))):  # Iterate over bits
-            # Get exposure time of file
-            file = path.join(prep, h[f'FLT{str(i+1).zfill(5)}'])
-            t = fits.getval(file, 'EXPTIME')
-
-            # Set exposure time if bit i is set in ctx
-            exptime[np.bitwise_and(ctx, 2**i) > 0] += t
-
-        # Save exposure time map
+        # Exposure time map
         outfile = path.join(fitsmap, f'{f}_exp.fits')
-        fits.PrimaryHDU(exptime, header=h).writeto(outfile)
+        shutil.copy(
+            path.join(prep, f'{fname}-{f.lower()}n-clear_drc_exp.fits'), outfile
+        )
         files.append(outfile)
 
     # Create grism files
-    ref = fits.getheader(path.join(fitsmap, f'{f}.fits'))
     grisms = np.unique([f.split(';')[1] for f in filters if 'GR' in f])
-    ngrisms = 0
     for g in grisms:
         # Get file pattern and PAs
         pre = f'{fname}-{g.lower()}-'
         pas = [
-            f for f in glob(path.join(extract, f'{pre}*grism_sci*')) if 'proj' not in f
+            path.basename(pa).split('_')[0].replace(f'{pre}', '')
+            for f in glob(path.join(extract, f'{pre}*grism_sci.fits'))
+            if 'proj' not in f
         ]
 
         # Iterate over PAs
         for pa in pas:
-            ngrisms += 1
-
-            # Get and project original image
-            outproj = path.join(pa.replace('.fits', '_proj.fits'))
-            if not path.exists(outproj):
-                proj, _ = reproject_interp(pa, ref)
-                fits.PrimaryHDU(proj).writeto(outproj)
-
-            # Copy file to fitsmap
-            outfile = path.join(
-                fitsmap,
-                f"{g}-{path.basename(pa).split('_')[0].replace(f'{pre}','')}.fits",
-            )
-            shutil.copy(outproj, outfile)
+            # Copy projection to fitsmap
+            proj = path.join(extract, f'{pre}{pa}_grism_sci_proj.fits')
+            outfile = path.join(fitsmap, f'{g}-{pa}.fits')
+            shutil.copy(proj, outfile)
             files.append(outfile)
 
-            # continue # Skip exposure time maps for now
-
-            # Load context map
-            hdul = fits.open(pa.replace('sci', 'ctx'))
-            ctx, h = hdul[0].data, hdul[0].header
-
-            # Make exposure time map
-            exptime = np.zeros(ctx.shape)
-            for i in range(math.ceil(np.log2(ctx.max()))):  # Iterate over bits
-                # Get exposure time of file
-                file = path.join(prep, h[f'FLT{str(i+1).zfill(5)}'])
-                t = fits.getval(file, 'EXPTIME')
-
-                # Set exposure time if bit i is set in ctx
-                exptime[np.bitwise_and(ctx, 2**i) > 0] += t
-
-            # Reproject exposure time map
-            exptime, _ = reproject_interp((exptime, h), ref)
-
             # Save exposure time map
-            outfile = path.join(
-                fitsmap,
-                f"{g}-{path.basename(pa).split('_')[0].replace(f'{pre}','')}_exp.fits",
-            )
-            fits.PrimaryHDU(exptime, header=h).writeto(outfile)
+            exp = path.join(extract, f'{pre}{pa}_grism_exp.fits')
+            outfile = path.join(fitsmap, f'{g}-{pa}_exp.fits')
+            shutil.copy(exp, outfile)
             files.append(outfile)
 
     # Create Segmap

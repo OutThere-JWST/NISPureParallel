@@ -3,6 +3,7 @@
 # Import packages
 import os
 import glob
+import math
 import shutil
 import argparse
 import warnings
@@ -11,6 +12,7 @@ from matplotlib import pyplot
 
 # Astropy packages
 import astropy.units as u
+from astropy.io import fits
 from astropy.wcs import WCS
 from astropy.table import Table
 from regions import Regions, PixCoord, EllipsePixelRegion
@@ -76,6 +78,28 @@ def main():
         skip_existing=False,
         write_ctx=True,
     )
+
+    # Create Exposure time maps
+    for f in [f.split(';')[1] for f in np.unique(obs['filters']) if 'CLEAR' in f]:
+        # Load context map
+        hdul = fits.open(os.path.join(prep, f'{fname}-{f.lower()}n-clear_drc_ctx.fits'))
+        ctx, h = hdul[0].data, hdul[0].header
+
+        # Make exposure time map
+        exptime = np.zeros(ctx.shape)
+        for i in range(math.floor(np.log2(ctx.max())) + 1):  # Iterate over bits
+            # Get exposure time of file
+            file = os.path.join(prep, h[f'FLT{str(i+1).zfill(5)}'])
+            t = fits.getval(file, 'EXPTIME')
+
+            # Set exposure time if bit i is set in ctx
+            exptime[np.bitwise_and(ctx, 2**i) > 0] += t
+
+        # Save exposure time map
+        fits.PrimaryHDU(exptime, header=h).writeto(
+            os.path.join(prep, f'{fname}-{f.lower()}n-clear_drc_exp.fits'),
+            overwrite=True,
+        )
 
     # Get filters for RGB
     scales = {'f200wn-clear': 1.65, 'f150wn-clear': 1.33, 'f115wn-clear': 1.0}
@@ -149,12 +173,15 @@ def main():
         filter_combinations={'ir': ['F115WN-CLEAR', 'F150WN-CLEAR', 'F200WN-CLEAR']},
     )
     # grizli.prep.make_SEP_catalog(f'{root}-ir', threshold=1.2)
-    cat = auto_script.multiband_catalog(
+    auto_script.multiband_catalog(
         field_root=fname,
         detection_filter='ir',
         get_all_filters=True,
         rescale_weight=True,
     )
+
+    # Load detection catalog
+    cat = Table.read(f'{fname}-ir.cat.fits')
 
     # Write DS9 region file
     Regions(
@@ -175,6 +202,7 @@ def main():
             for c in cat
         ]
     ).write(f'{fname}-ir.reg', format='ds9', overwrite=True)
+
 
 if __name__ == '__main__':
     main()

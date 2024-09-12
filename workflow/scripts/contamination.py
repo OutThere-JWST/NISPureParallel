@@ -4,13 +4,14 @@
 import os
 import re
 import glob
+import math
 import shutil
 import argparse
 import warnings
 import numpy as np
 from matplotlib import pyplot
 from scipy import stats, optimize
-from reproject import reproject_adaptive as reproject
+from reproject import reproject_interp
 
 # Astropy packages
 from astropy.io import fits
@@ -69,6 +70,11 @@ def main():
         print('No grism files, skipping')
         return
 
+    # Projection Reference header
+    with fits.open(os.path.join(prep, f'{fname}-ir_drc_sci.fits')) as f:
+        projref = WCS(f[0].header)
+        projsize = f[0].data.shape
+
     # Set priority of filters
     filt_ref = dict(
         F115W=['F115W', 'F150W', 'F200W'],
@@ -101,6 +107,7 @@ def main():
     )
 
     # Iterate over filters
+    all_pas = []
     for filt in un.values:
         # Change directory
         os.chdir(prep)
@@ -145,55 +152,72 @@ def main():
             root=fname, kernel='square', scale=0.04, pixfrac=0.75, write_ctx=True
         )
 
-    # Copy grism model plots
-    for f in glob.glob(os.path.join(extract, '*grism*png')):
-        shutil.copy(f, plots)
+        # Get angles
+        pas = list(grp.PA[filt].keys())
+        all_pas += pas
 
-    # Reference header
-    with fits.open(os.path.join(prep, f'{fname}-ir_drc_sci.fits')) as f:
-        ref = WCS(f[0].header)
-        size = f[0].data.shape
+        # Iterate over angles
+        for pa in pas:
+            # Load context map
+            prefix = f'{fname}-{filt.lower()}-{pa}_grism'
+            hdul = fits.open(os.path.join(extract, f'{prefix}_ctx.fits'))
+            ctx, h = hdul[0].data, hdul[0].header
+
+            # Make exposure time map
+            exptime = np.zeros(ctx.shape)
+            for i in range(math.floor(np.log2(ctx.max())) + 1):  # Iterate over bits
+                # Get exposure time of file
+                file = os.path.join(prep, h[f'FLT{str(i+1).zfill(5)}'])
+                t = fits.getval(file, 'EXPTIME')
+
+                # Set exposure time if bit i is set in ctx
+                exptime[np.bitwise_and(ctx, 2**i) > 0] += t
+
+            # Reproject exposure time map
+            proj, _ = reproject_interp((exptime, h), projref, projsize)
+
+            # Save exposure time map
+            fits.PrimaryHDU(proj, header=h).writeto(
+                os.path.join(extract, f'{prefix}_exp.fits'), overwrite=True
+            )
+
+            # Copy grism model plots
+            print(f'Copying {prefix} plots')
+            shutil.copy(f'{prefix}.png', plots)
 
     # Iterate over suffixes
-    for end in ['sci', 'clean']:  # For now, only sci
-        suffix = f'_grism_{end}.fits'
-
-        # Get files
-        files = sorted(glob.glob(os.path.join(extract, f'{fname}-*{suffix}')))[::-1]
-
-        # Get filters
-        filters, grisms = [], []
-        for f in files:
-            clean = f.replace(fname, '').replace(suffix, '').split('-')
-            filters.append(clean[-2])
-            grisms.append(clean[-1])
-        filters, grisms = np.array(filters), np.array(grisms)
-
+    for end in ['sci', 'clean']:
         # Iterate over unique grisms
-        for grism in np.unique(grisms):
-            print(f'Processing {end} RGB for angle {grism}')
+        for pa in np.unique(all_pas):
+            print(f'Processing {end} RGB for angle {pa}')
 
             # Get filters for this grism
-            gfilts = list(filters[grisms == grism])
+            all_filts = ['f200w', 'f150w', 'f115w']
+            files = [f'{fname}-{f}-{pa}_grism_{end}.fits' for f in all_filts]
 
             # Reproject grism images (zero if not available)
-            all_filts = ['f200w', 'f150w', 'f115w']
-            ims = [
-                reproject(
-                    f'{fname}-{gf}-{grism}{suffix}', ref, size, conserve_flux=True
-                )[0]
-                if gf in gfilts
-                else np.zeros(size)
-                for gf in all_filts
-            ]
+            ims = []
+            for file in files:
+                if os.path.exists(file):
+                    im, _ = reproject_interp(file, projref, projsize)
+                    fits.PrimaryHDU(im).writeto(
+                        file.replace('.fits', '_proj.fits'), overwrite=True
+                    )
+                else:
+                    im = np.zeros(projsize)
+                ims.append(im)
 
             # Make RGB
-            filename = os.path.join(plots, f'{fname}-grism.{grism}_{end}.png')
+            filename = os.path.join(plots, f'{fname}-grism.{pa}_{end}.png')
             rgb = make_lupton_rgb(*ims, filename=None, Q=20, stretch=0.1)
 
             # Transform to use different colors to be colorblind friendly
             transform = np.array(
-                [[246, 2, 57], [255, 110, 58], [255, 172, 59]]
+                [
+                    [246, 2, 57],  # Carmine
+                    [255, 110, 58],  # Burning Orange
+                    [255, 172, 59],  # Frenzee
+                ]
             )  # 255,220,61
             rgb = np.dot(rgb, transform / 255).clip(0, 255).astype(np.uint8)
 
