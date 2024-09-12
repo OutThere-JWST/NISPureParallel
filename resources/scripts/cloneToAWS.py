@@ -176,7 +176,7 @@ for field in fields:
 names = ['phomoetry.fits', 'spectra-fitting.fits']
 for cats, name in zip([phot_combined, zfit_combined], names):
     # Stack and save
-    vstack(cats).write(name)
+    vstack(cats, metadata_conflicts='silent').write(name)
 
 # Save Manifest
 fname = 'MANIFEST.toml'
