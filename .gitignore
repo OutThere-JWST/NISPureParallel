@@ -20,4 +20,5 @@ images.html
 # Pixi environments
 .pixi
 *.egg-info
-*pixi* # Ignore Pixi for now
+pixi.toml # Ignore Pixi for Now
+pixi.lock # Ignore Pixi for Now
