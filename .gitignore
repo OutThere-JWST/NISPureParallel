@@ -16,3 +16,8 @@ test*
 # Ignore built HTML files
 table.html
 images.html
+
+# Pixi environments
+.pixi
+*.egg-info
+*pixi # Ignore Pixi for now
