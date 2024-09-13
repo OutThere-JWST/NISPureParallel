@@ -18,8 +18,8 @@ def create_rule(field):
         # resources:
         #     tasks = lambda wildcards: len(uncal[wildcards.field])
         shell:
-            """
-            ./workflow/scripts/makeFitsmap.py {field} --ncpu {resources.cpus_per_task} > {log} 2>&1
+            f"""
+            ./workflow/scripts/makeFitsmap.py {field} --ncpu {{resources.cpus_per_task}} > {{log}} 2>&1
             """
             # tar -cf FIELDS/{wildcards.field}/fitsmap/{wildcards.field}.tar -C FIELDS/{wildcards.field}/fitsmap/ {wildcards.field}/
 
