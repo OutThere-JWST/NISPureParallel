@@ -50,7 +50,16 @@
 					<div id="main">
 						<div class="inner">
 							<h2>Data Access</h1>
-                            <p>The data is all hosted on S3. If you require direct access, please get in touch with Raphael Hviding and he can provide you with credentials. Otherwise, you can explore the data in the browser <a href="s3/data" target="_blank"><b>here</b></a>.</p>
+                            <h3>Visualization</h3>
+                            <p>The best way to visualize the data is using the provided interactive <a href="table.html">Table</a> and <a href="maps.html">Fitsmaps</a>.</p>
+
+                            <h3>Data Download</h3>
+                            <p>You can explore the data in the browser <a href="s3/data" target="_blank"><b>here</b></a> as an FTP site. The data products are explained in the following section. Each directory contains a TOML file with a dictionary of the data products available in that field. You can pass any TOML file to the <a href="https://github.com/OutThere-JWST/NISPureParallel/blob/main/resources/scripts/downloadProducts.py" target="_blank">downloadProducts.py</a> script and it will download the products for you. You can remove files that you do not want to download. In addition, at the top level, a MANIFEST file with all files is included, however if you need bulk access to the data, please refer to the next section.</p>
+
+                            <p>To download spectra you will need to pass an extracted.fits file to the <a href="https://github.com/OutThere-JWST/NISPureParallel/blob/main/resources/scripts/downloadSpectra.py">downloadSpectra.py</a> function. The extracted.fits file can be downloaded as a product and edited to download the desired spectra.</p>
+
+                            <h3>Bulk Access</h3>
+                            <p>The data is all hosted on S3. If you require bulk access, please get in touch with Raphael Hviding and he can provide you with credentials. 
 
                             <h2>Data Products</h1>
                             <p>The following data products are available:</p>
@@ -65,6 +74,7 @@
                                 <ul>
                                     <li>sci.fits: Science Mosaic</li>
                                     <li>ctx.fits: Context Mosaic </li>
+                                    <li>exp.fits: Exposure Time Mosaic </li>
                                     <li>wht.fits: Weight Mosaic (Direct Only)</li>
                                     <li>clean.fits: Contamination Subtracted Grism Mosaic (Grism Only)</li>
                                     <li>bkg.fits: Background Image (Direct Only)</li>
@@ -83,7 +93,7 @@
                                 </ul>
                                 <li>DS9 Region Files</li>
                                 <ul>
-                                    <li>ir.cat.reg: DS9 Region File for all Sources</li>
+                                    <li>ir.reg: DS9 Region File for all Sources</li>
                                     <li>-extracted.reg: DS9 Region File for all Extracted Sources</li>
                                 </ul>
                                 <li>Spectroscopy</li>
