@@ -92,8 +92,9 @@ phot_combined = []
 zfit_combined = []
 manifest = {}
 for field in fields:
-    if field != 'leo-11':
-        continue
+
+    print('Cloning', field)
+
     # Field Path
     field_path = path.join(local_path, field)
 
