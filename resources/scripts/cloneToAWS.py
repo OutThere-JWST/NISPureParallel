@@ -106,7 +106,7 @@ for field in fields:
     prep_path = path.join(field_path, 'Prep')
     catstrings = [
         f'{field}-ir*.fits',
-        f'{field}-ir.cat.reg',
+        f'{field}-ir.reg',
         f'{field}-f*n-clear*fits',
     ]
     catalogs = sum([glob.glob(path.join(prep_path, s)) for s in catstrings], [])
