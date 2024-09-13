@@ -156,7 +156,7 @@ for field in fields:
 
     # Save and copy over manifest
     with open(path.join(field_path, f'MANIFEST-{field}.toml'), 'w') as f:
-        toml.dump(manifest['field'], f)
+        toml.dump(manifest[field], f)
     copy_files(
         [path.join(field_path, 'MANIFEST.toml')], field_path, catalogs_remote_path
     )
