@@ -29,8 +29,6 @@ def copy_files(filelist, local_dir, remote_dir, options=default_options):
     # Relative paths
     relfiles = [path.relpath(f, local_dir) for f in filelist]
 
-    return relfiles
-
     # Create a file with the list of files
     file = 'files.txt'
     with open(file, 'w') as f:
@@ -55,11 +53,13 @@ def copy_files(filelist, local_dir, remote_dir, options=default_options):
     # Remove the file
     os.remove(file)
 
+    # Return the list of files
+    return relfiles
+
 
 # Function to sync directory
 def sync_dir(local_dir, remote_dir, options=default_options):
     """Function to rclone a list of files to the remote server."""
-    return
 
     # Copy command
     command = [
@@ -92,7 +92,6 @@ phot_combined = []
 zfit_combined = []
 manifest = {}
 for field in fields:
-
     print('Cloning', field)
 
     # Field Path
