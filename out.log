@@ -1,0 +1,457 @@
+Set ROOT_PATH=/Users/hviding/Projects/NISPureParallel
+Preprocessing cam-00
+grizli:1.13.dev16+g99c125c
+# (2024-09-13 09:30:00.201)
+
+jwst_utils.initialize_jwst_image(**{'filename': '/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/RAW/jw01571131001_03201_00001_nis_rate.fits', 'verbose': True, 'max_dq_bit': 14, 'orig_keys': ['TELESCOP', 'INSTRUME', 'DETECTOR', 'FILTER', 'PUPIL', 'EXP_TYPE', 'GRATING'], 'oneoverf_correction': True, 'oneoverf_kwargs': {'make_plot': False}, 'use_skyflats': True, 'nircam_edge': 8})
+
+ENV CRDS_CONTEXT = jwst_1123.pmap
+OTELESCO = TELESCOP JWST
+OINSTRUM = INSTRUME NIRISS
+ODETECTO = DETECTOR NIS
+OFILTER = FILTER GR150R
+OPUPIL = PUPIL F200W
+OEXP_TYP = EXP_TYPE NIS_WFSS
+ENGQLPTG = CALCULATED_TR_202105
+PFLTFILE = /opt/crds_cache/references/jwst/niriss/jwst_niriss_flat_0271.fits
+Clip MAXDQBIT = 14
+exposure_oneoverf_correction: /Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/RAW/jw01571131001_03201_00001_nis_rate.fits axis=0 deg_pix=64
+exposure_oneoverf_correction: /Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/RAW/jw01571131001_03201_00001_nis_rate.fits apply to file
+ENV CRDS_CONTEXT = jwst_1123.pmap
+jwst.flatfield.FlatFieldStep: /opt/crds_cache/references/jwst/niriss/jwst_niriss_flat_0271.fits
+jwst_utils.get_jwst_skyflat: /opt/py-packages/grizli-conf/CONF/NircamSkyFlat/nis-f200w-gr150r_skyflat.fits not found
+ENV CRDS_CONTEXT = jwst_1123.pmap
+jwst.assign_wcs.AssignWcsStep: /opt/crds_cache/references/jwst/niriss/jwst_niriss_distortion_0025.asdf
+# (2024-09-13 09:30:04.783)
+
+jwst_utils.pipeline_model_wcs_header(**{'datamodel': <ImageModel(2048, 2048) from jw01571131001_03201_00001_nis_rate.fits>, 'step': 64, 'degrees': [3, 4, 5, 5], 'lsq_args': {'jac': '2-point', 'bounds': (-inf, inf), 'method': 'trf', 'ftol': 1e-12, 'xtol': 1e-12, 'gtol': 1e-12, 'x_scale': 1.0, 'loss': 'soft_l1', 'f_scale': 1000.0, 'diff_step': 1e-06, 'tr_solver': None, 'tr_options': {}, 'jac_sparsity': None, 'max_nfev': 100, 'verbose': 0, 'kwargs': {}}, 'crpix': None, 'verbose': True, 'initial_header': None, 'max_rms': 0.0001, 'set_diff_step': False, 'get_guess': False, 'fast_coeffs': True, 'uvxy': None})
+
+Fit SIP degree=3 rms= 3.09e-02, 5.40e-02 pix
+Fit SIP degree=4 rms= 2.63e-02, 2.18e-02 pix
+Fit SIP degree=5 rms= 6.68e-05, 6.66e-05 pix
+jwst_utils.update_pure_parallel_wcs: par_file='/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/RAW/jw01571131001_03201_00001_nis_rate.fits' couldn't find corresponding exposure in FGS logs
+# photometry keywords
+PHOTFNU = 2.6746e-08
+PHOTPLAM = 19929.6
+PHOTFLAM = 2.0134e-21
+ZP = 27.83
+TO_MJYSR = 0.265
+
+# (2024-09-13 09:30:07.906)
+
+jwst_utils.set_jwst_to_hst_keywords(**{'input': '/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/RAW/jw01571131001_03201_00001_nis_rate.fits', 'reset': True, 'verbose': True, 'orig_keys': ['TELESCOP', 'INSTRUME', 'DETECTOR', 'FILTER', 'PUPIL', 'EXP_TYPE', 'GRATING'], 'oneoverf_correction': True})
+
+Reset: TELESCOP > JWST (OTELESCO)
+Reset: INSTRUME > NIRISS (OINSTRUM)
+Reset: DETECTOR > NIS (ODETECTO)
+Reset: FILTER > GR150R (OFILTER)
+Reset: PUPIL > F200W (OPUPIL)
+Reset: EXP_TYPE > NIS_WFSS (OEXP_TYP)
+# (2024-09-13 09:30:08.017)
+
+jwst_utils.initialize_jwst_image(**{'filename': '/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/RAW/jw01571132001_05201_00001_nis_rate.fits', 'verbose': True, 'max_dq_bit': 14, 'orig_keys': ['TELESCOP', 'INSTRUME', 'DETECTOR', 'FILTER', 'PUPIL', 'EXP_TYPE', 'GRATING'], 'oneoverf_correction': True, 'oneoverf_kwargs': {'make_plot': False}, 'use_skyflats': True, 'nircam_edge': 8})
+
+ENV CRDS_CONTEXT = jwst_1123.pmap
+OTELESCO = TELESCOP JWST
+OINSTRUM = INSTRUME NIRISS
+ODETECTO = DETECTOR NIS
+OFILTER = FILTER CLEAR
+OPUPIL = PUPIL F200W
+OEXP_TYP = EXP_TYPE NIS_IMAGE
+ENGQLPTG = CALCULATED_TR_202105
+PFLTFILE = /opt/crds_cache/references/jwst/niriss/jwst_niriss_flat_0268.fits
+Clip MAXDQBIT = 14
+exposure_oneoverf_correction: /Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/RAW/jw01571132001_05201_00001_nis_rate.fits axis=0 deg_pix=64
+exposure_oneoverf_correction: /Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/RAW/jw01571132001_05201_00001_nis_rate.fits apply to file
+ENV CRDS_CONTEXT = jwst_1123.pmap
+jwst.flatfield.FlatFieldStep: /opt/crds_cache/references/jwst/niriss/jwst_niriss_flat_0268.fits
+jwst.flatfield.PhotomStep: /opt/crds_cache/references/jwst/niriss/jwst_niriss_photom_0035.fits
+jwst_utils.get_jwst_skyflat: /opt/py-packages/grizli-conf/CONF/NircamSkyFlat/nis-f200w-clear_skyflat.fits not found
+ENV CRDS_CONTEXT = jwst_1123.pmap
+jwst.assign_wcs.AssignWcsStep: /opt/crds_cache/references/jwst/niriss/jwst_niriss_distortion_0025.asdf
+# (2024-09-13 09:30:11.034)
+
+jwst_utils.pipeline_model_wcs_header(**{'datamodel': <ImageModel(2048, 2048) from jw01571132001_05201_00001_nis_rate.fits>, 'step': 64, 'degrees': [3, 4, 5, 5], 'lsq_args': {'jac': '2-point', 'bounds': (-inf, inf), 'method': 'trf', 'ftol': 1e-12, 'xtol': 1e-12, 'gtol': 1e-12, 'x_scale': 1.0, 'loss': 'soft_l1', 'f_scale': 1000.0, 'diff_step': 1e-06, 'tr_solver': None, 'tr_options': {}, 'jac_sparsity': None, 'max_nfev': 100, 'verbose': 0, 'kwargs': {}}, 'crpix': None, 'verbose': True, 'initial_header': None, 'max_rms': 0.0001, 'set_diff_step': False, 'get_guess': False, 'fast_coeffs': True, 'uvxy': None})
+
+Fit SIP degree=3 rms= 3.09e-02, 5.40e-02 pix
+Fit SIP degree=4 rms= 2.63e-02, 2.18e-02 pix
+Fit SIP degree=5 rms= 6.78e-05, 6.65e-05 pix
+jwst_utils.update_pure_parallel_wcs: par_file='/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/RAW/jw01571132001_05201_00001_nis_rate.fits' couldn't find corresponding exposure in FGS logs
+# photometry keywords
+PHOTFNU = 1.0091e-07
+PHOTPLAM = 19929.6
+PHOTFLAM = 7.5967e-21
+ZP = 26.39
+TO_MJYSR = 1.000
+
+# (2024-09-13 09:30:13.537)
+
+jwst_utils.set_jwst_to_hst_keywords(**{'input': '/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/RAW/jw01571132001_05201_00001_nis_rate.fits', 'reset': True, 'verbose': True, 'orig_keys': ['TELESCOP', 'INSTRUME', 'DETECTOR', 'FILTER', 'PUPIL', 'EXP_TYPE', 'GRATING'], 'oneoverf_correction': True})
+
+Reset: TELESCOP > JWST (OTELESCO)
+Reset: INSTRUME > NIRISS (OINSTRUM)
+Reset: DETECTOR > NIS (ODETECTO)
+Reset: FILTER > CLEAR (OFILTER)
+Reset: PUPIL > F200W (OPUPIL)
+Reset: EXP_TYPE > NIS_IMAGE (OEXP_TYP)
+# (2024-09-13 09:30:13.621)
+
+auto_script.parse_visits(**{'files': [], 'field_root': 'cam-00', 'RAW_PATH': '/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/RAW', 'use_visit': True, 'combine_same_pa': True, 'combine_minexp': 2, 'is_dash': False, 'filters': ['F410M', 'F467M', 'F547M', 'F550M', 'F621M', 'F689M', 'F763M', 'F845M', 'F200LP', 'F350LP', 'F435W', 'F438W', 'F439W', 'F450W', 'F475W', 'F475X', 'F555W', 'F569W', 'F600LP', 'F606W', 'F622W', 'F625W', 'F675W', 'F702W', 'F775W', 'F791W', 'F814W', 'F850LP', 'G800L', 'F098M', 'F127M', 'F139M', 'F153M', 'F105W', 'F110W', 'F125W', 'F140W', 'F160W', 'G102', 'G141', 'F070W', 'F090W', 'F1000W', 'F1130W', 'F115W', 'F1280W', 'F140M', 'F1500W', 'F150W', 'F150W2', 'F158M', 'F162M', 'F164N', 'F1800W', 'F182M', 'F187N', 'F200W', 'F2100W', 'F210M', 'F212N', 'F250M', 'F2550W', 'F277W', 'F300M', 'F322W2', 'F323N', 'F335M', 'F356W', 'F360M', 'F380M', 'F405N', 'F410M', 'F430M', 'F444W', 'F460M', 'F466N', 'F470N', 'F480M', 'F560W', 'F770W', 'GR150C', 'GR150R', 'GRISMR', 'GRISMC'], 'max_dt': 1000000000.0, 'visit_split_shift': 1.5, 'file_query': '*'})
+
+indef-01571-132-167.0-NIS-F200W-CLEAR 1
+indef-01571-131-167.0-NIS-F200W-GR150R 1
+# (2024-09-13 09:30:13.660)
+parse_visits(combine_same_pa=True), max_dt=1000000000.0: BEFORE   2 visits
+# (2024-09-13 09:30:13.664)
+parse_visits(combine_same_pa=True), max_dt=1000000000.0:  AFTER   2 visits
+** Combine same PA: **
+0 jw01571-nis-f200w-clear 1
+1 jw01571-nis-f200w-gr150r 1
+NIRISS pure parallel direct:  jw01571-nis-f200w-clear
+
+ == Grism groups ==
+
+jw01571-nis-f200w-clear 1 jw01571-nis-f200w-gr150r 1
+# (2024-09-13 09:30:13.865)
+
+prep.visit_grism_sky(**{'grism': {'product': 'jw01571-nis-f200w-clear', 'files': ['jw01571132001_05201_00001_nis_rate.fits'], 'footprint': <POLYGON ((102.364 70.396, 102.472 70.405, 102.472 70.405, 102.472 70.405, 1...>, 'footprints': [<POLYGON ((102.364 70.396, 102.388 70.36, 102.496 70.368, 102.472 70.404, 10...>]}, 'apply': True, 'column_average': False, 'verbose': True, 'ext': 1, 'sky_iter': 10, 'iter_atol': 0.0001, 'use_spline': True, 'NXSPL': 50, 'skip_nircam': True, 'ignoreNA': True})
+cp: *mask.reg: No such file or directory
+
+Use local wfssbkg file /opt/py-packages/grizli-conf/CONF/nis-f200w-clear_skyflat.fits (Warning: no DATE keyword)
+# visit_grism_sky / jw01571-nis-f200w-clear: EXTVER=1 / ['/opt/py-packages/grizli-conf/CONF/nis-f200w-clear_skyflat.fits'] / []
+# visit_grism_sky   jw01571-nis-f200w-clear > Iter: 1, masked: 12%, [0.15079609]
+# visit_grism_sky   jw01571-nis-f200w-clear > Iter: 2, masked: 12%, [0.14999194]
+# visit_grism_sky   jw01571-nis-f200w-clear > Iter: 3, masked: 11%, [0.14960086]
+# visit_grism_sky   jw01571-nis-f200w-clear > Iter: 4, masked: 11%, [0.14942533]
+/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/iref/uc72113oi_pfl.fits exists
+/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/iref/uc721143i_pfl.fits exists
+/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/iref/u4m1335li_pfl.fits exists
+/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/iref/u4m1335mi_pfl.fits exists
+/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/iref/w3m18525i_idc.fits exists
+Extra WFC3/IR bad pixels: /Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/iref/badpix_spars200_Nov9.fits
+Pixel area map: /Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/iref/ir_wfc3_map.fits
+
+# Write parameters to cam-00.run.yaml
+
+
+# Write parameters to cam-00.run.yaml
+
+
+########################################## 
+# ! Exception (2024-09-13 09:30:15.319)
+#
+# !Traceback (most recent call last):
+# !  File "/opt/py-packages/grizli/grizli/pipeline/auto_script.py", line 479, in go
+# !    gaia = grizli_catalog.gaia_catalog_for_assoc(assoc_name=root)
+# !           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+# !  File "/opt/py-packages/grizli/grizli/catalog.py", line 639, in gaia_catalog_for_assoc
+# !    res = db.SQL(
+# !          ^^^^^^^
+# !ModuleNotFoundError: No module named 'sqlalchemy'
+# !
+######################################### 
+
+
+# (2024-09-13 09:30:15.319)
+
+auto_script.fetch_files(**{'field_root': 'cam-00', 'HOME_PATH': '$PWD', 'paths': {'home': '/Users/hviding/Projects/NISPureParallel/FIELDS', 'base': '/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00', 'raw': '/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/RAW', 'prep': '/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/Prep', 'persist': '/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/Persistence', 'extract': '/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/Extractions', 'thumbs': '/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/Extractions'}, 'inst_products': {'ACS/WFC': ['FLC'], 'WFC3/IR': ['RAW'], 'WFC3/UVIS': ['FLC'], 'WFPC2/PC': ['C0M', 'C1M'], 'WFPC2/WFC': ['C0M', 'C1M']}, 'remove_bad': True, 'reprocess_parallel': False, 'reprocess_clean_darks': False, 's3_sync': False, 'fetch_flt_calibs': ['IDCTAB', 'PFLTFILE', 'NPOLFILE'], 'filters': ['CLEAR', 'GR150R'], 'min_bad_expflag': 2, 'fetch_only': False, 'force_rate': True, 'get_rateints': False, 'get_recalibrated_rate': True, 'recalibrate_jwst': False, 's3path': None})
+
+paths:  {'home': '/Users/hviding/Projects/NISPureParallel/FIELDS', 'base': '/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00', 'raw': '/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/RAW', 'prep': '/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/Prep', 'persist': '/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/Persistence', 'extract': '/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/Extractions', 'thumbs': '/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/Extractions'}
+Fetch 2 JWST files!
+Download iteration: 0
+# (2024-09-13 09:30:15.423)
+
+jwst_utils.initialize_jwst_image(**{'filename': 'jw01571131001_03201_00001_nis_rate.fits', 'verbose': True, 'max_dq_bit': 14, 'orig_keys': ['TELESCOP', 'INSTRUME', 'DETECTOR', 'FILTER', 'PUPIL', 'EXP_TYPE', 'GRATING'], 'oneoverf_correction': False, 'oneoverf_kwargs': {'make_plot': False}, 'use_skyflats': True, 'nircam_edge': 8})
+
+ENV CRDS_CONTEXT = jwst_1123.pmap
+PFLTFILE = /opt/crds_cache/references/jwst/niriss/jwst_niriss_flat_0271.fits
+Clip MAXDQBIT = 14
+ENV CRDS_CONTEXT = jwst_1123.pmap
+jwst_utils.img_with_flat: Flat already applied
+jwst_utils.get_jwst_skyflat: /opt/py-packages/grizli-conf/CONF/NircamSkyFlat/nis-f200w-gr150r_skyflat.fits not found
+ENV CRDS_CONTEXT = jwst_1123.pmap
+jwst.assign_wcs.AssignWcsStep: /opt/crds_cache/references/jwst/niriss/jwst_niriss_distortion_0025.asdf
+jwst_utils.update_pure_parallel_wcs: par_file='jw01571131001_03201_00001_nis_rate.fits' couldn't find corresponding exposure in FGS logs
+# photometry keywords
+PHOTFNU = 2.6746e-08
+PHOTPLAM = 19929.6
+PHOTFLAM = 2.0134e-21
+ZP = 27.83
+TO_MJYSR = 0.265
+
+# (2024-09-13 09:30:18.461)
+
+jwst_utils.set_jwst_to_hst_keywords(**{'input': 'jw01571131001_03201_00001_nis_rate.fits', 'reset': True, 'verbose': True, 'orig_keys': ['TELESCOP', 'INSTRUME', 'DETECTOR', 'FILTER', 'PUPIL', 'EXP_TYPE', 'GRATING'], 'oneoverf_correction': True})
+
+Reset: TELESCOP > JWST (OTELESCO)
+Reset: INSTRUME > NIRISS (OINSTRUM)
+Reset: DETECTOR > NIS (ODETECTO)
+Reset: FILTER > GR150R (OFILTER)
+Reset: PUPIL > F200W (OPUPIL)
+Reset: EXP_TYPE > NIS_WFSS (OEXP_TYP)
+# (2024-09-13 09:30:18.519)
+
+jwst_utils.initialize_jwst_image(**{'filename': 'jw01571132001_05201_00001_nis_rate.fits', 'verbose': True, 'max_dq_bit': 14, 'orig_keys': ['TELESCOP', 'INSTRUME', 'DETECTOR', 'FILTER', 'PUPIL', 'EXP_TYPE', 'GRATING'], 'oneoverf_correction': False, 'oneoverf_kwargs': {'make_plot': False}, 'use_skyflats': True, 'nircam_edge': 8})
+
+ENV CRDS_CONTEXT = jwst_1123.pmap
+PFLTFILE = /opt/crds_cache/references/jwst/niriss/jwst_niriss_flat_0268.fits
+Clip MAXDQBIT = 14
+ENV CRDS_CONTEXT = jwst_1123.pmap
+jwst_utils.img_with_flat: Flat already applied
+jwst_utils.get_jwst_skyflat: /opt/py-packages/grizli-conf/CONF/NircamSkyFlat/nis-f200w-clear_skyflat.fits not found
+ENV CRDS_CONTEXT = jwst_1123.pmap
+jwst.assign_wcs.AssignWcsStep: /opt/crds_cache/references/jwst/niriss/jwst_niriss_distortion_0025.asdf
+jwst_utils.update_pure_parallel_wcs: par_file='jw01571132001_05201_00001_nis_rate.fits' couldn't find corresponding exposure in FGS logs
+# photometry keywords
+PHOTFNU = 1.0091e-07
+PHOTPLAM = 19929.6
+PHOTFLAM = 7.5967e-21
+ZP = 26.39
+TO_MJYSR = 1.000
+
+# (2024-09-13 09:30:21.358)
+
+jwst_utils.set_jwst_to_hst_keywords(**{'input': 'jw01571132001_05201_00001_nis_rate.fits', 'reset': True, 'verbose': True, 'orig_keys': ['TELESCOP', 'INSTRUME', 'DETECTOR', 'FILTER', 'PUPIL', 'EXP_TYPE', 'GRATING'], 'oneoverf_correction': True})
+
+Reset: TELESCOP > JWST (OTELESCO)
+Reset: INSTRUME > NIRISS (OINSTRUM)
+Reset: DETECTOR > NIS (ODETECTO)
+Reset: FILTER > CLEAR (OFILTER)
+Reset: PUPIL > F200W (OPUPIL)
+Reset: EXP_TYPE > NIS_IMAGE (OEXP_TYP)
+Warning: no files to fetch for filters=['CLEAR', 'GR150R'].
+
+    Couldn't `import reprocess_wfc3`.
+    Get it from https://github.com/gbrammer/reprocess_wfc3 
+# (2024-09-13 09:30:21.457)
+
+auto_script.parse_visits(**{'files': [], 'field_root': 'cam-00', 'RAW_PATH': '/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/RAW', 'use_visit': True, 'combine_same_pa': True, 'combine_minexp': 2, 'is_dash': False, 'filters': ['CLEAR', 'GR150R'], 'max_dt': 4, 'visit_split_shift': 2, 'file_query': '*'})
+
+indef-01571-132-167.0-NIS-F200W-CLEAR 1
+indef-01571-131-167.0-NIS-F200W-GR150R 1
+# (2024-09-13 09:30:21.495)
+parse_visits(combine_same_pa=True), max_dt=4.0: BEFORE   2 visits
+# (2024-09-13 09:30:21.498)
+parse_visits(combine_same_pa=True), max_dt=4.0:  AFTER   2 visits
+** Combine same PA: **
+0 jw01571-nis-f200w-clear 1
+1 jw01571-nis-f200w-gr150r 1
+NIRISS pure parallel direct:  jw01571-nis-f200w-clear
+
+ == Grism groups ==
+
+jw01571-nis-f200w-clear 1 jw01571-nis-f200w-gr150r 1
+Initial exposure footprints in ./cam-00_visits.yaml
+# (2024-09-13 09:30:21.562)
+
+auto_script.preprocess(**{'field_root': 'cam-00', 'HOME_PATH': '/Users/hviding/Projects/NISPureParallel/FIELDS', 'PERSIST_PATH': '/Users/hviding/Projects/NISPureParallel/FIELDS/cam-00/Persistence', 'min_overlap': 0.2, 'make_combined': False, 'catalogs': ['PS1', 'DES', 'NSC', 'SDSS', 'GAIA', 'WISE'], 'use_visit': True, 'master_radec': 'astrometry_db', 'parent_radec': None, 'use_first_radec': False, 'skip_imaging': False, 'clean': True, 'skip_single_optical_visits': False, 'visit_prep_args': {'align_thresh': None, 'align_rms_limit': 2, 'align_mag_limits': [14, 24, 0.05], 'align_assume_close': False, 'align_transform': None, 'align_ref_border': 100, 'align_guess': None, 'max_err_percentile': 99, 'align_min_flux_radius': 1.0, 'align_min_nexp': 2, 'align_final_niter': 8, 'catalog_mask_pad': 0.05, 'match_catalog_density': False, 'skymethod': 'localmin', 'drizzle_params': {}, 'single_image_CRs': True, 'run_tweak_align': True, 'tweak_threshold': 3.0, 'tweak_fit_order': -1, 'tweak_max_dist': 5, 'tweak_n_min': 10, 'tweak_ref_exp': 0, 'tweak_mosaic_iters': 2, 'align_simple': False, 'align_clip': 120, 'do_pure_parallel_wcs': True, 'column_average': True, 'sky_iter': 10, 'iter_atol': 0.0001, 'imaging_bkg_params': None, 'run_separate_chip_sky': True, 'fix_stars': False, 'reference_catalogs': ['LS_DR9', 'PS1', 'DES', 'NSC', 'GAIA'], 'outlier_threshold': 4, 'skip_nircam_grism_sky': True, 'nircam_wisp_kwargs': {'niter': 3, 'update': True}, 'oneoverf_kwargs': None, 'snowball_kwargs': None, 'angle_background_kwargs': {'threshold': 1.8, 'detection_background': True, 'angles': [30.0, -30.0, 0, 90], 'suffix': 'angles', 'niter': 3, 'instruments': []}, 'miri_skyflat': False, 'miri_skyfile': None, 'use_skyflats': True, 'use_self_catalog': True}, 'persistence_args': {'dq_value': 1024, 'err_threshold': 0.5, 'grow_mask': 3, 'verbose': True, 'reset': False}})
+
+0 jw01571-nis-f200w-clear 1 jw01571-nis-f200w-gr150r 1
+Failed to query astrometry database for jw01571-nis-f200w-clear
+
+
+
+jw01571-nis-f200w-clear radec: None
+
+
+
+# (2024-09-13 09:30:21.570)
+
+prep.process_direct_grism_visit(**{'direct': {'files': ['jw01571132001_05201_00001_nis_rate.fits'], 'footprint': <POLYGON ((102.388 70.359, 102.388 70.359, 102.388 70.359, 102.388 70.359, 1...>, 'footprints': [[<POLYGON ((102.388 70.36, 102.364 70.396, 102.472 70.404, 102.496 70.368, 10...>]], 'product': 'jw01571-nis-f200w-clear'}, 'grism': {'files': ['jw01571131001_03201_00001_nis_rate.fits'], 'footprint': <POLYGON ((102.389 70.359, 102.389 70.359, 102.389 70.359, 102.389 70.359, 1...>, 'footprints': [[<POLYGON ((102.389 70.36, 102.365 70.396, 102.473 70.404, 102.497 70.368, 10...>]], 'product': 'jw01571-nis-f200w-gr150r'}, 'radec': None, 'outlier_threshold': 4, 'align_clip': 120, 'align_thresh': None, 'align_mag_limits': [14, 24, 0.05], 'align_rms_limit': 2, 'align_triangle_ba_max': 0.9, 'align_ref_border': 100, 'align_min_flux_radius': 1.0, 'align_min_nexp': 2, 'align_assume_close': False, 'align_transform': None, 'align_guess': None, 'align_final_niter': 8, 'max_err_percentile': 99, 'catalog_mask_pad': 0.05, 'match_catalog_density': False, 'column_average': True, 'sky_iter': 10, 'run_tweak_align': True, 'tweak_fit_order': -1, 'skip_direct': False, 'fix_stars': False, 'tweak_max_dist': 5, 'tweak_n_min': 10, 'tweak_threshold': 3.0, 'tweak_ref_exp': 0, 'tweak_mosaic_iters': 2, 'align_simple': False, 'single_image_CRs': True, 'skymethod': 'localmin', 'drizzle_params': {}, 'iter_atol': 0.0001, 'static_mask': False, 'imaging_bkg_params': None, 'run_separate_chip_sky': True, 'separate_chip_kwargs': {}, 'reference_catalogs': ['LS_DR9', 'PS1', 'DES', 'NSC', 'GAIA'], 'use_self_catalog': True, 'nircam_wisp_kwargs': {'niter': 3, 'update': True}, 'skip_nircam_grism_sky': True, 'oneoverf_kwargs': None, 'snowball_kwargs': None, 'angle_background_kwargs': {'threshold': 1.8, 'detection_background': True, 'angles': [30.0, -30.0, 0, 90], 'suffix': 'angles', 'niter': 3, 'instruments': []}, 'miri_skyflat': False, 'miri_skyfile': None, 'use_skyflats': True, 'do_pure_parallel_wcs': True, 'write_ctx': False})
+
+
+
+# ../RAW/jw01571132001_05201_00001_nis_rate.fits -> jw01571132001_05201_00001_nis_rate.fits 
+# (2024-09-13 09:30:21.995)
+
+jwst_utils.initialize_jwst_image(**{'filename': 'jw01571132001_05201_00001_nis_rate.fits', 'verbose': True, 'max_dq_bit': 14, 'orig_keys': ['TELESCOP', 'INSTRUME', 'DETECTOR', 'FILTER', 'PUPIL', 'EXP_TYPE', 'GRATING'], 'oneoverf_correction': False, 'oneoverf_kwargs': None, 'use_skyflats': True, 'nircam_edge': 8})
+
+ENV CRDS_CONTEXT = jwst_1123.pmap
+PFLTFILE = /opt/crds_cache/references/jwst/niriss/jwst_niriss_flat_0268.fits
+Clip MAXDQBIT = 14
+ENV CRDS_CONTEXT = jwst_1123.pmap
+jwst_utils.img_with_flat: Flat already applied
+jwst_utils.get_jwst_skyflat: /opt/py-packages/grizli-conf/CONF/NircamSkyFlat/nis-f200w-clear_skyflat.fits not found
+ENV CRDS_CONTEXT = jwst_1123.pmap
+jwst.assign_wcs.AssignWcsStep: /opt/crds_cache/references/jwst/niriss/jwst_niriss_distortion_0025.asdf
+jwst_utils.update_pure_parallel_wcs: par_file='jw01571132001_05201_00001_nis_rate.fits' couldn't find corresponding exposure in FGS logs
+# photometry keywords
+PHOTFNU = 1.0091e-07
+PHOTPLAM = 19929.6
+PHOTFLAM = 7.5967e-21
+ZP = 26.39
+TO_MJYSR = 1.000
+
+# prep.apply_region_mask_from_db: query failed
+# (2024-09-13 09:30:25.377)
+
+jwst_utils.set_jwst_to_hst_keywords(**{'input': 'jw01571132001_05201_00001_nis_rate.fits', 'reset': False, 'verbose': True, 'orig_keys': ['TELESCOP', 'INSTRUME', 'DETECTOR', 'FILTER', 'PUPIL', 'EXP_TYPE', 'GRATING'], 'oneoverf_correction': True})
+
+  Set: TELESCOP > HST
+  Set: INSTRUME > WFC3
+  Set: DETECTOR > IR
+# ../RAW/jw01571131001_03201_00001_nis_rate.fits -> jw01571131001_03201_00001_nis_rate.fits 
+# (2024-09-13 09:30:25.738)
+
+jwst_utils.initialize_jwst_image(**{'filename': 'jw01571131001_03201_00001_nis_rate.fits', 'verbose': True, 'max_dq_bit': 14, 'orig_keys': ['TELESCOP', 'INSTRUME', 'DETECTOR', 'FILTER', 'PUPIL', 'EXP_TYPE', 'GRATING'], 'oneoverf_correction': False, 'oneoverf_kwargs': None, 'use_skyflats': True, 'nircam_edge': 8})
+
+ENV CRDS_CONTEXT = jwst_1123.pmap
+PFLTFILE = /opt/crds_cache/references/jwst/niriss/jwst_niriss_flat_0271.fits
+Clip MAXDQBIT = 14
+ENV CRDS_CONTEXT = jwst_1123.pmap
+jwst_utils.img_with_flat: Flat already applied
+jwst_utils.get_jwst_skyflat: /opt/py-packages/grizli-conf/CONF/NircamSkyFlat/nis-f200w-gr150r_skyflat.fits not found
+ENV CRDS_CONTEXT = jwst_1123.pmap
+jwst.assign_wcs.AssignWcsStep: /opt/crds_cache/references/jwst/niriss/jwst_niriss_distortion_0025.asdf
+jwst_utils.update_pure_parallel_wcs: par_file='jw01571131001_03201_00001_nis_rate.fits' couldn't find corresponding exposure in FGS logs
+# photometry keywords
+PHOTFNU = 2.6746e-08
+PHOTPLAM = 19929.6
+PHOTFLAM = 2.0134e-21
+ZP = 27.83
+TO_MJYSR = 0.265
+
+# prep.apply_region_mask_from_db: query failed
+# (2024-09-13 09:30:29.097)
+
+prep.tweak_align(**{'direct_group': {'files': ['jw01571132001_05201_00001_nis_rate.fits'], 'footprint': <POLYGON ((102.388 70.359, 102.388 70.359, 102.388 70.359, 102.388 70.359, 1...>, 'footprints': [[<POLYGON ((102.388 70.36, 102.364 70.396, 102.472 70.404, 102.496 70.368, 10...>]], 'product': 'jw01571-nis-f200w-clear'}, 'grism_group': {'files': ['jw01571131001_03201_00001_nis_rate.fits'], 'footprint': <POLYGON ((102.389 70.359, 102.389 70.359, 102.389 70.359, 102.389 70.359, 1...>, 'footprints': [[<POLYGON ((102.389 70.36, 102.365 70.396, 102.473 70.404, 102.497 70.368, 10...>]], 'product': 'jw01571-nis-f200w-gr150r'}, 'max_dist': 5, 'n_min': 10, 'key': ' ', 'threshold': 3.0, 'drizzle': False, 'fit_order': -1, 'ref_exp': 0, 'flux_radius': [0.5, 5], 'min_nexp': 2, 'master_radec': None, 'make_figures': True})
+
+# ! jw01571-nis-f200w-clear: Only one direct image found, can't compute shifts
+# (2024-09-13 09:30:29.098)
+
+jwst_utils.set_jwst_to_hst_keywords(**{'input': 'jw01571132001_05201_00001_nis_rate.fits', 'reset': True, 'verbose': True, 'orig_keys': ['TELESCOP', 'INSTRUME', 'DETECTOR', 'FILTER', 'PUPIL', 'EXP_TYPE', 'GRATING'], 'oneoverf_correction': True})
+
+Reset: TELESCOP > JWST (OTELESCO)
+Reset: INSTRUME > NIRISS (OINSTRUM)
+Reset: DETECTOR > NIS (ODETECTO)
+Reset: FILTER > CLEAR (OFILTER)
+Reset: PUPIL > F200W (OPUPIL)
+Reset: EXP_TYPE > NIS_IMAGE (OEXP_TYP)
+# (2024-09-13 09:30:29.181)
+
+jwst_utils.set_jwst_to_hst_keywords(**{'input': 'jw01571131001_03201_00001_nis_rate.fits', 'reset': True, 'verbose': True, 'orig_keys': ['TELESCOP', 'INSTRUME', 'DETECTOR', 'FILTER', 'PUPIL', 'EXP_TYPE', 'GRATING'], 'oneoverf_correction': True})
+
+Reset: TELESCOP > JWST (OTELESCO)
+Reset: INSTRUME > NIRISS (OINSTRUM)
+Reset: DETECTOR > NIS (ODETECTO)
+Reset: FILTER > GR150R (OFILTER)
+Reset: PUPIL > F200W (OPUPIL)
+Reset: EXP_TYPE > NIS_WFSS (OEXP_TYP)
+# iterate_tweak_align: make copies to ./TweakBackup
+# prep.iterate_tweak_align: iteration 0
+# prep.apply_region_mask_from_db: query failed
+# (2024-09-13 09:30:31.936)
+
+prep.tweak_align(**{'direct_group': {'files': ['jw01571132001_05201_00001_nis_rate.fits'], 'footprint': <POLYGON ((102.388 70.359, 102.388 70.359, 102.388 70.359, 102.388 70.359, 1...>, 'footprints': [[<POLYGON ((102.388 70.36, 102.364 70.396, 102.472 70.404, 102.496 70.368, 10...>]], 'product': 'jw01571-nis-f200w-clear'}, 'grism_group': {'files': ['jw01571131001_03201_00001_nis_rate.fits'], 'footprint': <POLYGON ((102.389 70.359, 102.389 70.359, 102.389 70.359, 102.389 70.359, 1...>, 'footprints': [[<POLYGON ((102.389 70.36, 102.365 70.396, 102.473 70.404, 102.497 70.368, 10...>]], 'product': 'jw01571-nis-f200w-gr150r'}, 'max_dist': 5, 'n_min': 10, 'key': ' ', 'threshold': 3.0, 'drizzle': False, 'fit_order': -1, 'ref_exp': 0, 'flux_radius': [0.5, 5], 'min_nexp': 2, 'master_radec': 'tweak_jw01571-nis-f200w-clear_0.radec', 'make_figures': True})
+
+# ! jw01571-nis-f200w-clear: Only one direct image found, can't compute shifts
+# prep.iterate_tweak_align: iteration 1
+# prep.apply_region_mask_from_db: query failed
+# (2024-09-13 09:30:34.497)
+
+prep.tweak_align(**{'direct_group': {'files': ['jw01571132001_05201_00001_nis_rate.fits'], 'footprint': <POLYGON ((102.388 70.359, 102.388 70.359, 102.388 70.359, 102.388 70.359, 1...>, 'footprints': [[<POLYGON ((102.388 70.36, 102.364 70.396, 102.472 70.404, 102.496 70.368, 10...>]], 'product': 'jw01571-nis-f200w-clear'}, 'grism_group': {'files': ['jw01571131001_03201_00001_nis_rate.fits'], 'footprint': <POLYGON ((102.389 70.359, 102.389 70.359, 102.389 70.359, 102.389 70.359, 1...>, 'footprints': [[<POLYGON ((102.389 70.36, 102.365 70.396, 102.473 70.404, 102.497 70.368, 10...>]], 'product': 'jw01571-nis-f200w-gr150r'}, 'max_dist': 5, 'n_min': 10, 'key': ' ', 'threshold': 3.0, 'drizzle': False, 'fit_order': -1, 'ref_exp': 0, 'flux_radius': [0.5, 5], 'min_nexp': 2, 'master_radec': 'tweak_jw01571-nis-f200w-clear_1.radec', 'make_figures': True})
+
+# ! jw01571-nis-f200w-clear: Only one direct image found, can't compute shifts
+# iterate_tweak_align: remove ./TweakBackup
+# remove tweak_jw01571-nis-f200w-clear_1_fp.png
+# remove tweak_jw01571-nis-f200w-clear_1_bkg.fits
+# remove tweak_jw01571-nis-f200w-clear_0_bkg.fits
+# remove tweak_jw01571-nis-f200w-clear_0_seg.fits
+# remove tweak_jw01571-nis-f200w-clear_1_seg.fits
+# remove tweak_jw01571-nis-f200w-clear_1_drc_wht.fits
+# remove tweak_jw01571-nis-f200w-clear_1.radec
+# remove tweak_jw01571-nis-f200w-clear_1.log.txt
+# remove tweak_jw01571-nis-f200w-clear_1.cat.fits
+# remove tweak_jw01571-nis-f200w-clear_0.cat.fits
+# remove tweak_jw01571-nis-f200w-clear_0.log.txt
+# remove tweak_jw01571-nis-f200w-clear_0_fp.png
+# remove tweak_jw01571-nis-f200w-clear_0_drc_wht.fits
+# remove tweak_jw01571-nis-f200w-clear_0.radec
+# remove tweak_jw01571-nis-f200w-clear_1_wcs.csv
+# remove tweak_jw01571-nis-f200w-clear_0_drc_sci.fits
+# remove tweak_jw01571-nis-f200w-clear_1_drc_sci.fits
+# remove tweak_jw01571-nis-f200w-clear_0_wcs.csv
+# (2024-09-13 09:30:34.523)
+
+jwst_utils.set_jwst_to_hst_keywords(**{'input': 'jw01571132001_05201_00001_nis_rate.fits', 'reset': False, 'verbose': True, 'orig_keys': ['TELESCOP', 'INSTRUME', 'DETECTOR', 'FILTER', 'PUPIL', 'EXP_TYPE', 'GRATING'], 'oneoverf_correction': True})
+
+  Set: TELESCOP > HST
+  Set: INSTRUME > WFC3
+  Set: DETECTOR > IR
+# (2024-09-13 09:30:34.607)
+
+jwst_utils.set_jwst_to_hst_keywords(**{'input': 'jw01571131001_03201_00001_nis_rate.fits', 'reset': False, 'verbose': True, 'orig_keys': ['TELESCOP', 'INSTRUME', 'DETECTOR', 'FILTER', 'PUPIL', 'EXP_TYPE', 'GRATING'], 'oneoverf_correction': True})
+
+  Set: TELESCOP > HST
+  Set: INSTRUME > WFC3
+  Set: DETECTOR > IR
+Query LegacySurveys (ls_dr9.tractor) catalog (102.42957683998,70.381932188736,3.00)
+Launched query: 'SELECT TOP 1000000 * FROM ls_dr9.tractor WHERE ra > 102.35511637102873 AND ra < 102.50403730893127 AND dec > 70.356932188736 AND dec < 70.40693218873601  AND flux_r*SQRT(flux_ivar_r) > 10'
+------>https
+host = datalab.noirlab.edu:443
+context = /tap/sync
+Content-type = application/x-www-form-urlencoded
+200 OK
+[('Date', 'Fri, 13 Sep 2024 09:30:36 GMT'), ('Server', 'Apache-Coyote/1.1'), ('Content-Disposition', 'attachment; filename="result_iv5nub4gh7xg14ll.xml"'), ('Content-Type', 'application/x-votable+xml'), ('Connection', 'close'), ('Transfer-Encoding', 'chunked')]
+Retrieving sync. results...
+Saving results to: result_iv5nub4gh7xg14ll.xml
+Query finished.
+jw01571-nis-f200w-clear_ls_dr9.reg: x = ra, y=dec, ellipse=False
+jw01571-nis-f200w-clear - Reference RADEC: jw01571-nis-f200w-clear_ls_dr9.radec [LS_DR9] N=62
+# (2024-09-13 09:30:39.309)
+#  jw01571-nis-f200w-clear: First Drizzle
+2024-09-13 11:30:39,463 - stpipe - WARNING - Static mask for file 'jw01571132001_05201_00001_nis_rate.fits', ext=('SCI', 1) NOT FOUND.
+2024-09-13 11:30:39,642 - stpipe - WARNING - No CR mask file found! Input DQ array not updated.
+2024-09-13 11:30:39,645 - stpipe - WARNING - Cannot find flat field file 'jwst_niriss_flat_0268.fits'
+2024-09-13 11:30:39,645 - stpipe - WARNING - Treating flatfield as a constant value of '1'.
+2024-09-13 11:30:40,515 - stpipe - INFO - Writing out image to disk: jw01571-nis-f200w-clear_drz_sci.fits
+Writing out image to disk: jw01571-nis-f200w-clear_drz_sci.fits
+2024-09-13 11:30:40,588 - stpipe - INFO - Writing out image to disk: jw01571-nis-f200w-clear_drz_wht.fits
+Writing out image to disk: jw01571-nis-f200w-clear_drz_wht.fits
+2024-09-13 11:30:40,609 - stpipe - INFO - ==== Processing Step Final Drizzle finished at 11:30:40.609 (13/09/2024)
+==== Processing Step Final Drizzle finished at 11:30:40.609 (13/09/2024)
+2024-09-13 11:30:40,610 - stpipe - INFO - 
+
+2024-09-13 11:30:40,610 - stpipe - INFO - AstroDrizzle Version 3.7.1 is finished processing at 11:30:40.610 (13/09/2024).
+AstroDrizzle Version 3.7.1 is finished processing at 11:30:40.610 (13/09/2024).
+2024-09-13 11:30:40,610 - stpipe - INFO - 
+
+2024-09-13 11:30:40,610 - stpipe - INFO - 
+
+2024-09-13 11:30:40,610 - stpipe - INFO - 
+
+2024-09-13 11:30:40,610 - stpipe - INFO -    --------------------          --------------------
+   --------------------          --------------------
+2024-09-13 11:30:40,610 - stpipe - INFO -                    Step          Elapsed time
+                   Step          Elapsed time
+2024-09-13 11:30:40,610 - stpipe - INFO -    --------------------          --------------------
+   --------------------          --------------------
+2024-09-13 11:30:40,610 - stpipe - INFO - 
+
+2024-09-13 11:30:40,610 - stpipe - INFO -          Initialization          0.1239 sec.
+         Initialization          0.1239 sec.
+2024-09-13 11:30:40,610 - stpipe - INFO -             Static Mask          0.0001 sec.
+            Static Mask          0.0001 sec.
+2024-09-13 11:30:40,610 - stpipe - INFO -            Subtract Sky          0.1606 sec.
+           Subtract Sky          0.1606 sec.
+2024-09-13 11:30:40,610 - stpipe - INFO -        Separate Drizzle          0.0001 sec.
+       Separate Drizzle          0.0001 sec.
+2024-09-13 11:30:40,611 - stpipe - INFO -           Create Median          0.0000 sec.
+          Create Median          0.0000 sec.
+2024-09-13 11:30:40,611 - stpipe - INFO -                    Blot          0.0001 sec.
+                   Blot          0.0001 sec.
+2024-09-13 11:30:40,611 - stpipe - INFO -                 Driz_CR          0.0000 sec.
+                Driz_CR          0.0000 sec.
+2024-09-13 11:30:40,611 - stpipe - INFO -           Final Drizzle          0.9990 sec.
+          Final Drizzle          0.9990 sec.
+2024-09-13 11:30:40,611 - stpipe - INFO -    ====================          ====================
+   ====================          ====================
+2024-09-13 11:30:40,611 - stpipe - INFO -                   Total          1.2838 sec.
+                  Total          1.2838 sec.
+2024-09-13 11:30:40,611 - stpipe - INFO - 
+
+2024-09-13 11:30:40,611 - stpipe - INFO - Removing intermediate files for jw01571132001_05201_00001_nis_rate.fits
+2024-09-13 11:30:40,614 - stpipe - INFO - Trailer file written to:  astrodrizzle.log
+Trailer file written to:  astrodrizzle.log
+kill='preprocess'
+Update exposure footprints in ./cam-00_visits.yaml

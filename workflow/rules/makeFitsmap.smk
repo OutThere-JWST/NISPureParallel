@@ -10,7 +10,7 @@ def create_rule(field):
         log:
             f'FIELDS/{field}/logs/fmap.log'
         group:
-            lambda wildcards: f'fmap-{groups[wildcards.field]}'
+            lambda wildcards: f'fmap-{groups[field]}'
         conda:
             '../envs/fitsmap.yaml'
         priority:
@@ -21,6 +21,8 @@ def create_rule(field):
             """
             ./workflow/scripts/makeFitsmap.py {field} --ncpu {resources.cpus_per_task} > {log} 2>&1
             """
+            # tar -cf FIELDS/{wildcards.field}/fitsmap/{wildcards.field}.tar -C FIELDS/{wildcards.field}/fitsmap/ {wildcards.field}/
+
 
 # Create rules for all fields
 for field in FIELDS: create_rule(field)
