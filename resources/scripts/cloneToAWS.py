@@ -155,10 +155,11 @@ for field in fields:
     }
 
     # Save and copy over manifest
-    with open(path.join(field_path, f'MANIFEST-{field}.toml'), 'w') as f:
-        toml.dump(manifest[field], f)
+    manifest_name = f'MANIFEST-{field}.toml'
+    with open(path.join(field_path, manifest_name), 'w') as f:
+        toml.dump(manifest_name, f)
     copy_files(
-        [path.join(field_path, 'MANIFEST.toml')], field_path, catalogs_remote_path
+        [path.join(field_path, manifest_name)], field_path, catalogs_remote_path
     )
 
     # Spectra Paths
@@ -179,10 +180,10 @@ for cats, name in zip([phot_combined, zfit_combined], names):
     vstack(cats, metadata_conflicts='silent').write(name)
 
 # Save Manifest
-fname = 'MANIFEST.toml'
-with open('MANIFEST.toml', 'w') as f:
+manifest_name = 'MANIFEST.toml'
+with open(manifest_name, 'w') as f:
     toml.dump(manifest, f)
-names += [fname]
+names += [manifest_name]
 
 # Copy over the total catalogs
 copy_files(names, os.getcwd(), data_remote_path)
