@@ -86,7 +86,7 @@ def main():
         # Get file pattern and PAs
         pre = f'{fname}-{g.lower()}-'
         pas = [
-            path.basename(pa).split('_')[0].replace(f'{pre}', '')
+            path.basename(f).split('_')[0].replace(f'{pre}', '')
             for f in glob(path.join(extract, f'{pre}*grism_sci.fits'))
             if 'proj' not in f
         ]
