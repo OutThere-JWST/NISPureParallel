@@ -11,7 +11,7 @@ rule extract:
     conda:
         '../envs/grizli.yaml'
     resources:
-        cpus_per_task = max(1, workflow.resource_settings.default_resources.parsed['cpus_per_task'] // 2)
+        cpus_per_task = 1
     shell:
         """
         ./workflow/scripts/extract.py {wildcards.field} --ncpu {resources.cpus_per_task} > {log} 2>&1
