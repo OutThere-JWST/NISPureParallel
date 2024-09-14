@@ -21,25 +21,8 @@ from grizli import multifit
 warnings.filterwarnings('ignore')
 
 
-# Extraction function
-def extract_id(i, grp, fname):
-    # Get beams from group
-    beams = grp.get_beams(i, size=32, min_mask=0, min_sens=0.01)
-    if len(beams) == 0:
-        return  # Skip if no beams
-
-    # Extract beam
-    mb = multifit.MultiBeam(
-        beams, fcontam=0.1, min_sens=0.01, min_mask=0, group_name=fname
-    )
-    mb.write_master_fits()
-
-    # Keep track of extracted objects
-    return i
-
-
 def main():
-    # Parse arguements
+    # Parse arguments
     parser = argparse.ArgumentParser()
     parser.add_argument('fieldname', type=str)
     parser.add_argument('--ncpu', type=int, default=1)
@@ -98,16 +81,32 @@ def main():
     mag = cat['MAG_AUTO'].filled(np.inf)
     ids = cat['NUMBER'][mag <= extract_mag]
 
-    # Multiprocess
-    if ncpu > 1:
-        from multiprocessing import Pool
+    # Define the extract_id function within main
+    def extract_id(i):
+        # Get beams from group
+        beams = grp.get_beams(i, size=32, min_mask=0, min_sens=0.01)
+        if len(beams) == 0:
+            return  # Skip if no beams
 
-        with Pool(ncpu) as pool:
-            # Iterate over IDs
-            results = pool.starmap_async(extract_id, [(i, grp, fname) for i in ids])
-            extracted = results.get()
+        # Extract beam
+        mb = multifit.MultiBeam(
+            beams, fcontam=0.1, min_sens=0.01, min_mask=0, group_name=fname
+        )
+        mb.write_master_fits()
+
+        # Keep track of extracted objects
+        return i
+
+    # Multiprocess using ThreadPoolExecutor to avoid memory issues
+    if ncpu > 1:
+        from concurrent.futures import ThreadPoolExecutor
+
+        with ThreadPoolExecutor(ncpu) as executor:
+            extracted = list(executor.map(extract_id, ids))
+
+    # Single process
     else:
-        extracted = [extract_id(i, grp, fname) for i in ids]
+        extracted = [extract_id(i) for i in ids]
 
     # Write catalog of extracted objects
     extracted = Table(
