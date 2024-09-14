@@ -10,8 +10,8 @@ rule extract:
         lambda wildcards: f'extr-{groups[wildcards.field]}'
     conda:
         '../envs/grizli.yaml'
-    # resources:
-    #     tasks = lambda wildcards: len(uncal[wildcards.field])
+    resources:
+        cpus_per_task = max(1, workflow.resource_settings.default_resources.parsed['cpus_per_task'] // 2)
     shell:
         """
         ./workflow/scripts/extract.py {wildcards.field} --ncpu {resources.cpus_per_task} > {log} 2>&1
