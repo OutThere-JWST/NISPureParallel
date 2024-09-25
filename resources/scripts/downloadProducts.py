@@ -8,15 +8,17 @@ import subprocess
 
 
 # Download products with rsync
-def download_product(product, prod_dir, remote):
+def download_product(product, prod_dir, remote, password):
     """Download product from remote server."""
 
     # Download command
     command = [
-        'rsync',
-        '-avz',
-        os.path.join(remote, product),
+        'curl',
+        '-u',
+        f'outthere:{password}',
+        '-o',
         os.path.join(prod_dir, product),
+        os.path.join(remote, product),
     ]
 
     # Execute command
@@ -32,9 +34,13 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('manifest', type=str, help='Path to manifest file')
     parser.add_argument(
-        '--remote', type=str, help='Remote URL', default='outthere-mpia.org/s3/data'
+        '--remote', type=str, help='Remote URL', default='http://outthere-mpia.org/s3/data'
     )
     args = parser.parse_args()
+
+    # Prompt User for input
+    print('Enter the password to the remote server')
+    password = input()
 
     # Load manifest
     manifest = toml.load(args.manifest)
@@ -63,7 +69,7 @@ def main():
             # Loop over products
             for product in products:
                 # Download product
-                download_product(product, prod_dir, os.path.join(remote, field))
+                download_product(product, prod_dir, os.path.join(remote, field), password)
 
 
 if __name__ == '__main__':
