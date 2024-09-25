@@ -10,7 +10,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 
 # Download product with rsync
-def download_spectrum(extract, local_dir, remote):
+def download_spectrum(extract, local_dir, remote, password):
     """Download product from remote server."""
 
     # Product name
@@ -27,10 +27,12 @@ def download_spectrum(extract, local_dir, remote):
     for file in files:
         # Download command
         command = [
-            'rsync',
-            '-avz',
-            os.path.join(remote_url, file),
+            'curl',
+            '-u',
+            f'outthere:{password}',
+            '-o',
             os.path.join(local_dir, field, 'spectra'),
+            os.path.join(remote_url, file),
         ]
 
         try:
@@ -45,10 +47,17 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('extracted', type=str, help='Path to extracted table')
     parser.add_argument(
-        '--remote', type=str, help='Remote URL', default='outthere-mpia.org/s3/data'
+        '--remote',
+        type=str,
+        help='Remote URL',
+        default='http://outthere-mpia.org/s3/data',
     )
     parser.add_argument('--ncpu', type=int, default=1)
     args = parser.parse_args()
+
+    # Prompt User for input
+    print('Enter the password to the remote server')
+    password = input()
 
     # Load extracted
     extracted = Table.read(args.extracted)
@@ -68,14 +77,14 @@ def main():
     if ncpu > 1:
         with ThreadPoolExecutor(ncpu) as executor:
             executor.map(
-                lambda e: download_spectrum(e, remote),
+                lambda e: download_spectrum(e, home, remote, password),
                 extracted,
             )
 
     # Single-threaded download
     else:
         for extract in extracted:
-            download_spectrum(extract, home, remote)
+            download_spectrum(extract, home, remote, password)
 
 
 if __name__ == '__main__':

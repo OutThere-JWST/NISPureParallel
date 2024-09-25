@@ -34,7 +34,10 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('manifest', type=str, help='Path to manifest file')
     parser.add_argument(
-        '--remote', type=str, help='Remote URL', default='http://outthere-mpia.org/s3/data'
+        '--remote',
+        type=str,
+        help='Remote URL',
+        default='http://outthere-mpia.org/s3/data',
     )
     args = parser.parse_args()
 
@@ -69,7 +72,9 @@ def main():
             # Loop over products
             for product in products:
                 # Download product
-                download_product(product, prod_dir, os.path.join(remote, field), password)
+                download_product(
+                    product, prod_dir, os.path.join(remote, field), password
+                )
 
 
 if __name__ == '__main__':
