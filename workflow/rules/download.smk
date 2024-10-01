@@ -2,8 +2,6 @@
 def create_rule(field):
     rule:
         name: f"download_{field}"
-        input:
-            'FIELDS/fields.txt'
         output:
             [f'FIELDS/{field}/UNCAL/{f}' for f in uncal[field]]
         log: 
