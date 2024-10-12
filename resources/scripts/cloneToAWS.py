@@ -108,6 +108,7 @@ for field in fields:
         f'{field}-ir*.fits',
         f'{field}-ir.reg',
         f'{field}-f*n-clear*fits',
+        f'{field}-f*n-clear_wcs.csv',
     ]
     catalogs = sum([glob.glob(path.join(prep_path, s)) for s in catstrings], [])
 
@@ -158,9 +159,7 @@ for field in fields:
     manifest_name = f'MANIFEST-{field}.toml'
     with open(path.join(field_path, manifest_name), 'w') as f:
         toml.dump(manifest[field], f)
-    copy_files(
-        [path.join(field_path, manifest_name)], field_path, catalogs_remote_path
-    )
+    copy_files([path.join(field_path, manifest_name)], field_path, catalogs_remote_path)
 
     # Spectra Paths
     extensions = ['1D', 'beams', 'full', 'stack', 'row']
