@@ -3,7 +3,6 @@ local-cores: 1
 
 # SnakeMake Conda settings
 use-conda: True
-conda-frontend: mamba
 
 # Settings to continue running and keep incomplete
 keep-going: True

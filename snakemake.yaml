@@ -6,7 +6,6 @@ dependencies:
 - pip
 - tqdm
 - conda
-- mamba
 - scipy
 - astropy
 - astroquery
