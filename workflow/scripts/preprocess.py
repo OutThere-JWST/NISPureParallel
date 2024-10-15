@@ -261,7 +261,7 @@ def plot_visits(visits, fname, plots):
     fig, ax = pyplot.subplots(1, 1, figsize=(12, 12))
 
     # Enumerate visits
-    ras, decs = [], []
+    ras, decs, fgs = [], [], []
     for i, v in enumerate(visits):
         # Get region box
         sr = utils.SRegion(v['footprint'])
@@ -272,15 +272,11 @@ def plot_visits(visits, fname, plots):
 
         # Get filter-grism combo
         fg = '-'.join(v['product'].split('-')[-2:]).upper()
+        fgs.append(fg)
 
         # Place patches for region
         for patch in sr.patch(
-            ec=colors[fg],
-            fc='None',
-            alpha=0.5,
-            lw=3,
-            ls=ls_dic[fg[6:]],
-            label=fg.replace('-', '$-$'),
+            ec=colors[fg], fc='None', alpha=0.5, lw=3, ls=ls_dic[fg[6:]]
         ):
             ax.add_patch(patch)
 
@@ -288,7 +284,9 @@ def plot_visits(visits, fname, plots):
     ra = np.concatenate(ras)
     dec = np.concatenate(decs)
 
-    # Add legend
+    # Add legend for fgs
+    for fg in set(fgs):
+        ax.plot([], [], ls=ls_dic[fg[6:]], color=colors[fg], label=fg)
     ax.legend(fontsize=20, frameon=True)
 
     # Set axis parameters
