@@ -41,18 +41,10 @@ def cal(file, out):
 
     # Define Detector 1 steps (skip everything before jump)
     steps = dict(
-        persistence=dict(
-            skip=True  # Not implemented
-        ),
-        jump=dict(
-            skip=True,
-        ),
-        ramp_fit=dict(
-            skip=True,
-        ),
-        gain_scale=dict(
-            skip=True,
-        ),
+        persistence=dict(skip=True),  # Not implemented
+        jump=dict(skip=True),
+        ramp_fit=dict(skip=True),
+        gain_scale=dict(skip=True),
     )
 
     # Run the pipeline up until the jump step
@@ -62,10 +54,7 @@ def cal(file, out):
     cjump = ColumnJumpStep.call(dark, nsigma1jump=5.0, nsigma2jumps=5.0)
 
     # Jump step
-    jump = JumpStep.call(
-        cjump,
-        rejection_threshold=5.0,
-    )
+    jump = JumpStep.call(cjump, rejection_threshold=5.0)
 
     # Ramp Fit
     rate, _ = RampFitStep.call(jump)
