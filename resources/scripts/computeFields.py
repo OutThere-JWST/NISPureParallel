@@ -166,6 +166,10 @@ if __name__ == '__main__':
             if found:
                 break
 
+        # If no parallel is found
+        if not found:
+            pids.append('')
+
     # Add primary IDs to table
     obs.add_column(pids, name='prim_id')
 
