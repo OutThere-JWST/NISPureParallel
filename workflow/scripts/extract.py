@@ -2,7 +2,6 @@
 
 # Import packages
 import os
-import re
 import yaml
 import glob
 import warnings
@@ -48,10 +47,6 @@ def main():
     main = os.getcwd()
     fields = os.path.join(main, 'FIELDS')
     home = os.path.join(fields, fname)
-
-    # Load exposure times (direct vs grism)
-    obs = Table.read(os.path.join(fields, 'field-obs.fits'), fname)
-    obs['filters'] = [re.sub(r'150[RC]', '', f) for f in obs['filters']]
 
     # Subdirectories
     extract = os.path.join(home, 'Extractions')
