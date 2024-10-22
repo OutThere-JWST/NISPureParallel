@@ -89,7 +89,7 @@ def main():
         f = shutil.copy(f, raw)
 
         # Initialize image
-        jwst_utils.initialize_jwst_image(f)
+        jwst_utils.initialize_jwst_image(f, oneoverf_correction=grizli_oneoverf)
 
         # If not already corrected, correct for 1/f noise using Willot
         if not grizli_oneoverf:
@@ -106,7 +106,7 @@ def main():
 
         # Set correct keywords
         jwst_utils.set_jwst_to_hst_keywords(
-            f, reset=True
+            f, oneoverf_correction=grizli_oneoverf, reset=True
         )
 
     # Parse Visits
