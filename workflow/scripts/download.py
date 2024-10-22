@@ -32,8 +32,8 @@ if __name__ == '__main__':
     home = os.path.join(fields, fname)
 
     # Create directory tree if it doesn't exist
-    if not os.path.exists(home):
-        os.makedirs(home)
+    if not os.path.exists(uncal):
+        os.makedirs(uncal)
 
     print(f'Downloading Products for {fname}...')
 
