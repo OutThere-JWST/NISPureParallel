@@ -1,5 +1,6 @@
 # Ignored directories
 FIELDS/
+__pychache__/
 
 # Ignore Snakmake files
 *.snakemake

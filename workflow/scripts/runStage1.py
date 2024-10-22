@@ -47,13 +47,13 @@ def cal(file, out):
         gain_scale=dict(skip=True),
     )
 
-    # Run the pipeline up until the jump step
-    dark = Detector1Pipeline.call(file, steps=steps)
+    # Run the pipeline up until the Jump Step
+    prejump = Detector1Pipeline.call(file, steps=steps)
 
     # Custom Column Jump
-    cjump = ColumnJumpStep.call(dark, nsigma1jump=5.0, nsigma2jumps=5.0)
+    cjump = ColumnJumpStep.call(prejump, nsigma1jump=5.0, nsigma2jumps=5.0)
 
-    # Jump step
+    # Jump Step
     jump = JumpStep.call(cjump, rejection_threshold=5.0)
 
     # Ramp Fit

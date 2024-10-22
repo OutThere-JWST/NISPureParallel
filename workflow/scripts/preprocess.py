@@ -27,8 +27,19 @@ from grizli.aws import visit_processor
 from grizli.prep import visit_grism_sky
 from grizli.pipeline import auto_script
 
+# Chris Willot 1/f Noise
+from image1overf import sub1fimaging
+
 # Silence warnings
 warnings.filterwarnings('ignore')
+
+# Set Willott 1/f noise parameters
+one_over_f_args = {
+    'sigma_bgmask': 3.0,
+    'sigma_1fmask': 2.0,
+    'splitamps': True,
+    'usesegmask': True,
+}
 
 
 # Create main function
@@ -36,8 +47,10 @@ def main():
     # Parse arguements
     parser = argparse.ArgumentParser()
     parser.add_argument('fieldname', type=str)
+    parser.add_argument('--grizli_oneoverf', action='store_true')
     args = parser.parse_args()
     fname = args.fieldname
+    grizli_oneoverf = args.grizli_oneoverf
 
     # Print grizli and jwst versions
     print(f'Preprocessing {fname}')
@@ -77,7 +90,26 @@ def main():
 
         # Initialize image
         jwst_utils.initialize_jwst_image(f)
-        jwst_utils.set_jwst_to_hst_keywords(f, reset=True)
+
+        # If not already corrected, correct for 1/f noise using Willot
+        if not grizli_oneoverf:
+            print(f'Correcting 1/f noise for {f} with Willot code')
+            with fits.open(f) as hdul:
+                # Correct for 1/f noise
+                correcteddata = sub1fimaging(hdul, **one_over_f_args)
+
+                # Update data
+                hdul['SCI'].data[4:2044, 4:2044] = correcteddata  # FULL Subarray
+
+                # Save corrected data
+                hdul.writeto(f, overwrite=True)
+
+        # Set correct keywords
+        jwst_utils.set_jwst_to_hst_keywords(
+            f, reset=True
+        )
+
+    return
 
     # Parse Visits
     visits, all_groups, info = auto_script.parse_visits(field_root=fname, RAW_PATH=raw)
