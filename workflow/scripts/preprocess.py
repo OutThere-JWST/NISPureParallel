@@ -109,8 +109,6 @@ def main():
             f, reset=True
         )
 
-    return
-
     # Parse Visits
     visits, all_groups, info = auto_script.parse_visits(field_root=fname, RAW_PATH=raw)
 
