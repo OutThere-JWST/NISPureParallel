@@ -12,11 +12,6 @@ import jwst
 from columnjump import ColumnJumpStep
 from jwst.pipeline import Detector1Pipeline
 
-# Set ColumnJumpStep Paramters
-columnjump = ColumnJumpStep()
-columnjump.nsigma1jump = 5.0
-columnjump.nsigma2jumps = 5.0
-
 
 # Run pipeline in parallel
 def main():
@@ -42,6 +37,11 @@ def main():
 @threadpool_limits.wrap(limits=1, user_api='blas')
 def cal(file, out):
     print(f'Processing {file} with jwst: {jwst.__version__}')
+
+    # Set ColumnJumpStep Paramters
+    columnjump = ColumnJumpStep()
+    columnjump.nsigma1jump = 5.0
+    columnjump.nsigma2jumps = 5.0
 
     # Define Detector 1 steps (skip everything before jump)
     steps = dict(
