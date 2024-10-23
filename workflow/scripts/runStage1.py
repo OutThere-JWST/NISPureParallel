@@ -43,10 +43,10 @@ def cal(file, out):
     columnjump.nsigma1jump = 5.0
     columnjump.nsigma2jumps = 5.0
 
-    # Define Detector 1 steps (skip everything before jump)
+    # Define Detector 1 steps
     steps = dict(
-        charge_migration=dict(post_hooks=[columnjump]), # ColumnJump before Jump
-        jump=dict(rejection_threshold=5.0),  # 5 sigma rejection in Jump
+        charge_migration=dict(post_hooks=[columnjump]),
+        jump=dict(rejection_threshold=5.0),
         clean_flicker_noise=dict(skip=True),  # Do this in Stage 2
     )
 
