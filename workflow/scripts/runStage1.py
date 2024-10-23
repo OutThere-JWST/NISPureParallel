@@ -11,7 +11,11 @@ from threadpoolctl import threadpool_limits
 import jwst
 from columnjump import ColumnJumpStep
 from jwst.pipeline import Detector1Pipeline
-from jwst.step import JumpStep, RampFitStep
+
+# Set ColumnJumpStep Paramters
+columnjump = ColumnJumpStep()
+columnjump.nsigma1jump = 5.0
+columnjump.nsigma2jumps = 5.0
 
 
 # Run pipeline in parallel
@@ -42,22 +46,13 @@ def cal(file, out):
     # Define Detector 1 steps (skip everything before jump)
     steps = dict(
         persistence=dict(skip=True),  # Not implemented
-        jump=dict(skip=True),
-        ramp_fit=dict(skip=True),
-        gain_scale=dict(skip=True),
+        dark_current=dict(post_hooks=[columnjump]),
+        jump=dict(rejection_threshold=5.0),
+        clean_flicker_noise=dict(skip=True), # Skip for now
     )
 
-    # Run the pipeline up until the Jump Step
-    prejump = Detector1Pipeline.call(file, steps=steps)
-
-    # Custom Column Jump
-    cjump = ColumnJumpStep.call(prejump, nsigma1jump=5.0, nsigma2jumps=5.0)
-
-    # Jump Step
-    jump = JumpStep.call(cjump, rejection_threshold=5.0)
-
-    # Ramp Fit
-    rate, _ = RampFitStep.call(jump)
+    # Run the pipeline up until the jump step
+    rate = Detector1Pipeline.call(file, steps=steps)
 
     # Save results
     rate.save(out)
