@@ -46,9 +46,9 @@ def cal(file, out):
     # Define Detector 1 steps (skip everything before jump)
     steps = dict(
         persistence=dict(skip=True),  # Not implemented
-        dark_current=dict(post_hooks=[columnjump]),
-        jump=dict(rejection_threshold=5.0),
-        clean_flicker_noise=dict(skip=True), # Skip for now
+        dark_current=dict(post_hooks=[columnjump]),  # ColumnJump after Dark
+        jump=dict(rejection_threshold=5.0),  # 5 sigma rejection in jump
+        clean_flicker_noise=dict(skip=True),  # Skip for now
     )
 
     # Run the pipeline up until the jump step
