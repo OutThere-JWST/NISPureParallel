@@ -45,6 +45,7 @@ def cal(file, out):
 
     # Define Detector 1 steps
     steps = dict(
+        persistence=dict(skip=True),  # Not implemented
         charge_migration=dict(post_hooks=[columnjump]),
         jump=dict(rejection_threshold=5.0),
         clean_flicker_noise=dict(skip=True),  # Do this in Stage 2
