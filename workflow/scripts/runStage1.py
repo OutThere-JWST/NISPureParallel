@@ -7,6 +7,9 @@ import argparse
 # Multiprocessing
 from threadpoolctl import threadpool_limits
 
+# Astropy
+from astropy.io import fits
+
 # JWST Pipeline
 import jwst
 from columnjump import ColumnJumpStep
@@ -43,12 +46,18 @@ def cal(file, out):
     columnjump.nsigma1jump = 5.0
     columnjump.nsigma2jumps = 5.0
 
+    # Determine if grism or imaging
+    disperser = fits.getval(file, 'FILTER', 'PRIMARY')
+    background_method = 'median' if disperser == 'CLEAR' else 'model'
+
     # Define Detector 1 steps
     steps = dict(
         persistence=dict(skip=True),  # Not implemented
         charge_migration=dict(post_hooks=[columnjump]),
         jump=dict(rejection_threshold=5.0),
-        clean_flicker_noise=dict(skip=True),  # Do this in Stage 2
+        clean_flicker_noise=dict(
+            skip=False, background_method=background_method, fit_by_channel=True
+        ),
     )
 
     # Run the pipeline up until the jump step
