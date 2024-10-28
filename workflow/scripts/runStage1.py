@@ -56,7 +56,7 @@ def cal(file, out):
         charge_migration=dict(post_hooks=[columnjump]),
         jump=dict(rejection_threshold=5.0),
         clean_flicker_noise=dict(
-            skip=False, background_method=background_method, fit_by_channel=True
+            skip=True, background_method=background_method, fit_by_channel=True
         ),
     )
 
