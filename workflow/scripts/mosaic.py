@@ -31,7 +31,6 @@ def main():
     # Parse arguements
     parser = argparse.ArgumentParser()
     parser.add_argument('fieldname', type=str)
-    parser.add_argument('--ncpu', type=int, default=1)
     args = parser.parse_args()
     fname = args.fieldname
 
