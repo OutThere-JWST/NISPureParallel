@@ -7,6 +7,7 @@ import shutil
 import argparse
 import warnings
 import numpy as np
+from multiprocessing import Pool
 
 # Packages for Plotting
 from sregion import SRegion
@@ -42,14 +43,43 @@ one_over_f_args = {
 }
 
 
+# Process image
+def process_image(f, raw, grizli_oneoverf):
+    # Copy raw file
+    f = shutil.copy(f, raw)
+
+    # Initialize image
+    jwst_utils.initialize_jwst_image(f, oneoverf_correction=grizli_oneoverf)
+
+    # If not already corrected, correct for 1/f noise using Willot
+    if not grizli_oneoverf:
+        print(f'Correcting 1/f noise for {f} with Willot code')
+        with fits.open(f) as hdul:
+            # Correct for 1/f noise
+            correcteddata = sub1fimaging(hdul, **one_over_f_args)
+
+            # Update data
+            hdul['SCI'].data[4:2044, 4:2044] = correcteddata  # FULL Subarray
+
+            # Save corrected data
+            hdul.writeto(f, overwrite=True)
+
+    # Set correct keywords
+    jwst_utils.set_jwst_to_hst_keywords(
+        f, oneoverf_correction=grizli_oneoverf, reset=True
+    )
+
+
 # Create main function
 def main():
     # Parse arguements
     parser = argparse.ArgumentParser()
     parser.add_argument('fieldname', type=str)
+    parser.add_argument('--ncpu', type=int, default=1)
     parser.add_argument('--grizli_oneoverf', action='store_true')
     args = parser.parse_args()
     fname = args.fieldname
+    ncpu = args.ncpu
     grizli_oneoverf = args.grizli_oneoverf
 
     # Print grizli and jwst versions
@@ -80,40 +110,28 @@ def main():
     # Change to working directory
     os.chdir(fields)
 
-    # Initialize image
-    files = [
-        os.path.join(rate, f).replace('uncal', 'rate') for f in prods['productFilename']
-    ]
-    for f in files:
-        # Copy raw file
-        f = shutil.copy(f, raw)
-
-        # Initialize image
-        jwst_utils.initialize_jwst_image(f, oneoverf_correction=grizli_oneoverf)
-
-        # If not already corrected, correct for 1/f noise using Willot
-        if not grizli_oneoverf:
-            print(f'Correcting 1/f noise for {f} with Willot code')
-            with fits.open(f) as hdul:
-                # Correct for 1/f noise
-                correcteddata = sub1fimaging(hdul, **one_over_f_args)
-
-                # Update data
-                hdul['SCI'].data[4:2044, 4:2044] = correcteddata  # FULL Subarray
-
-                # Save corrected data
-                hdul.writeto(f, overwrite=True)
-
-        # Set correct keywords
-        jwst_utils.set_jwst_to_hst_keywords(
-            f, oneoverf_correction=grizli_oneoverf, reset=True
-        )
+    # Initialize images
+    files = sorted(
+        [
+            os.path.join(rate, f).replace('uncal', 'rate')
+            for f in prods['productFilename']
+        ]
+    )
+    with Pool(ncpu) as pool:
+        pool.starmap(process_image, [(f, raw, grizli_oneoverf) for f in files])
 
     # Parse Visits
     visits, all_groups, info = auto_script.parse_visits(field_root=fname, RAW_PATH=raw)
 
     # Plot visits
     plot_visits(visits, fname, plots)
+
+    # Subtract background from direct images
+    os.chdir(raw)
+    for group in all_groups:
+        if 'direct' in group:  #
+            visit_grism_sky(grism=group['direct'], column_average=False, ignoreNA=True)
+    os.chdir(fields)
 
     # Make visit associations
     assoc = info['EXPSTART', 'EXPTIME', 'INSTRUME']
@@ -142,13 +160,6 @@ def main():
     assoc.rename_columns(
         ['EXPSTART', 'EXPTIME', 'INSTRUME'], ['t_min', 'exptime', 'instrument_name']
     )
-
-    # Subtract background from direct images
-    os.chdir(raw)
-    for group in all_groups:
-        if 'direct' in group:  #
-            visit_grism_sky(grism=group['direct'], column_average=False, ignoreNA=True)
-    os.chdir(fields)
 
     # Visit process arguements
     prep_args = {
