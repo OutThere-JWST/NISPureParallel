@@ -14,6 +14,8 @@ from astropy.io import fits
 import jwst
 from columnjump import ColumnJumpStep
 from jwst.pipeline import Detector1Pipeline
+from jwst.ramp_fitting import RampFitStep
+from jwst.clean_flicker_noise import CleanFlickerNoiseStep
 
 
 # Run pipeline in parallel
@@ -41,32 +43,50 @@ def main():
 def cal(file, out):
     print(f'Processing {file} with jwst: {jwst.__version__}')
 
-    # Set ColumnJumpStep Paramters
-    columnjump = ColumnJumpStep()
-    columnjump.nsigma1jump = 5.0
-    columnjump.nsigma2jumps = 5.0
+    # Set ColumnJumpStep Parameters
+    cjs = ColumnJumpStep()
+    cjs.nsigma1jump, cjs.nsigma2jumps = 5.0, 5.0
 
-    # Determine if grism or imaging
-    disperser = fits.getval(file, 'FILTER', 'PRIMARY')
-    background_method = 'median' if disperser == 'CLEAR' else 'model'
-
-    # Define Detector 1 steps
+    # Define Detector 1 steps up until Ramp Fitting
     steps = dict(
         persistence=dict(skip=True),  # Not implemented
-        charge_migration=dict(post_hooks=[columnjump]),
+        charge_migration=dict(post_hooks=[cjs]),
         jump=dict(rejection_threshold=5.0),
-        clean_flicker_noise=dict(
-            skip=True, background_method=background_method, fit_by_channel=True
-        ),
+        clean_flicker_noise=dict(skip=True),
+        ramp_fit=dict(skip=True),
     )
 
     # Run the pipeline up until the jump step
-    rate = Detector1Pipeline.call(file, steps=steps)
+    stage1 = Detector1Pipeline.call(file, steps=steps)
 
-    # Save results
+    # Determine if wfss or imaging
+    disperser = fits.getval(file, 'FILTER', 'PRIMARY')
+
+    # Decide 1/f correction parameters
+    bm = 'median' if disperser == 'CLEAR' else 'model'  # Background method
+    fbc = True if disperser == 'CLEAR' else False  # Fit by channel
+    skip = False if disperser == 'CLEAR' else True # Skip step for WFSS
+
+    # Get flat-field
+    flat_field = fits.getdata(cjs.get_reference_file(file, 'flat'))
+    flat_field[flat_field == 0] = 1  # Ignore zeros
+
+    # Divide out flat-field
+    stage1.data /= flat_field
+
+    # Clean Flicker Step
+    cfs = CleanFlickerNoiseStep()
+    cfs.skip, cfs.fit_by_channel, cfs.background_method = skip, fbc, bm
+    stage1 = cfs.run(stage1)
+
+    # Reapply flat field
+    stage1.data *= flat_field
+
+    # Ramp Fit Step
+    rate, _ = RampFitStep().run(stage1)
+
+    # Save to file
     rate.save(out)
-
-    print(f'Finished {out}')
 
     return
 

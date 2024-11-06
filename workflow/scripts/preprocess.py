@@ -34,11 +34,9 @@ from image1overf import sub1fimaging
 # Silence warnings
 warnings.filterwarnings('ignore')
 
-# Set Willott 1/f noise parameters
 one_over_f_args = {
     'sigma_bgmask': 3.0,
     'sigma_1fmask': 2.0,
-    'splitamps': True,
     'usesegmask': True,
 }
 
@@ -55,6 +53,14 @@ def process_image(f, raw, grizli_oneoverf):
     if not grizli_oneoverf:
         print(f'Correcting 1/f noise for {f} with Willot code')
         with fits.open(f) as hdul:
+            # Set Willott 1/f noise parameters
+            one_over_f_args = {
+                'sigma_bgmask': 3.0,
+                'sigma_1fmask': 2.0,
+                'usesegmask': True,
+                'splitamps': hdul['PRIMARY'].header['FILTER'] == 'CLEAR',
+            }
+
             # Correct for 1/f noise
             correcteddata = sub1fimaging(hdul, **one_over_f_args)
 
