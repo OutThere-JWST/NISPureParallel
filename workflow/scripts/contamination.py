@@ -204,6 +204,9 @@ def main():
         all_pas = pool.starmap(model_contam, args)
     unique_pas = np.unique(np.concatenate(all_pas))  # Unique PAs
 
+    # Change to extract directory
+    os.chdir(extract)
+
     # Iterate over suffixes
     for end in ['sci', 'clean']:
         # Iterate over unique grisms
