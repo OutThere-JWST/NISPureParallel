@@ -90,15 +90,24 @@ def model_contam(fname, filt, dirs, mags, projs, grism_files):
         hdul = fits.open(os.path.join(extract, f'{prefix}_ctx.fits'))
         ctx, h = hdul[0].data, hdul[0].header
 
-        # Make exposure time map
-        exptime = np.zeros(ctx.shape)
-        for i in range(math.floor(np.log2(ctx.max())) + 1):  # Iterate over bits
-            # Get exposure time of file
-            file = os.path.join(prep, h[f'FLT{str(i+1).zfill(5)}'])
-            t = fits.getval(file, 'EXPTIME')
+        # If exposure time map is 2D, make it 3D
+        if ctx.ndim == 2:
+            ctx = np.array([ctx])
 
-            # Set exposure time if bit i is set in ctx
-            exptime[np.bitwise_and(ctx, 2**i) > 0] += t
+        # Make exposure time map
+        exptime = np.zeros(ctx.shape[1:])
+
+        # Iterate over planes
+        for i, plane in enumerate(ctx):
+            # Iterate over bits
+            for bit in range(math.floor(np.log2(plane.max())) + 1):
+                # Get file exposure time (adjust for plane)
+                fltnum = 32 * i + bit + 1
+                file = os.path.join(prep, h[f'FLT{str(fltnum).zfill(5)}'])
+                t = fits.getval(file, 'EXPTIME')
+
+                # Set exposure time if bit i is set in ctx plane
+                exptime[np.bitwise_and(plane, 2**bit) > 0] += t
 
         # Reproject exposure time map
         proj, _ = reproject_interp((exptime, h), projref, projsize)
