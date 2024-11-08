@@ -123,8 +123,15 @@ def main():
             for f in prods['productFilename']
         ]
     )
-    with Pool(ncpu) as pool:
-        pool.starmap(process_image, [(f, raw, grizli_oneoverf) for f in files])
+
+    # Multiprocess
+    if ncpu == 1:
+        for f in files:
+            process_image(f, raw, grizli_oneoverf)
+    else:
+
+        with Pool(ncpu) as pool:
+            pool.starmap(process_image, [(f, raw, grizli_oneoverf) for f in files])
 
     # Parse Visits
     visits, all_groups, info = auto_script.parse_visits(field_root=fname, RAW_PATH=raw)

@@ -186,7 +186,8 @@ def main():
     t_grism = np.max([times[f] for f in times if 'GR' in f])  # Max Grism
     offset = 2.5 * np.log10(np.sqrt(t_grism / t_clear))  # Scales with sqrt(t)
 
-    # Determine extraction depth
+    # Determine extraction limits
+    mag_min = mag.min() - 1
     extract_mag = mode_mag + offset - 1.5  # 1.5 mag fainter than mode
 
     # Save extraction depth
@@ -200,7 +201,7 @@ def main():
             fname,
             filt,
             (fields, prep, plots, extract),
-            (mode_mag, extract_mag),
+            (mag_min, extract_mag),
             (projref, projsize),
             ['{dataset}_rate.fits'.format(**row) for row in res[is_grism & un[filt]]],
         )
@@ -209,9 +210,14 @@ def main():
     ]
 
     # Multiprocess over filters
-    with Pool(ncpu) as pool:
-        all_pas = pool.starmap(model_contam, args)
+    if ncpu == 1:
+        all_pas = [model_contam(*arg) for arg in args]
+    else:
+        with Pool(ncpu) as pool:
+            all_pas = pool.starmap(model_contam, args)
     unique_pas = np.unique(np.concatenate(all_pas))  # Unique PAs
+
+    return
 
     # Change to extract directory
     os.chdir(extract)
