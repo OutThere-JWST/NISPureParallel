@@ -217,8 +217,6 @@ def main():
             all_pas = pool.starmap(model_contam, args)
     unique_pas = np.unique(np.concatenate(all_pas))  # Unique PAs
 
-    return
-
     # Change to extract directory
     os.chdir(extract)
 
@@ -237,7 +235,7 @@ def main():
             for file in files:
                 if os.path.exists(file):
                     im, _ = reproject_interp(file, projref, projsize)
-                    fits.PrimaryHDU(im).writeto(
+                    fits.PrimaryHDU(im, header=projref.to_header()).writeto(
                         file.replace('.fits', '_proj.fits'), overwrite=True
                     )
                 else:
