@@ -67,20 +67,22 @@ def cal(file, out):
     fbc = True if disperser == 'CLEAR' else False  # Fit by channel
     skip = False if disperser == 'CLEAR' else True # Skip step for WFSS
 
-    # Get flat-field
-    flat_field = fits.getdata(cjs.get_reference_file(file, 'flat'))
-    flat_field[flat_field == 0] = 1  # Ignore zeros
+    if not skip:
 
-    # Divide out flat-field
-    stage1.data /= flat_field
+        # Get flat-field
+        flat_field = fits.getdata(cjs.get_reference_file(file, 'flat'))
+        flat_field[flat_field == 0] = 1  # Ignore zeros
 
-    # Clean Flicker Step
-    cfs = CleanFlickerNoiseStep()
-    cfs.skip, cfs.fit_by_channel, cfs.background_method = skip, fbc, bm
-    stage1 = cfs.run(stage1)
+        # Divide out flat-field
+        stage1.data /= flat_field
 
-    # Reapply flat field
-    stage1.data *= flat_field
+        # Clean Flicker Step
+        cfns = CleanFlickerNoiseStep()
+        cfns.skip, cfns.fit_by_channel, cfns.background_method = skip, fbc, bm
+        stage1 = cfns.run(stage1)
+
+        # Reapply flat field
+        stage1.data *= flat_field
 
     # Ramp Fit Step
     rate, _ = RampFitStep().run(stage1)
