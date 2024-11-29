@@ -34,10 +34,12 @@ from image1overf import sub1fimaging
 # Silence warnings
 warnings.filterwarnings('ignore')
 
-one_over_f_args = {
+# Willott 1/f noise parameters
+one_over_f_args_all = {
     'sigma_bgmask': 3.0,
     'sigma_1fmask': 2.0,
     'usesegmask': True,
+    'splitamps': False,
 }
 
 
@@ -46,20 +48,19 @@ def process_image(f, raw, grizli_oneoverf):
     # Copy raw file
     f = shutil.copy(f, raw)
 
-    # Initialize image
-    jwst_utils.initialize_jwst_image(f, oneoverf_correction=grizli_oneoverf)
+    # Initialize image (flat-fielding and 1/f)
+    # Set correct header keywords
+    jwst_utils.set_jwst_to_hst_keywords(
+        f, oneoverf_correction=grizli_oneoverf, reset=True
+    )
 
     # If not already corrected, correct for 1/f noise using Willot
     if not grizli_oneoverf:
         print(f'Correcting 1/f noise for {f} with Willot code')
         with fits.open(f) as hdul:
-            # Set Willott 1/f noise parameters
-            one_over_f_args = {
-                'sigma_bgmask': 3.0,
-                'sigma_1fmask': 2.0,
-                'usesegmask': True,
-                'splitamps': hdul['PRIMARY'].header['FILTER'] == 'CLEAR',
-            }
+            # Edit 1/f args if necessary
+            one_over_f_args = one_over_f_args_all.copy()
+            # one_over_f_args['splitamps'] = hdul['PRIMARY'].header['FILTER'] == 'CLEAR'
 
             # Correct for 1/f noise
             correcteddata = sub1fimaging(hdul, **one_over_f_args)
@@ -69,11 +70,6 @@ def process_image(f, raw, grizli_oneoverf):
 
             # Save corrected data
             hdul.writeto(f, overwrite=True)
-
-    # Set correct keywords
-    jwst_utils.set_jwst_to_hst_keywords(
-        f, oneoverf_correction=grizli_oneoverf, reset=True
-    )
 
 
 # Create main function
@@ -129,7 +125,6 @@ def main():
         for f in files:
             process_image(f, raw, grizli_oneoverf)
     else:
-
         with Pool(ncpu) as pool:
             pool.starmap(process_image, [(f, raw, grizli_oneoverf) for f in files])
 
