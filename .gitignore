@@ -1,6 +1,8 @@
 # Ignored directories
 FIELDS/
 __pycache__/
+GRIZLI/
+CRDS_CACHE/
 
 # Ignore Snakmake files
 *.snakemake
@@ -21,6 +23,3 @@ images.html
 # Pixi environments
 .pixi
 *.egg-info
-# Ignore Pixi for now
-pixi.toml
-pixi.lock

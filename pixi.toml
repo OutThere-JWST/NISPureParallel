@@ -1,0 +1,46 @@
+[project]
+authors = ["TheSkyentist <raphael.hviding@gmail.com>"]
+channels = ["conda-forge", "bioconda"]
+description = "NIRISS Pure Paralle Reduction Pipeline"
+name = "NISPureParallel"
+platforms = ["osx-arm64"]
+version = "1.0.0"
+
+[activation]
+scripts = ["resources/setupShell.sh"]
+
+[tasks]
+computeFields = "./resources/scripts/computeFields.py"
+clean = "rm -r .snakemake/conda"
+
+[dependencies]
+python = ">=3.9.7,<3.13"
+pip = ">=24.3.1,<24.4"
+tqdm = ">=4.67.1,<4.68"
+conda = ">=24.11.0,<24.12"
+scipy = ">=1.14.1,<1.15"
+astropy = ">=7.0.0,<7.1"
+astroquery = ">=0.4.7,<0.5"
+libarchive = ">=3.7.7,<3.8"
+scikit-learn = ">=1.5.2,<1.6"
+snakemake = { version = ">=8.25.4,<8.26", channel = "bioconda" }
+snakemake-executor-plugin-slurm = ">=0.11.2,<0.12"
+
+[pypi-dependencies]
+sregion = ">=1.4, <2"
+spherical-geometry = ">=1.3.2, <2"
+
+[feature.grizli.activation]
+scripts = ["resources/setupShell.sh"]
+
+[feature.grizli.tasks]
+setup = "./resources/scripts/setupGrizli.py"
+
+[feature.grizli.dependencies]
+python = ">=3.9.0, <3.10"
+
+[feature.grizli.pypi-dependencies]
+grizli = ">=1.12.8, <2"
+
+[environments]
+grizli = {features = ["grizli"], no-default-feature = true}
