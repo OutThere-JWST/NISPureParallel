@@ -9,5 +9,6 @@ export iref="$GRIZLI/iref"
 export jref="$GRIZLI/jref"
 
 # Export CRDS-related environment variables
-export CRDS_CONTEXT="jwst_1299.pmap"
+export CRDS_CONTEXT="jwst_1308.pmap"
 export CRDS_SERVER_URL="https://jwst-crds.stsci.edu"
+export CRDS_READONLY_CACHE="1"

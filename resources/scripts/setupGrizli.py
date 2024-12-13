@@ -51,7 +51,7 @@ def main():
 # Fetch updated NIRISS WFSSBack files
 # https://zenodo.org/records/13741413
 def fetch_file(grism, filt):
-    filename = f'nis-{filt}-{grism}_skyflat.fits'.lower()
+    filename = f'nis-{filt}-{grism}_skyflat_unflat.fits'.lower()
     url = f'https://zenodo.org/record/13741413/files/{filename}'
     if os.path.exists(filename):
         os.remove(filename)
