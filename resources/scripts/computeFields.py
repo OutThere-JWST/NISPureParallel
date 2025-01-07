@@ -116,10 +116,20 @@ if __name__ == '__main__':
 
     # Query survey
     print('Querying MAST...')
-    obs = Observations.query_criteria(
-        proposal_id=proposal_ids, instrument_name='NIRISS*', obs_collection='JWST'
-    )
-    obs.sort('t_obs_release')  # Sort by release date
+    obs = Observations.query_criteria(proposal_id=proposal_ids, obs_collection='JWST')
+
+    # For each invidually extracted spectra, only keep one from each association
+    isx = np.array([o.endswith('x1d.fits') for o in obs['dataURL']])
+    xassoc = ['_'.join((s := o.split('_'))[0:1] + s[2:]) for o in obs[isx]['obs_id']]
+    obs = vstack([obs[~isx], obs[isx][np.unique(xassoc, return_index=True)[1]]])
+
+    # Sort by observation date
+    obs.sort('t_min')
+
+    # Get all products
+    products = Observations.get_product_list(obs)
+    products = Observations.filter_products(products, productSubGroupDescription='UNCAL')
+    products = products[np.unique(products['productFilename'], return_index=True)[1]]
 
     # Download APT files
     print('Downloading APT files...')
@@ -141,7 +151,7 @@ if __name__ == '__main__':
     # Associate with primary observation
     ns = '{http://www.stsci.edu/JWST/APT}'
     pids = []
-    for o in obs:
+    for o in products:
         # Get ObsID
         oid = o['obs_id'][7:10]
         found = False
@@ -171,7 +181,17 @@ if __name__ == '__main__':
             pids.append('')
 
     # Add primary IDs to table
-    obs.add_column(pids, name='prim_id')
+    products.add_column(pids, name='primary_id')
+
+    # Get primary IDs for each observation
+    pids = []
+    for o in obs:
+        # Get primary ID
+        allpid = np.unique(products[products['parent_obsid'] == o['obsid']]['primary_id'])
+        if len(allpid) > 1:
+            print(o)
+            break
+        pids.append(allpid[0])
 
     # Compute regions
     print('Computing Overlapping Regions (Cartesian Approximation)...')
@@ -261,9 +281,10 @@ if __name__ == '__main__':
         't_exptime',
         'obsid',
         's_region',
+        'proposal_id',
         'prim_id',
     ]  # Columns to keep
-    prod_cols = ['obs_id', 'productFilename', 'dataURI', 'obs_collection', 'obsID']
+    prod_cols = ['obs_id', 'productFilename', 'dataURI', 'obsID', 'parent_obsid']
     obs_hdul = fits.HDUList([fits.PrimaryHDU()])
     prod_hdul = fits.HDUList([fits.PrimaryHDU()])
     for i, f in enumerate(tqdm(fields)):

@@ -14,16 +14,16 @@ computeFields = "./resources/scripts/computeFields.py"
 clean = "rm -r .snakemake/conda"
 
 [dependencies]
-python = ">=3.9.7,<3.13"
-pip = ">=24.3.1,<24.4"
-tqdm = ">=4.67.1,<4.68"
-conda = ">=24.11.0,<24.12"
-scipy = ">=1.14.1,<1.15"
-astropy = ">=7.0.0,<7.1"
+python = ">=3.12.8,<3.13"
+pip = ">=24.3.1,<25"
+tqdm = ">=4.67.1,<5"
+conda = ">=24.11.2,<25"
+scipy = ">=1.15.0,<2"
+astropy = ">=7.0.0,<8"
 astroquery = ">=0.4.7,<0.5"
-libarchive = ">=3.7.7,<3.8"
-scikit-learn = ">=1.5.2,<1.6"
-snakemake = { version = ">=8.25.4,<8.26", channel = "bioconda" }
+libarchive = ">=3.7.7,<4"
+scikit-learn = ">=1.6.0,<2"
+snakemake = { version = ">=8.26.0,<9", channel = "bioconda" }
 snakemake-executor-plugin-slurm = ">=0.11.2,<0.12"
 
 [pypi-dependencies]
@@ -36,11 +36,8 @@ scripts = ["resources/setupShell.sh"]
 [feature.grizli.tasks]
 setup = "./resources/scripts/setupGrizli.py"
 
-[feature.grizli.dependencies]
-python = ">=3.9.0, <3.10"
-
 [feature.grizli.pypi-dependencies]
-grizli = ">=1.12.8, <2"
+grizli = { git = "https://github.com/TheSkyentist/grizli.git", rev="dev", extras=["jwst"]}
 
 [environments]
-grizli = {features = ["grizli"], no-default-feature = true}
+grizli = {features = ["grizli"]}

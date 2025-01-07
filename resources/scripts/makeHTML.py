@@ -32,7 +32,7 @@ def get_area(reg):
 with open('resources/aliases.yaml', 'r') as file:
     aliases = yaml.safe_load(file)
 
-# Open products file
+# Open observations file
 hdul = fits.open('FIELDS/field-obs.fits')
 
 # Iterate over fields
