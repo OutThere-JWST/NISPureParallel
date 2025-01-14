@@ -43,7 +43,8 @@ def main():
         os.system(f'tar xzvf {filename}')
 
     # Multiprocess
-    gfs = product(['CLEAR', 'GR150R', 'GR150C'], ['F115W', 'F150W', 'F200W'])
+    dispersers = ['CLEAR'] # + ['GR150R', 'GR150C'] # Ignore Grisms if you want
+    gfs = product(dispersers, ['F115W', 'F150W', 'F200W'])
     with Pool(processes=9) as executor:
         executor.starmap(fetch_file, gfs)
 
@@ -51,7 +52,7 @@ def main():
 # Fetch updated NIRISS WFSSBack files
 # https://zenodo.org/records/13741413
 def fetch_file(grism, filt):
-    filename = f'nis-{filt}-{grism}_skyflat_unflat.fits'.lower()
+    filename = f'nis-{filt}-{grism}_skyflat.fits'.lower()
     url = f'https://zenodo.org/record/13741413/files/{filename}'
     if os.path.exists(filename):
         os.remove(filename)

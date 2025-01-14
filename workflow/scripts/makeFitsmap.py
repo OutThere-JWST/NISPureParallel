@@ -60,7 +60,7 @@ def main():
         files.append(path.join(fitsmap, f'RGB-{pa}.png'))
 
     # Get Observations and filters
-    obs = Table.read(path.join(fields, 'field-obs.fits'), fname)
+    obs = Table.read(path.join(fields, 'fields.fits'), fname)
     filters = np.unique(obs['filters'])
 
     # Create image files (FITS)

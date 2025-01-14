@@ -77,116 +77,124 @@ def sync_dir(local_dir, remote_dir, options=default_options):
         print(f'Failed to copy to {remote_dir}. Error: {e}')
 
 
-# Local path to FIELDS directory
-local_path = path.join(os.getcwd(), 'FIELDS')
+def main():
+    # Local path to FIELDS directory
+    local_path = path.join(os.getcwd(), 'FIELDS')
 
-# Create remote directory
-data_remote_path = path.join(remote_path, 'data')
+    # Create remote directory
+    data_remote_path = path.join(remote_path, 'data')
 
-# Get list of fields
-with open(path.join(local_path, 'fields.txt')) as f:
-    fields = f.read().splitlines()
+    # Get list of fields
+    with open(path.join(local_path, 'fields.txt')) as f:
+        fields = f.read().splitlines()
 
-# Iterate over fields
-phot_combined = []
-zfit_combined = []
-manifest = {}
-for field in fields:
-    print('Cloning', field)
+    # Iterate over fields
+    phot_combined = []
+    zfit_combined = []
+    manifest = {}
+    for field in fields:
+        print('Cloning', field)
 
-    # Field Path
-    field_path = path.join(local_path, field)
+        # Field Path
+        field_path = path.join(local_path, field)
 
-    # Fitsmap Sync
-    fitsmap_path = path.join(field_path, 'fitsmap', field)
-    fitsmap_remote_path = path.join(remote_path, 'maps', field)
-    sync_dir(fitsmap_path, fitsmap_remote_path)
+        # Fitsmap Sync
+        fitsmap_path = path.join(field_path, 'fitsmap', field)
+        fitsmap_remote_path = path.join(remote_path, 'maps', field)
+        sync_dir(fitsmap_path, fitsmap_remote_path)
 
-    # Prep Catalog Paths
-    prep_path = path.join(field_path, 'Prep')
-    catstrings = [
-        f'{field}-ir*.fits',
-        f'{field}-ir.reg',
-        f'{field}-f*n-clear*fits',
-        f'{field}-f*n-clear_wcs.csv',
-    ]
-    catalogs = sum([glob.glob(path.join(prep_path, s)) for s in catstrings], [])
+        # Prep Catalog Paths
+        prep_path = path.join(field_path, 'Prep')
+        catstrings = [
+            f'{field}-ir*.fits',
+            f'{field}-ir.reg',
+            f'{field}-f*n-clear*fits',
+            f'{field}-f*n-clear_wcs.csv',
+        ]
+        catalogs = []
+        map(catalogs.extend, [glob.glob(path.join(prep_path, s)) for s in catstrings])
 
-    # Copy Over Catalogs
-    catalogs_remote_path = path.join(data_remote_path, field)
-    files = copy_files(catalogs, prep_path, catalogs_remote_path)
+        # Copy Over Catalogs
+        catalogs_remote_path = path.join(data_remote_path, field)
+        files = copy_files(catalogs, prep_path, catalogs_remote_path)
 
-    # Extraction Catalogs
-    extract_path = path.join(field_path, 'Extractions')
-    catalogs = glob.glob(path.join(extract_path, f'{field}-f*_grism_*.fits'))
-    catalogs = [c for c in catalogs if 'proj' not in c]  # Remove proj
-    catalogs += glob.glob(path.join(extract_path, f'{field}-extracted.*'))
+        # Extraction Catalogs
+        extract_path = path.join(field_path, 'Extractions')
+        catalogs = glob.glob(path.join(extract_path, f'{field}-f*_grism_*.fits'))
+        catalogs = [c for c in catalogs if 'proj' not in c]  # Remove proj
+        catalogs += glob.glob(path.join(extract_path, f'{field}-extracted.*'))
 
-    # Handle Photometric and Fit Results
-    phot = path.join(extract_path, f'{field}_phot_apcorr.fits')
-    if path.exists(phot):
-        catalogs.append(phot)
-        phot = Table.read(phot)
-        phot.add_column(field, name='root', index=0)
-        phot_combined.append(phot)
-    zfit = path.join(extract_path, f'{field}_fitresults.fits')
-    if path.exists(zfit):
-        catalogs.append(zfit)
-        zfit_combined.append(Table.read(zfit))
+        # Handle Photometric and Fit Results
+        phot = path.join(extract_path, f'{field}_phot_apcorr.fits')
+        if path.exists(phot):
+            catalogs.append(phot)
+            phot = Table.read(phot)
+            phot.add_column(field, name='root', index=0)
+            phot_combined.append(phot)
+        zfit = path.join(extract_path, f'{field}_fitresults.fits')
+        if path.exists(zfit):
+            catalogs.append(zfit)
+            zfit_combined.append(Table.read(zfit))
 
-    # Copy Over Catalogs
-    files += copy_files(catalogs, extract_path, catalogs_remote_path)
+        # Copy Over Catalogs
+        files += copy_files(catalogs, extract_path, catalogs_remote_path)
 
-    # Create Manifest
-    manifest[field] = {
-        'direct': [f for f in files if 'clear' in f],
-        'grism': [f for f in files if 'grism' in f],
-        'detection': [f for f in files if '-ir_' in f],
-        'summary': [
-            f
-            for f in [
-                f'{field}-ir.cat.fits',
-                f'{field}-extracted.fits',
-                f'{field}_fitresults.fits',
-                f'{field}_phot_apcorr.fits',
-            ]
-            if f in files
-        ],
-        'regions': [f for f in files if f.endswith('.reg')],
-    }
+        # Create Manifest
+        manifest[field] = {
+            'direct': [f for f in files if 'clear' in f],
+            'grism': [f for f in files if 'grism' in f],
+            'detection': [f for f in files if '-ir_' in f],
+            'summary': [
+                f
+                for f in [
+                    f'{field}-ir.cat.fits',
+                    f'{field}-extracted.fits',
+                    f'{field}_fitresults.fits',
+                    f'{field}_phot_apcorr.fits',
+                ]
+                if f in files
+            ],
+            'regions': [f for f in files if f.endswith('.reg')],
+        }
 
-    # Save and copy over manifest
-    manifest_name = f'MANIFEST-{field}.toml'
-    with open(path.join(field_path, manifest_name), 'w') as f:
-        toml.dump(manifest[field], f)
-    copy_files([path.join(field_path, manifest_name)], field_path, catalogs_remote_path)
+        # Save and copy over manifest
+        manifest_name = f'MANIFEST-{field}.toml'
+        with open(path.join(field_path, manifest_name), 'w') as f:
+            toml.dump(manifest[field], f)
+        copy_files(
+            [path.join(field_path, manifest_name)], field_path, catalogs_remote_path
+        )
 
-    # Spectra Paths
-    extensions = ['1D', 'beams', 'full', 'stack', 'row']
-    spectra = sum(
-        [glob.glob(path.join(extract_path, f'*{ext}.fits')) for ext in extensions],
-        [],
-    )
+        # Spectra Paths
+        extensions = ['1D', 'beams', 'full', 'stack', 'row']
+        spectra = sum(
+            [glob.glob(path.join(extract_path, f'*{ext}.fits')) for ext in extensions],
+            [],
+        )
 
-    # Copy Over Spectra
-    spectra_remote_path = path.join(catalogs_remote_path, 'spectra')
-    copy_files(spectra, extract_path, spectra_remote_path)
+        # Copy Over Spectra
+        spectra_remote_path = path.join(catalogs_remote_path, 'spectra')
+        copy_files(spectra, extract_path, spectra_remote_path)
 
-# Create total catalogs
-names = ['phomoetry.fits', 'spectra-fitting.fits']
-for cats, name in zip([phot_combined, zfit_combined], names):
-    # Stack and save
-    vstack(cats, metadata_conflicts='silent').write(name)
+    # Create total catalogs
+    names = ['phomoetry.fits', 'spectra-fitting.fits']
+    for cats, name in zip([phot_combined, zfit_combined], names):
+        # Stack and save
+        vstack(cats, metadata_conflicts='silent').write(name)
 
-# Save Manifest
-manifest_name = 'MANIFEST.toml'
-with open(manifest_name, 'w') as f:
-    toml.dump(manifest, f)
-names += [manifest_name]
+    # Save Manifest
+    manifest_name = 'MANIFEST.toml'
+    with open(manifest_name, 'w') as f:
+        toml.dump(manifest, f)
+    names += [manifest_name]
 
-# Copy over the total catalogs
-copy_files(names, os.getcwd(), data_remote_path)
+    # Copy over the total catalogs
+    copy_files(names, os.getcwd(), data_remote_path)
 
-# Delete the individual catalogs
-for name in names:
-    os.remove(name)
+    # Delete the individual catalogs
+    for name in names:
+        os.remove(name)
+
+
+if __name__ == '__main__':
+    main()

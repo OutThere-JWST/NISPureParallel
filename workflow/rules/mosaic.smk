@@ -8,11 +8,9 @@ rule mosaic:
         'FIELDS/{field}/logs/mos.log'
     group:
         lambda wildcards: f'mos-{groups[wildcards.field]}'
-    conda:
-        '../envs/grizli.yaml'
     # resources:
     #     tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:
         """
-        ./workflow/scripts/mosaic.py {wildcards.field} > {log} 2>&1
+        pixi run --no-lockfile-update --environment grizli ./workflow/scripts/mosaic.py {wildcards.field} > {log} 2>&1
         """

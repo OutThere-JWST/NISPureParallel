@@ -41,7 +41,7 @@ def main():
     # Get paths and get fields
     main = os.getcwd()
     fields = os.path.join(main, 'FIELDS')
-    obs = Table.read(os.path.join(fields, 'field-obs.fits'), fname)
+    obs = Table.read(os.path.join(fields, 'fields.fits'), fname)
     home = os.path.join(fields, fname)
 
     # Subdirectories

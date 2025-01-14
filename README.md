@@ -23,15 +23,15 @@ To get started, of course the first step is to clone this repository either over
 
 This repository includes the following:
 
-- Pixi environment files for installing the necessary software
+- Pixi environment file for installing the necessary software
 - Snakemake profiles for different machines/clusters
 - Snakemake workflow code for processing NIRISS Pure Parallel Data
 
 
 ### Configure Grizli and CRDS
-Those who have installed grizli and/or the JWST pipeline before may be familiar with the process of installing grizli, configuring the relevant environment variables, and downloading the necessary configuration files. Pixi allows us to make this process easy. Running `pixi run setup` will automatically install all necessary packages, configure the relevant environment variables, and download the grizli configurations, including the latest NIRISS dispersion solutions and WFSS Backgrounds.
+Those who have installed grizli and/or the JWST pipeline before may be familiar with the process of installing grizli, configuring the relevant environment variables, and downloading the necessary configuration files. Pixi allows us to make this process easy. Running `pixi run grizli-setup` will automatically install all necessary packages, configure the relevant environment variables, and download the grizli configurations, including the latest NIRISS dispersion solutions and WFSS Backgrounds.
 
-For advanced users who have existing CRDS cache and grizli conf locations, you can configure the defaults in `resources/setupShell.sh`. By default, these will be downloaded to extra directories within this directory. 
+For advanced users who have existing CRDS cache and grizli conf locations, you can configure the defaults in `pixi.toml`. By default, these will be downloaded to extra directories within this directory. 
 
 
 ### Set Up Pipeline
@@ -39,14 +39,11 @@ This pipeline processes data in `fields` which are computed in the following way
 - If two NIRISS fields overlap (computed using a Cartesian approximation) they are added to the same field.
 - If two NIRISS fields are within 30" of each other (computed using a spherical prescription), they are added to the same field. This is to account for the fact that the trace from a galaxy in one NIRISS field may fall into a non-contiguous field some distance away.
 - Fields are named based on the constellation they are in along with a numeric index that indicates the relative start of observation of the field (e.g. the first data for field uma-00 arrived before uma-01).
-To compute these fields we can run: `pixi run computeFields`
-Anytime new data is taken it may be necessary to 
+To compute these fields we can run: `pixi run compute-fields`
 
 If you are running this on a cluster (or even on a powerful server) you will likely need to write a Snakemake configuration profile for the workflow. You can see examples of these in the `profiles/` directory. Please get in touch if you need one made for your environment.
 
 Essentially this allows Snakemake to submit your SLURM jobs on your behalf. As such it will require basic SLURM information, such as the number of available CPUs per node and the number of jobs Snakemake can submit at once. 
-
-In addition, if the packages necessary for Snakemake are updated, you will need to clean the Snakemake cache: `pixi run clean`
 
 ### Pipeline Description
 The following is a brief description of Snakemake and the pipeline developed in this repository. All of the relevant scripts are contained within the `workflow` directory. Snakemake begins by reading the Snakefile which describes the rules necessary to create output files based on input files. Snakemake then computes the DAG necessary to create all requested output files and distributes them in parallel where possible. Each rule requires inputs, outputs, and code necessary to produce inputs from outputs. Here I briefly describe the stages of our pipeline:
@@ -68,8 +65,8 @@ The following is a brief description of Snakemake and the pipeline developed in 
 7) FITSMap. In the final step, the products are collected and a FITSMap is created highlighting all of the results of the data analysis.
 
 ### Snakemake!
-Now we just have to type one command and watch as our worflow is distributed over our cluster:
-`pixi run snakemake --workflow-profile profiles/your-profile`
+Now we just have to type one command and watch as our worflow is distributed over our cluster (note the -e snakemake option to specify the relevant environment):
+`pixi run -e snakemake snakemake --workflow-profile profiles/your-profile`
 And that's it! Snakemake will distribute this workflow over the clusters for you! Two additional flags that you should be aware of:
 - `--force-all`: Snakemake can recognize when it needs to re-run a rule in many cases, such as a change in the conda/mamba environment used for the rule, or a change in the Snakemake rule (see below). But it's always good to have a hammer when you want to force a full rerun.
 - `--rerun-incomplete`: Sometimes a job/rule will fail, leaving behind bad files. Running with this option will get rid of pesky errors related to this, and force those jobs to rerun. 
@@ -86,8 +83,8 @@ Note: If you get tired of prepending `pixi run` each time, you can simply do `pi
 With just four commands we can process the entire pipeline:
 ```
 git clone git@github.com:OutThere-JWST/NISPureParallel.git
-pixi run setup
-pixi run computeFields
-pixi run snakemake
+pixi run setup-grizli
+pixi run compute-fields
+pixi run -e snakemake snakemake
 ```
 In practice, we likely want to customize the final step so as to activate a cluster profile if running over the entire dataset, or specify a specific field to process. 

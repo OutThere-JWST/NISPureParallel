@@ -2,10 +2,8 @@
 
 # Python Packages
 import os
-import shutil
 import argparse
 from tqdm import tqdm
-import xml.etree.ElementTree as et
 
 # Computational Packages
 import numpy as np
@@ -13,13 +11,16 @@ from scipy.optimize import minimize
 
 # Astropy Packages
 from astropy.io import fits
-from astroquery.mast import Observations
-from astropy.table import Table, vstack
+from astropy.table import Table, vstack, join
+from astroquery.mast import Observations, MastMissions
 from astropy.coordinates import SkyCoord, get_constellation
 
 # Geometry packages
 from sregion import SRegion
 from spherical_geometry.polygon import SingleSphericalPolygon
+
+# Query MAST for JWST data
+missions = MastMissions(mission='jwst')
 
 
 # Parametric equation for an arc from 0 to 1
@@ -116,82 +117,64 @@ if __name__ == '__main__':
 
     # Query survey
     print('Querying MAST...')
+
+    # Iterate over proposals and query mission interface
+    results = vstack(
+        [
+            missions.query_criteria(
+                program=pid,
+                productLevel='1*',  # Require RAW assocation
+                select_cols=[
+                    'fileSetName',
+                    'targ_ra',
+                    'targ_dec',
+                    'date_obs',
+                    'program',
+                    'effinttm',
+                    'obs_id',
+                ],
+            )
+            for pid in proposal_ids
+        ]
+    )
+
+    # Get primary IDs for each observation
+    results['primary_id'] = [int(o[1:6]) for o in results['obs_id']]
+
+    # Rename columns
+    del results['ArchiveFileID']
+    results.rename_columns(
+        ['obs_id','fileSetName', 'targ_ra', 'targ_dec', 'program', 'effinttm'],
+        ['mission_id','obs_id', 'ra', 'dec', 'program_id', 'exp_time'],
+    )
+    results['obs_id'] = results['obs_id'] + '_nis'
+
+    # Get all products
     obs = Observations.query_criteria(proposal_id=proposal_ids, obs_collection='JWST')
 
-    # For each invidually extracted spectra, only keep one from each association
+    # For each invidually extracted spectra, only keep one from each association (limit server load)
     isx = np.array([o.endswith('x1d.fits') for o in obs['dataURL']])
     xassoc = ['_'.join((s := o.split('_'))[0:1] + s[2:]) for o in obs[isx]['obs_id']]
     obs = vstack([obs[~isx], obs[isx][np.unique(xassoc, return_index=True)[1]]])
-
-    # Sort by observation date
-    obs.sort('t_min')
+    obs = obs['obsid','s_region']
 
     # Get all products
     products = Observations.get_product_list(obs)
-    products = Observations.filter_products(products, productSubGroupDescription='UNCAL')
+    products = Observations.filter_products(
+        products, productSubGroupDescription='UNCAL'
+    )
     products = products[np.unique(products['productFilename'], return_index=True)[1]]
 
-    # Download APT files
-    print('Downloading APT files...')
-    if not os.path.isdir('APT'):
-        os.mkdir('APT')
-    for i in proposal_ids:
-        os.system(
-            f'wget -q --show-progress https://www.stsci.edu/jwst/phase2-public/{i}.aptx'
-        )
-        os.system(f'bsdtar -xf {i}.aptx -C APT')
-        os.system(
-            f'rm {i}.aptx APT/manifest APT/edu.stsci.mpt.MsaPlanningToolMPT_UI_STATE.json'
-        )
+    # Join products and observations (also restrict to columns we want)
+    obs = obs['obsid','s_region']
+    obs.rename_column('obsid', 'parent_obsid')
+    products = products['obsID','obs_id','filters','productFilename','dataURI','parent_obsid']
+    products = join(products, obs, keys='parent_obsid')
+    del products['parent_obsid']
 
-    # Parse XML files
-    xml = {i: et.parse(f'APT/{i}.xml').getroot() for i in proposal_ids}
-    shutil.rmtree('APT')
-
-    # Associate with primary observation
-    ns = '{http://www.stsci.edu/JWST/APT}'
-    pids = []
-    for o in products:
-        # Get ObsID
-        oid = o['obs_id'][7:10]
-        found = False
-
-        # Parse XML file
-        dr = xml[o['proposal_id']].find(f'{ns}DataRequests')
-        for og in dr.findall(f'{ns}ObservationGroup'):
-            for ob in og.findall(f'{ns}Observation'):
-                # Get Observation number
-                if oid == ob.find(f'{ns}Number').text.zfill(3):
-                    # Get primary ID from label
-                    pid = ob.find(f'{ns}Label').text[:4]
-                    # If it can't be found here, get it from the slot
-                    # This is just a fix because parallel to 2302 is weird.
-                    if pid.startswith('F'):
-                        pid = ob.find(f'{ns}PureParallelSlotGroupName').text[:4]
-                    pids.append(pid)
-                    found = True
-                    break
-
-            # Break if found
-            if found:
-                break
-
-        # If no parallel is found
-        if not found:
-            pids.append('')
-
-    # Add primary IDs to table
-    products.add_column(pids, name='primary_id')
-
-    # Get primary IDs for each observation
-    pids = []
-    for o in obs:
-        # Get primary ID
-        allpid = np.unique(products[products['parent_obsid'] == o['obsid']]['primary_id'])
-        if len(allpid) > 1:
-            print(o)
-            break
-        pids.append(allpid[0])
+    # Join with results
+    obs = join(results, products, keys='obs_id')
+    obs.sort('date_obs')
 
     # Compute regions
     print('Computing Overlapping Regions (Cartesian Approximation)...')
@@ -205,6 +188,7 @@ if __name__ == '__main__':
     regs = regs[1:]
 
     # Iterate until all regions have been assigned to a field
+    pbar = tqdm(total=len(regs))
     while len(regs) > 0:
         # Iterate over regions
         for i, r in enumerate(regs):
@@ -213,6 +197,7 @@ if __name__ == '__main__':
                 # Combine regions and observations
                 f_regs[-1] = f_regs[-1].union(regs.pop(i))
                 fields[-1] = vstack([fields[-1], obs.pop(i)])
+                pbar.update(1)
 
                 # Break loop and start over
                 notfinished = False
@@ -225,12 +210,15 @@ if __name__ == '__main__':
         if notfinished:
             f_regs.append(regs.pop(0))
             fields.append(obs.pop(0))
+            pbar.update(1)
+    pbar.close()
 
     # Combine fields that are too close
     print('Combine Nearly Fields (Spherical)...')
 
     # Check distance between fields (in Spherical)
     i = 0
+    pbar = tqdm(total=len(fields))
     while i < len(fields):
         # Check against all other fields
         for j in range(i + 1, len(fields)):
@@ -246,13 +234,15 @@ if __name__ == '__main__':
 
         # Increment index
         i += 1
+        pbar.update(1)
+    pbar.close()
 
     # Get field names from Constellations
     names = []
     for i, f in enumerate(fields):
         # Create field Name
         con = get_constellation(
-            SkyCoord(*f['s_ra', 's_dec'][0], unit='deg'), short_name=True
+            SkyCoord(*f['ra', 'dec'][0], unit='deg'), short_name=True
         ).lower()
 
         # Find instance of constellation
@@ -271,39 +261,13 @@ if __name__ == '__main__':
         f.write('\n'.join(names))
 
     # Save fields to FITS file
-    print('Querying Products and Saving to FITS...')
-    obs_cols = [
-        'obs_id',
-        's_ra',
-        's_dec',
-        'filters',
-        't_obs_release',
-        't_exptime',
-        'obsid',
-        's_region',
-        'proposal_id',
-        'prim_id',
-    ]  # Columns to keep
-    prod_cols = ['obs_id', 'productFilename', 'dataURI', 'obsID', 'parent_obsid']
+    print('Saving to FITS...')
     obs_hdul = fits.HDUList([fits.PrimaryHDU()])
     prod_hdul = fits.HDUList([fits.PrimaryHDU()])
-    for i, f in enumerate(tqdm(fields)):
+    for i, f in enumerate(fields):
         # Append field observations
-        obs_hdul.append(fits.BinTableHDU(f[obs_cols]))
+        obs_hdul.append(fits.BinTableHDU(f))
         obs_hdul[-1].header['EXTNAME'] = names[i]
 
-        # Query products (only science uncalibrated)
-        allprods = Observations.get_product_list(f)
-        good = np.logical_and(
-            allprods['productType'] == 'SCIENCE',
-            allprods['productSubGroupDescription'] == 'UNCAL',  # Uncal files only
-        )
-        prods = allprods[good]
-
-        # Append products
-        prod_hdul.append(fits.BinTableHDU(prods[prod_cols]))
-        prod_hdul[-1].header['EXTNAME'] = names[i]
-
     # Save FITS file
-    obs_hdul.writeto('FIELDS/field-obs.fits', overwrite=True)
-    prod_hdul.writeto('FIELDS/field-prods.fits', overwrite=True)
+    obs_hdul.writeto('FIELDS/fields.fits', overwrite=True)

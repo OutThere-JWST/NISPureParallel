@@ -1,9 +1,6 @@
 # MPCDF Ngarrgu Tindebeek configuration file
 local-cores: 1
 
-# SnakeMake Conda settings
-use-conda: True
-
 # Settings to continue running and keep incomplete
 keep-going: True
 keep-incomplete: True

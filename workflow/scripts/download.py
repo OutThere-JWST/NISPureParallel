@@ -24,7 +24,7 @@ if __name__ == '__main__':
     # Get paths
     main = os.getcwd()
     fields = os.path.join(main, 'FIELDS')
-    prods = Table.read(os.path.join(fields, 'field-prods.fits'), fname)
+    prods = Table.read(os.path.join(fields, 'fields.fits'), fname)
     home = os.path.join(fields, fname)
     uncal = os.path.join(home, 'UNCAL')
 

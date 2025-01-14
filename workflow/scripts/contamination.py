@@ -49,7 +49,7 @@ def model_contam(fname, filt, dirs, mags, projs, grism_files):
 
     # Force detection image
     for f in filt_ref[filt]:
-        obs = Table.read(os.path.join(fields, 'field-obs.fits'), fname)
+        obs = Table.read(os.path.join(fields, 'fields.fits'), fname)
         if f'CLEAR;{f}' in np.unique(obs['filters']):
             ref_filt = f
             break
@@ -142,10 +142,6 @@ def main():
     fields = os.path.join(main, 'FIELDS')
     home = os.path.join(fields, fname)
 
-    # Load observations (direct vs grism)
-    obs = Table.read(os.path.join(fields, 'field-obs.fits'), fname)
-    obs['filters'] = [re.sub(r'150[RC]', '', f) for f in obs['filters']]
-
     # Subdirectories
     prep = os.path.join(home, 'Prep')
     plots = os.path.join(home, 'Plots')
@@ -178,8 +174,10 @@ def main():
     mode_mag = optimize.minimize(lambda x: -kde(x), np.median(mag)).x  # Modes
 
     # Determine exposure time offset
+    obs = Table.read(os.path.join(fields, 'fields.fits'), fname)
+    obs['filters'] = [re.sub(r'150[RC]', '', f) for f in obs['filters']]
     times = {
-        f: (obs['t_exptime'][obs['filters'] == f]).sum()
+        f: (obs['exp_time'][obs['filters'] == f]).sum()
         for f in np.unique(obs['filters'])
     }
     t_clear = np.sum([times[f] for f in times if 'CLEAR' in f])  # Total Direct

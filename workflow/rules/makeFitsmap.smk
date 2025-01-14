@@ -11,15 +11,13 @@ def create_rule(field):
             f'FIELDS/{field}/logs/fmap.log'
         group:
             lambda wildcards: f'fmap-{groups[field]}'
-        conda:
-            '../envs/fitsmap.yaml'
         priority:
             priority
         # resources:
         #     tasks = lambda wildcards: len(uncal[wildcards.field])
         shell:
             f"""
-            ./workflow/scripts/makeFitsmap.py {field} --ncpu {{resources.cpus_per_task}} > {{log}} 2>&1
+            pixi run --no-lockfile-update --environment fitsmap ./workflow/scripts/makeFitsmap.py {field} --ncpu {{resources.cpus_per_task}} > {{log}} 2>&1
             """
             # tar -cf FIELDS/{wildcards.field}/fitsmap/{wildcards.field}.tar -C FIELDS/{wildcards.field}/fitsmap/ {wildcards.field}/
 

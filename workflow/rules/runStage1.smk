@@ -22,14 +22,12 @@ def create_rule(field):
             f'FIELDS/{field}/logs/stage1.log'
         group:
             f'stage1-{groups[field]}'
-        conda:
-            '../envs/jwst.yaml'
         resources:
             cpus_per_task = default_resources['cpus_per_task']
         shell: 
             """
             mkdir -p FIELDS/{field}/RATE
-            parallel --link -j {resources.cpus_per_task} ./workflow/scripts/runStage1.py --scratch ::: {input} ::: {output} > {log} 2>&1
+            pixi run --no-lockfile-update --environment jwst parallel --link -j {resources.cpus_per_task} ./workflow/scripts/runStage1.py --scratch ::: {input} ::: {output} > {log} 2>&1
             """
 
 # Create rules for all fields

@@ -12,6 +12,7 @@ def create_rule(field):
             f"""
             mkdir -p FIELDS/{field}/logs
             ./workflow/scripts/download.py {field} --ncpu {{resources.cpus_per_task}} > {{log}} 2>&1
+            pixi run --no-lockfile-update --environment jwst crds sync --contexts $CRDS_CONTEXT --fetch-references --dataset-files FIELDS/{field}/UNCAL/* >> {{log}} 2>&1
             """
 
 # Create rules for all fields

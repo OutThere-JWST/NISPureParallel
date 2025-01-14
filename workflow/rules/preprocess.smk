@@ -8,11 +8,9 @@ rule preProcess:
         'FIELDS/{field}/logs/proc.log'
     group:
         lambda wildcards: f'proc-{groups[wildcards.field]}'
-    conda:
-        '../envs/grizli.yaml'
     # resources:
     #     tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:
         """
-        ./workflow/scripts/preprocess.py {wildcards.field} --ncpu {resources.cpus_per_task} > {log} 2>&1
+        pixi run --no-lockfile-update --environment grizli ./workflow/scripts/preprocess.py {wildcards.field} --ncpu {resources.cpus_per_task} > {log} 2>&1
         """

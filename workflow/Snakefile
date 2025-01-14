@@ -10,20 +10,21 @@ from sklearn.cluster import KMeans
 with open('FIELDS/fields.txt') as f: FIELDS = np.array(f.read().splitlines())
 
 # List of UNCAL files
-uncal = dict((f,Table.read('FIELDS/field-prods.fits',f)['productFilename'].tolist()) for f in FIELDS)
+uncal = dict((f,Table.read('FIELDS/fields.fits',f)['productFilename'].tolist()) for f in FIELDS)
+alluncal = [i for j in uncal.values() for i in j]
 
 # Split into groups so each group has roughly same compute time
-Njobs = workflow.resource_settings.nodes # Number of jobs
-if Njobs is None: Njobs = 1 # Default to 1 if not on a cluster
-if Njobs > len(FIELDS): Njobs = len(FIELDS) # Don't need more jobs than fields
+Nnodes = workflow.resource_settings.nodes # Number of jobs
+if Nnodes is None: Nnodes = 1 # Default to 1 if not on a cluster
+if Nnodes > len(FIELDS): Nnodes = len(FIELDS) # Don't need more jobs than fields
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
-    labels = KMeans(n_clusters=Njobs,random_state=0).fit(np.array([len(uncal[f]) for f in FIELDS]).reshape(-1,1)).labels_ # KMeans
+    labels = KMeans(n_clusters=Nnodes,random_state=0).fit(np.array([len(uncal[f]) for f in FIELDS]).reshape(-1,1)).labels_ # KMeans
 groups = {FIELDS[i]:l for i,l in enumerate(labels)}
 
 # Creat configuration file for group components
 rules = ['stage1','proc','mos','contam','extr','zfit','fmap']
-config = {f'{r}-{i}':int((labels==i).sum()) for r in rules for i in range(Njobs)}
+config = {f'{r}-{i}':int((labels==i).sum()) for r in rules for i in range(Nnodes)}
 config = {'group_components':config}
 
 # Final Rule

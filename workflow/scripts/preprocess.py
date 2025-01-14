@@ -91,7 +91,7 @@ def main():
     # Get paths and get fields
     main = os.getcwd()
     fields = os.path.join(main, 'FIELDS')
-    prods = Table.read(os.path.join(fields, 'field-prods.fits'), fname)
+    prods = Table.read(os.path.join(fields, 'fields.fits'), fname)
     home = os.path.join(fields, fname)
 
     # Subdirectories
@@ -107,7 +107,7 @@ def main():
         os.mkdir(d)
 
     # Plot field in context
-    plot_field(fname, plots)
+    plot_field(fname, fields, plots)
 
     # Change to working directory
     os.chdir(fields)
@@ -227,9 +227,9 @@ def main():
 
 
 # Plot Field in context
-def plot_field(fname, plots):
+def plot_field(fname, fields, plots):
     # Plot the field in context
-    hdul_obs = fits.open('FIELDS/field-obs.fits')
+    hdul_obs = fits.open(os.path.join(fields, 'fields.fits'))
 
     # Create figure
     fig, ax = pyplot.subplots(figsize=(12, 12))
