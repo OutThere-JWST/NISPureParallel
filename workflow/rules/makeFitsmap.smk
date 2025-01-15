@@ -13,7 +13,8 @@ def create_rule(field):
             lambda wildcards: f'fmap-{groups[field]}'
         priority:
             priority
-        # resources:
+        resources:
+            slurm_extra = f'-J fmap-{field}'
         #     tasks = lambda wildcards: len(uncal[wildcards.field])
         shell:
             f"""

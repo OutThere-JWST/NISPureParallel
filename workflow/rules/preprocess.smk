@@ -8,7 +8,8 @@ rule preProcess:
         'FIELDS/{field}/logs/proc.log'
     group:
         lambda wildcards: f'proc-{groups[wildcards.field]}'
-    # resources:
+    resources:
+        lambda wildcards: f'-J proc-{groups[wildcards.field]}'
     #     tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:
         """

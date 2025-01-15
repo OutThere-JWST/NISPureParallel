@@ -8,7 +8,8 @@ rule extract:
         'FIELDS/{field}/logs/extr.log'
     group:
         lambda wildcards: f'extr-{groups[wildcards.field]}'
-    # resources:
+    resources:
+        lambda wildcards: f'-J extr-{groups[wildcards.field]}'
     #     tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:
         """

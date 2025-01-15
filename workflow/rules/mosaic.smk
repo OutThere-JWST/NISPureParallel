@@ -8,7 +8,8 @@ rule mosaic:
         'FIELDS/{field}/logs/mos.log'
     group:
         lambda wildcards: f'mos-{groups[wildcards.field]}'
-    # resources:
+    resources:
+        lambda wildcards: f'-J zfit-{groups[wildcards.field]}'
     #     tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:
         """
