@@ -93,6 +93,10 @@ def model_contam(fname, filt, dirs, mags, projs, grism_files):
         # If exposure time map is 2D, make it 3D
         if ctx.ndim == 2:
             ctx = np.array([ctx])
+        # If exposure time map is 3D, remove NAXIS3
+        else:
+            h['NAXIS'] = 2
+            del h['NAXIS3']
 
         # Make exposure time map
         exptime = np.zeros(ctx.shape[1:])
