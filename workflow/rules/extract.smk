@@ -9,7 +9,7 @@ rule extract:
     group:
         lambda wildcards: f'extr-{groups[wildcards.field]}'
     resources:
-        lambda wildcards: f'-J extr-{groups[wildcards.field]}'
+        slurm_extra = lambda wildcards: f'-J extr-{groups[wildcards.field]}'
     #     tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:
         """

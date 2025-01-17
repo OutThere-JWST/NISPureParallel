@@ -11,7 +11,7 @@ rule zfit:
     # resources:
     #     tasks = lambda wildcards: len(uncal[wildcards.field])
     resources:
-        lambda wildcards: f'-J zfit-{groups[wildcards.field]}'
+        slurm_extra = lambda wildcards: f'-J zfit-{groups[wildcards.field]}'
     shell:
         """
         pixi run --no-lockfile-update --environment grizli ./workflow/scripts/redshiftFit.py {wildcards.field} --ncpu {resources.cpus_per_task} > {log} 2>&1

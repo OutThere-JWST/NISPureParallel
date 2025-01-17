@@ -9,7 +9,7 @@ rule mosaic:
     group:
         lambda wildcards: f'mos-{groups[wildcards.field]}'
     resources:
-        lambda wildcards: f'-J zfit-{groups[wildcards.field]}'
+        slurm_extra = lambda wildcards: f'-J zfit-{groups[wildcards.field]}'
     #     tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:
         """
