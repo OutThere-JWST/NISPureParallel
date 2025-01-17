@@ -9,7 +9,7 @@ def create_rule(field):
         group:
             f'download-{groups[field]}'
         resources:
-            slurm_extra = f'-J download-{field}'
+            # slurm_extra = f'-J download-{field}'
         shell: 
             f"""
             mkdir -p FIELDS/{field}/logs

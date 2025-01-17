@@ -9,8 +9,8 @@ rule preProcess:
     group:
         lambda wildcards: f'proc-{groups[wildcards.field]}'
     resources:
-        slurm_extra = lambda wildcards: f'-J proc-{groups[wildcards.field]}'
-    #     tasks = lambda wildcards: len(uncal[wildcards.field])
+        # slurm_extra = lambda wildcards: f'-J proc-{groups[wildcards.field]}'
+        # tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:
         """
         pixi run --no-lockfile-update --environment grizli ./workflow/scripts/preprocess.py {wildcards.field} --ncpu {resources.cpus_per_task} > {log} 2>&1

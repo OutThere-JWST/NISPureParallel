@@ -9,8 +9,8 @@ rule mosaic:
     group:
         lambda wildcards: f'mos-{groups[wildcards.field]}'
     resources:
-        slurm_extra = lambda wildcards: f'-J zfit-{groups[wildcards.field]}'
-    #     tasks = lambda wildcards: len(uncal[wildcards.field])
+        # slurm_extra = lambda wildcards: f'-J zfit-{groups[wildcards.field]}'
+        # tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:
         """
         pixi run --no-lockfile-update --environment grizli ./workflow/scripts/mosaic.py {wildcards.field} > {log} 2>&1
