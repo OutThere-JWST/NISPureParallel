@@ -9,7 +9,6 @@ rule preProcess:
     group:
         lambda wildcards: f'proc-{groups[wildcards.field]}'
     resources:
-        # slurm_extra = lambda wildcards: f'-J proc-{groups[wildcards.field]}'
         # tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:
         """

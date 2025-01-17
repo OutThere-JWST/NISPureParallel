@@ -24,7 +24,6 @@ def create_rule(field):
             f'stage1-{groups[field]}'
         resources:
             cpus_per_task = default_resources['cpus_per_task']
-            # slurm_extra = f'-J stage1-{field}'
         shell: 
             """
             mkdir -p FIELDS/{field}/RATE

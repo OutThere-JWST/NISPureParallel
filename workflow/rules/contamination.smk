@@ -9,7 +9,6 @@ rule contam:
     group:
         lambda wildcards: f'contam-{groups[wildcards.field]}'
     resources:
-        # slurm_extra = lambda wildcards: f'-J contam-{groups[wildcards.field]}'
         # tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:
         """
