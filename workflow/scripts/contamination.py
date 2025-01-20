@@ -32,8 +32,8 @@ warnings.filterwarnings('ignore')
 # Set priority of filters
 filt_ref = dict(
     F115W=['F115W', 'F150W', 'F200W'],
-    F150W=['F150W', 'F200W'],
-    F200W=['F200W'],
+    F150W=['F150W', 'F200W', 'F115W'],
+    F200W=['F200W', 'F150W', 'F115W'],
 )
 
 
