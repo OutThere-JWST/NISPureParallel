@@ -31,11 +31,12 @@ python = '>=3.11,<3.14'
 libarchive = '>=3.7.7,<4'
 tqdm = '>=4.67.1,<5'
 astropy = '>=7.0.0,<8'
-astroquery = '>=0.4.7,<0.5'
+# astroquery = '>=0.4.9,<0.5'
 
 [pypi-dependencies]
 sregion = '>=1.4, <2'
 spherical-geometry = '>=1.3.2, <2'
+astroquery = ">=0.4.9.post1, <0.5"
 
 [environments]
 snakemake = { features = ['snakemake'] }

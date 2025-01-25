@@ -2,8 +2,9 @@
 
 # Python Packages
 import os
+import tqdm
 import argparse
-from tqdm import tqdm
+# import multiprocessing as mp
 
 # Computational Packages
 import numpy as np
@@ -144,8 +145,22 @@ if __name__ == '__main__':
     # Rename columns
     del results['ArchiveFileID']
     results.rename_columns(
-        ['obs_id','fileSetName', 'targ_ra', 'targ_dec', 'program', 'effinttm'],
-        ['mission_id','obs_id', 'ra', 'dec', 'program_id', 'exp_time'],
+        [
+            'obs_id',
+            'fileSetName',
+            'targ_ra',
+            'targ_dec',
+            'program',
+            'effinttm',
+        ],
+        [
+            'mission_id',
+            'obs_id',
+            'ra',
+            'dec',
+            'program_id',
+            'exp_time',
+        ],
     )
     results['obs_id'] = results['obs_id'] + '_nis'
 
@@ -156,7 +171,6 @@ if __name__ == '__main__':
     isx = np.array([o.endswith('x1d.fits') for o in obs['dataURL']])
     xassoc = ['_'.join((s := o.split('_'))[0:1] + s[2:]) for o in obs[isx]['obs_id']]
     obs = vstack([obs[~isx], obs[isx][np.unique(xassoc, return_index=True)[1]]])
-    obs = obs['obsid','s_region']
 
     # Get all products
     products = Observations.get_product_list(obs)
@@ -166,9 +180,16 @@ if __name__ == '__main__':
     products = products[np.unique(products['productFilename'], return_index=True)[1]]
 
     # Join products and observations (also restrict to columns we want)
-    obs = obs['obsid','s_region']
+    obs = obs['obsid', 's_region']
     obs.rename_column('obsid', 'parent_obsid')
-    products = products['obsID','obs_id','filters','productFilename','dataURI','parent_obsid']
+    products = products[
+        'obsID',
+        'obs_id',
+        'filters',
+        'productFilename',
+        'dataURI',
+        'parent_obsid',
+    ]
     products = join(products, obs, keys='parent_obsid')
     del products['parent_obsid']
 
@@ -188,7 +209,7 @@ if __name__ == '__main__':
     regs = regs[1:]
 
     # Iterate until all regions have been assigned to a field
-    pbar = tqdm(total=len(regs))
+    pbar = tqdm.tqdm(total=len(regs))
     while len(regs) > 0:
         # Iterate over regions
         for i, r in enumerate(regs):
@@ -218,7 +239,7 @@ if __name__ == '__main__':
 
     # Check distance between fields (in Spherical)
     i = 0
-    pbar = tqdm(total=len(fields))
+    pbar = tqdm.tqdm(total=len(fields))
     while i < len(fields):
         # Check against all other fields
         for j in range(i + 1, len(fields)):
