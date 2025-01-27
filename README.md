@@ -83,7 +83,7 @@ Note: If you get tired of prepending `pixi run` each time, you can simply do `pi
 With just four commands we can process the entire pipeline:
 ```
 git clone git@github.com:OutThere-JWST/NISPureParallel.git
-pixi run setup-grizli
+pixi run grizli-setup
 pixi run compute-fields
 pixi run -e snakemake snakemake
 ```
