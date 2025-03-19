@@ -103,14 +103,16 @@ def main():
 
     # Multiprocess using ThreadPoolExecutor to avoid memory issues
     if ncpu > 1:
-        from concurrent.futures import ProcessPoolExecutor
+        from concurrent.futures import ThreadPoolExecutor
 
-        with ProcessPoolExecutor(ncpu) as executor:
+        with ThreadPoolExecutor(ncpu) as executor:
             extracted = list(executor.map(extract_id, ids))
 
     # Single process
     else:
         extracted = [extract_id(i) for i in ids]
+
+    print('Finished extracting')
 
     # Write catalog of extracted objects
     extracted = Table(
