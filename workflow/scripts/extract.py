@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 # Import packages
+import gc
 import os
 import yaml
 import glob
@@ -77,26 +78,34 @@ def main():
     ids = cat['NUMBER'][mag <= extract_mag]
 
     # Define the extract_id function within main
-    def extract_id(i):
-        # Get beams from group
-        beams = grp.get_beams(i, size=32, min_mask=0, min_sens=0.01)
-        if len(beams) == 0:
-            return  # Skip if no beams
+    def extract_id(i, grism_files, catalog, fname):
+        try:
+            # Get beams
+            beams = grp.get_beams(i, size=32, min_mask=0, min_sens=0.01)
+            if not beams:
+                return None
 
-        # Extract beam
-        mb = multifit.MultiBeam(
-            beams, fcontam=0.1, min_sens=0.01, min_mask=0, group_name=fname
-        )
-        mb.write_master_fits()
+            # Extract using MultiBeam
+            mb = multifit.MultiBeam(
+                beams, fcontam=0.1, min_sens=0.01, min_mask=0, group_name=fname
+            )
+            mb.write_master_fits()
 
-        # Keep track of extracted objects
-        return i
+            # Free memory
+            del mb, beams
+            gc.collect()
+
+            return i
+
+        except Exception as e:
+            print(f'Error processing ID {i}: {e}')
+            return None
 
     # Multiprocess using ThreadPoolExecutor to avoid memory issues
     if ncpu > 1:
-        from concurrent.futures import ThreadPoolExecutor
+        from concurrent.futures import ProcessPoolExecutor
 
-        with ThreadPoolExecutor(ncpu) as executor:
+        with ProcessPoolExecutor(ncpu) as executor:
             extracted = list(executor.map(extract_id, ids))
 
     # Single process
@@ -119,10 +128,7 @@ def main():
                 width=c['A_IMAGE'],
                 height=c['B_IMAGE'],
                 angle=c['THETA_IMAGE'] * u.rad,
-                visual={
-                    'color': '#E20134',
-                    'linewidth': 2,
-                },
+                visual={'color': '#E20134', 'linewidth': 2},
             )
             for c in extracted
         ]
