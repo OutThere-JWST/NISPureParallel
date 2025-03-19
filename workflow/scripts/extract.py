@@ -78,7 +78,7 @@ def main():
     ids = cat['NUMBER'][mag <= extract_mag]
 
     # Define the extract_id function within main
-    def extract_id(i, grism_files, catalog, fname):
+    def extract_id(i):
         try:
             # Get beams
             beams = grp.get_beams(i, size=32, min_mask=0, min_sens=0.01)
