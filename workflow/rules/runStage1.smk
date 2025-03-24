@@ -1,16 +1,16 @@
 # High memory fields
 high_memory_fields = ['boo-04','leo-02','leo-11','leo-13','sex-04','sex-15','sex-16','sex-17','sex-22','sex-29','uma-02','vir-04']
 
+# Compute resources for all fields
+cpus_per_task = workflow.resource_settings.default_resources.parsed['cpus_per_task']
+resources = {
+    field: max(1, cpus_per_task // 2) if field in high_memory_fields else cpus_per_task
+    for field in FIELDS
+}
+
+
 # Stage 1 Rule
 def create_rule(field):
-
-    # Get default resources and scale CPUs down by half
-    default_resources = workflow.resource_settings.default_resources.parsed.copy()
-    default_resources['cpus_per_task'] = max(1, default_resources['cpus_per_task'] // 2)
-
-    # Replace resources
-    if field in high_memory_fields:
-        default_resources['cpus_per_task'] = 2
 
     rule:
         name: f"stage1_{field}"
@@ -23,7 +23,7 @@ def create_rule(field):
         group:
             f'stage1-{groups[field]}'
         resources:
-            cpus_per_task = default_resources['cpus_per_task']
+            cpus_per_task = resources[field]
         shell: 
             """
             mkdir -p FIELDS/{field}/RATE

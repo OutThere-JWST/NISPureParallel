@@ -28,48 +28,17 @@ from grizli.aws import visit_processor
 from grizli.prep import visit_grism_sky
 from grizli.pipeline import auto_script
 
-# Chris Willot 1/f Noise
-from image1overf import sub1fimaging
-
 # Silence warnings
 warnings.filterwarnings('ignore')
 
-# Willott 1/f noise parameters
-one_over_f_args_all = {
-    'sigma_bgmask': 3.0,
-    'sigma_1fmask': 2.0,
-    'usesegmask': True,
-    'splitamps': False,
-}
-
 
 # Process image
-def process_image(f, raw, grizli_oneoverf):
+def process_image(f, raw):
     # Copy raw file
     f = shutil.copy(f, raw)
 
-    # Initialize image (flat-fielding and 1/f)
-    # Set correct header keywords
-    jwst_utils.set_jwst_to_hst_keywords(
-        f, oneoverf_correction=grizli_oneoverf, reset=True
-    )
-
-    # If not already corrected, correct for 1/f noise using Willot
-    if not grizli_oneoverf:
-        print(f'Correcting 1/f noise for {f} with Willot code')
-        with fits.open(f) as hdul:
-            # Edit 1/f args if necessary
-            one_over_f_args = one_over_f_args_all.copy()
-            # one_over_f_args['splitamps'] = hdul['PRIMARY'].header['FILTER'] == 'CLEAR'
-
-            # Correct for 1/f noise
-            correcteddata = sub1fimaging(hdul, **one_over_f_args)
-
-            # Update data
-            hdul['SCI'].data[4:2044, 4:2044] = correcteddata  # FULL Subarray
-
-            # Save corrected data
-            hdul.writeto(f, overwrite=True)
+    # Initialize image (flat-fielding, etc) and set correct header keywords
+    jwst_utils.set_jwst_to_hst_keywords(f, oneoverf_correction=False, reset=True)
 
 
 # Create main function
@@ -78,11 +47,9 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('fieldname', type=str)
     parser.add_argument('--ncpu', type=int, default=1)
-    parser.add_argument('--grizli_oneoverf', action='store_true')
     args = parser.parse_args()
     fname = args.fieldname
     ncpu = args.ncpu
-    grizli_oneoverf = args.grizli_oneoverf
 
     # Print grizli and jwst versions
     print(f'Preprocessing {fname}')
@@ -123,10 +90,10 @@ def main():
     # Multiprocess
     if ncpu == 1:
         for f in files:
-            process_image(f, raw, grizli_oneoverf)
+            process_image(f, raw)
     else:
         with Pool(ncpu) as pool:
-            pool.starmap(process_image, [(f, raw, grizli_oneoverf) for f in files])
+            pool.starmap(process_image, [(f, raw) for f in files])
 
     # Parse Visits
     visits, all_groups, info = auto_script.parse_visits(field_root=fname, RAW_PATH=raw)
@@ -160,7 +127,7 @@ def main():
     assoc['proposal_id'] = [int(getheader(f, 0)['PROGRAM']) for f in files]
     assoc['footprint'] = footprints
     assoc['dataURL'] = [
-        f"mast:JWST/product/{os.path.split(f)[1].replace('uncal','rate')}"
+        f'mast:JWST/product/{os.path.split(f)[1].replace("uncal", "rate")}'
         for f in files
     ]
 
@@ -178,9 +145,7 @@ def main():
     }
 
     # Other arguements
-    other_args = {
-        'is_parallel_field': True,
-    }
+    other_args = {'is_parallel_field': True}
 
     # Process visit
     visit_processor.ROOT_PATH = fields

@@ -143,7 +143,7 @@ if __name__ == '__main__':
     results['primary_id'] = [int(o[1:6]) for o in results['obs_id']]
 
     # Rename columns
-    del results['ArchiveFileID']
+    del results['ArchiveFileID'], results['s_region']
     results.rename_columns(
         [
             'obs_id',

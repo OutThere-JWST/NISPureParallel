@@ -11,7 +11,7 @@ GRIZLI = '$(pwd)/GRIZLI'
 CRDS_PATH = '$(pwd)/CRDS_CACHE'
 iref = '$GRIZLI/iref'
 jref = '$GRIZLI/jref'
-CRDS_CONTEXT = 'jwst_1314.pmap'
+CRDS_CONTEXT = 'jwst_1350.pmap'
 CRDS_SERVER_URL = 'https://jwst-crds.stsci.edu'
 
 [feature.grizli.activation.env]
@@ -27,16 +27,15 @@ s3-sync = './resources/scripts/clonetoAWS.py'
 grizli-setup = './resources/scripts/setupGrizli.py'
 
 [dependencies]
-python = '>=3.11,<3.14'
-libarchive = '>=3.7.7,<4'
-tqdm = '>=4.67.1,<5'
-astropy = '>=7.0.0,<8'
-# astroquery = '>=0.4.9,<0.5'
+python = ">=3.12.9,<3.14"
+libarchive = ">=3.7.7,<4"
+tqdm = ">=4.67.1,<5"
+astropy = ">=7.0.1,<8"
 
 [pypi-dependencies]
-sregion = '>=1.4, <2'
-spherical-geometry = '>=1.3.2, <2'
-astroquery = ">=0.4.9.post1, <0.5"
+sregion = { git = 'https://github.com/TheSkyentist/sregion.git' }
+spherical-geometry = ">=1.3.3, <2"
+astroquery = ">=0.4.10, <0.5"
 
 [environments]
 snakemake = { features = ['snakemake'] }
@@ -55,8 +54,8 @@ threadpoolctl = '>=3.5.0,<4'
 numpy = '<2'
 
 [feature.jwst.pypi-dependencies]
-columnjump = '>=1.1.0, <2'
-jwst = { git = 'https://github.com/spacetelescope/jwst.git' }
+columnjump = { git = 'https://github.com/TheSkyentist/jwst-tools.git', subdirectory = 'columnjump' }
+jwst = { git = 'https://github.com/TheSkyentist/jwst.git', branch = 'wfssbkg_oof'}
 
 [feature.grizli.dependencies]
 numba = '>=0.60.0,<0.61'
@@ -66,10 +65,10 @@ dust_attenuation = { git = 'https://github.com/karllark/dust_attenuation.git' }
 eazy = { git = 'https://github.com/gbrammer/eazy-py.git' }
 drizzlepac = '<3.7.1'
 reproject = '>=0.14.1, <0.15'
-grizli = { git = 'https://github.com/TheSkyentist/grizli.git', branch='dev', extras=['jwst']}
+grizli = { git = 'https://github.com/TheSkyentist/grizli.git', branch = 'dev', extras = ['jwst']}
 
 [feature.fitsmap.dependencies]
 numpy = "<2"
 
 [feature.fitsmap.pypi-dependencies]
-fitsmap = ">=0.11.1, <0.12"
+# fitsmap = ">=0.11.1, <0.12"
