@@ -16,6 +16,6 @@ use-envmodules: True
 default-resources:
     nodes: 1
     tasks: 1
-    cpus_per_task: 72
+    cpus_per_task: 64
     runtime: 1440
     mem_mb: 2456000

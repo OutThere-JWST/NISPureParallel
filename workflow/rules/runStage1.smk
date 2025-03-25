@@ -4,7 +4,7 @@ high_memory_fields = ['boo-04','leo-02','leo-11','leo-13','sex-04','sex-15','sex
 # Compute resources for all fields
 cpus_per_task = workflow.resource_settings.default_resources.parsed['cpus_per_task']
 resources = {
-    field: max(1, cpus_per_task // 2) if field in high_memory_fields else cpus_per_task
+    field: max(1, cpus_per_task // 4) if field in high_memory_fields else cpus_per_task
     for field in FIELDS
 }
 
