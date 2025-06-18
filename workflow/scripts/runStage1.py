@@ -47,7 +47,7 @@ def cal(file, out):
 
     # Set 1/f parameters
     imaging = fits.getval(file, 'FILTER', 'PRIMARY') != 'CLEAR' # Determine if wfss or imaging
-    bm = 'median' if imaging else 'wfssbkg'  # Background method
+    bm = 'median' if imaging else 'model'  # Background method
     fbc = False #True if imaging else False  # Fit by channel
     aff = True if imaging else False
 

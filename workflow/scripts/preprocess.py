@@ -83,13 +83,14 @@ def main():
     files = sorted(
         [
             os.path.join(rate, f).replace('uncal', 'rate')
-            for f in prods['productFilename']
+            for f in prods['filename']
         ]
     )
 
     # Multiprocess
     if ncpu == 1:
         for f in files:
+            print(f)
             process_image(f, raw)
     else:
         with Pool(ncpu) as pool:
@@ -102,10 +103,10 @@ def main():
     plot_visits(visits, fname, plots)
 
     # Subtract background from direct images
-    os.chdir(raw)
-    for group in all_groups:
-        if 'direct' in group:  #
-            visit_grism_sky(grism=group['direct'], column_average=False, ignoreNA=True)
+    # os.chdir(raw)
+    # for group in all_groups:
+    #     if 'direct' in group:  #
+    #         visit_grism_sky(grism=group['direct'], column_average=False, ignoreNA=True)
     os.chdir(fields)
 
     # Make visit associations

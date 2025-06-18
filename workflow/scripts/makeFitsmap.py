@@ -61,10 +61,9 @@ def main():
 
     # Get Observations and filters
     obs = Table.read(path.join(fields, 'fields.fits'), fname)
-    filters = np.unique(obs['filters'])
 
     # Create image files (FITS)
-    filts = [f.split(';')[1] for f in filters if 'CLEAR' in f]
+    filts = np.unique(obs['nis_pupil'][obs['nis_pupil'] == 'CLEAR'])
     for f in filts:
         # Direct image
         outfile = path.join(fitsmap, f'{f}.fits')
@@ -81,7 +80,7 @@ def main():
         files.append(outfile)
 
     # Create grism files
-    grisms = np.unique([f.split(';')[1] for f in filters if 'GR' in f])
+    grisms = np.unique(obs['nis_pupil'][obs['nis_pupil'] != 'CLEAR'])
     for g in grisms:
         # Get file pattern and PAs
         pre = f'{fname}-{g.lower()}-'

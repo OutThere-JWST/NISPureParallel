@@ -2,7 +2,6 @@
 
 # Import packages
 import os
-import re
 import glob
 import math
 import shutil
@@ -38,7 +37,7 @@ filt_ref = dict(
 
 
 # Model contamination for filt
-def model_contam(fname, filt, dirs, mags, projs, grism_files):
+def model_contam(fname, filt, directs, dirs, mags, projs, grism_files):
     # Unpack
     fields, prep, plots, extract = dirs  # directories
     min_mag, extract_mag = mags  # magnitudes
@@ -49,8 +48,7 @@ def model_contam(fname, filt, dirs, mags, projs, grism_files):
 
     # Force detection image
     for f in filt_ref[filt]:
-        obs = Table.read(os.path.join(fields, 'fields.fits'), fname)
-        if f'CLEAR;{f}' in np.unique(obs['filters']):
+        if f in directs:
             ref_filt = f
             break
     ref = f'{fname}-{ref_filt.lower()}n-clear_drc_sci.fits'
@@ -179,14 +177,13 @@ def main():
 
     # Determine exposure time offset
     obs = Table.read(os.path.join(fields, 'fields.fits'), fname)
-    obs['filters'] = [re.sub(r'150[RC]', '', f) for f in obs['filters']]
-    times = {
-        f: (obs['exp_time'][obs['filters'] == f]).sum()
-        for f in np.unique(obs['filters'])
-    }
-    t_clear = np.sum([times[f] for f in times if 'CLEAR' in f])  # Total Direct
+    modes = np.array([o['filter'][0:2] + o['niriss_pupil'] for o in obs])
+    times = {m: (obs['effinttm'][modes == m]).sum() for m in np.unique(modes)}
+    t_clear = np.sum([times[f] for f in times if 'CL' in f])  # Total Direct
     t_grism = np.max([times[f] for f in times if 'GR' in f])  # Max Grism
     offset = 2.5 * np.log10(np.sqrt(t_grism / t_clear))  # Scales with sqrt(t)
+
+    np.unique(obs['niriss_pupil'][obs['filter'] == 'CLEAR'])
 
     # Determine extraction limits
     mag_min = mag.min() - 1
@@ -198,10 +195,12 @@ def main():
     )
 
     # Create multiprocess arguments
+    directs = np.unique(obs['niriss_pupil'][obs['filter'] == 'CLEAR'])
     args = [
         (
             fname,
             filt,
+            directs,
             (fields, prep, plots, extract),
             (mag_min, extract_mag),
             (projref, projsize),

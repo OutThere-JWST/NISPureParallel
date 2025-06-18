@@ -38,7 +38,7 @@ if __name__ == '__main__':
     print(f'Downloading Products for {fname}...')
 
     # Get list of files to download
-    todo = np.setdiff1d(prods['productFilename'], os.listdir(uncal))
+    todo = np.setdiff1d(prods['filename'], os.listdir(uncal))
 
     # Download products if not already downloaded
     if len(todo) > 0:

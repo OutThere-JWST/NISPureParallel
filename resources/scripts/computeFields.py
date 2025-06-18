@@ -2,96 +2,65 @@
 
 # Python Packages
 import os
-import tqdm
 import argparse
-# import multiprocessing as mp
+import multiprocessing as mpl
+from concurrent.futures import ThreadPoolExecutor
+
+# Read YAML
+import yaml
+
+# Progress Bar
+from tqdm import tqdm, trange
 
 # Computational Packages
 import numpy as np
-from scipy.optimize import minimize
+import spherely as sph
 
 # Astropy Packages
 from astropy.io import fits
-from astropy.table import Table, vstack, join
-from astroquery.mast import Observations, MastMissions
+from astropy.table import vstack, join
+from astroquery.mast import MastMissions
 from astropy.coordinates import SkyCoord, get_constellation
-
-# Geometry packages
-from sregion import SRegion
-from spherical_geometry.polygon import SingleSphericalPolygon
 
 # Query MAST for JWST data
 missions = MastMissions(mission='jwst')
 
 
-# Parametric equation for an arc from 0 to 1
-def parametric_arc(a, b):
-    # Get angle between
-    theta = np.arccos(np.dot(a, b))
+def create_region(row):
+    """Create a region from a row of the table."""
+    # Get the target ra, dec and v3 pa
+    ra, dec = row['targ_ra'], row['targ_dec']
+    pa = -row['gs_v3_pa'] * np.pi / 180  # Convert to radians
 
-    # Get perpendicular vector
-    c = np.cross(np.cross(a, b), a)
-    c /= np.sqrt(c.dot(c))  # Normalize to unit
+    # Create the unite square and rotate it
+    side_length = 1.1 / 60  # Degrees
+    x = side_length * np.array([-1, 1, 1, -1])
+    y = side_length * np.array([-1, -1, 1, 1])
+    xr = x * np.cos(pa) - y * np.sin(pa)
+    yr = x * np.sin(pa) + y * np.cos(pa)
+    xr /= np.cos(np.deg2rad(dec))
+    x, y = xr + ra, yr + dec
 
-    # Define arc function
-    def arc(t):
-        scaled_t = t * theta
-        return a * np.cos(scaled_t) + c * np.sin(scaled_t)
-
-    return arc
-
-
-# Distance between two arcs (result in radians)
-def distance_between_arcs(a, b, c, d):
-    # If points are (essentially) the same, skip
-    if np.dot(a, b) > 1 or np.dot(c, d) > 1:
-        return np.inf
-
-    # Get arcs from points
-    arc1 = parametric_arc(a, b)
-    arc2 = parametric_arc(c, d)
-
-    # Minimize distance between arcs
-    return minimize(
-        lambda t: np.arccos(np.dot(arc1(t[0]), arc2(t[1]))),
-        [0.5, 0.5],
-        bounds=([0, 1], [0, 1]),
-    ).fun
+    return sph.create_polygon(np.array([x, y]).T)
 
 
-# Get distances between Shapely Objects (in Degrees)
-# But done properly in spherical coordinates
-# Don't check above some minimum distance, as it is not worth it
-def distance_between_shapely(sA, sB, min_dist=1):
-    # Check if MultiPolygon (can only be sA)
-    if hasattr(sA, 'geoms'):
-        return np.min([distance_between_shapely(g, sB) for g in sA.geoms]).min()
+def get_products(field):
+    # Loop as MAST sometimes doesn't return all products
+    prods = []
+    while len(prods) != len(field):
+        # Get all products for the field
+        allprods = missions.get_product_list(field)
 
-    # Get SingleSphericalPolygons
-    spA = SingleSphericalPolygon.from_radec(*sA.exterior.xy)
-    spB = SingleSphericalPolygon.from_radec(*sB.exterior.xy)
+        # Filter for 1b products
+        prods = missions.filter_products(allprods, category='1b')
 
-    # Get points from spherical polygons
-    spA_points = spA.points
-    spB_points = spB.points
+    # Remove overlapping columns
+    field.remove_columns(['access', 'category'])
 
-    # Don't bother checking if points are further apart than some threshhold (in degrees)
-    if np.arccos(np.dot(spA_points[0], spB_points[0])) > np.deg2rad(min_dist):
-        return np.inf
+    # Rename product column
+    prods.rename_column('dataset', 'fileSetName')
 
-    # Get distances between arcs
-    return np.rad2deg(
-        np.min(
-            [
-                distance_between_arcs(*i)
-                for i in [
-                    (spA_points[i], spA_points[i + 1], spB_points[j], spB_points[j + 1])
-                    for i in range(len(spA_points) - 1)
-                    for j in range(len(spB_points) - 1)
-                ]
-            ]
-        )
-    )
+    return join(field, prods)
 
 
 if __name__ == '__main__':
@@ -100,107 +69,66 @@ if __name__ == '__main__':
     parser.add_argument(
         '--separation',
         type=float,
-        help='Maximum separation between fields (in arcseconds)',
+        help='Maximum separation between fields (arcsec)',
         default=30,
     )
     parser.add_argument(
-        '--proposal_ids',
+        '--ignore-ids',
         type=str,
         nargs='+',
-        help='List of proposal IDs to download',
-        default=['1571', '3383', '4681'],
+        help='List of proposal IDs to ignore',
+        default=[
+            1085,  # NIRISS Focus Sweep
+            1089,  # NIRISS Grism Flux Cal
+            1090,  # NIRISS Grism Wave Cal
+            # 1202,  # Survey of Reflection Nebula
+            4477,  # NIRISS Grism Contam Cal
+        ],
+    )
+    parser.add_argument(
+        '--maxcpu',
+        type=int,
+        help='Maximum number of CPUs to use for multiprocessing',
+        default=mpl.cpu_count(),
     )
 
     # Parse arguements
     args = parser.parse_args()
     separation = args.separation
-    proposal_ids = args.proposal_ids
+    ignore_ids = args.ignore_ids
 
-    # Query survey
+    # Columns, remove problematic ones (seems to be a bug in MAST)
+    columns = list(missions.get_column_list()['name'])
+    badcols = ['effexptm', 'gsstrttm', 'gsendtim', 'texptime']
+
+    # Query for all NIRISS
     print('Querying MAST...')
-
-    # Iterate over proposals and query mission interface
-    results = vstack(
-        [
-            missions.query_criteria(
-                program=pid,
-                productLevel='1*',  # Require RAW assocation
-                select_cols=[
-                    'fileSetName',
-                    'targ_ra',
-                    'targ_dec',
-                    'date_obs',
-                    'program',
-                    'effinttm',
-                    'obs_id',
-                ],
-            )
-            for pid in proposal_ids
-        ]
+    wfss = missions.query_criteria(
+        template='NIRISS Wide Field Slitless Spectroscopy',
+        select_cols=[c for c in columns if c not in badcols],
+        instrume='NIRISS',
+        productLevel='1*',
+        limit=10000,
     )
 
-    # Get primary IDs for each observation
-    results['primary_id'] = [int(o[1:6]) for o in results['obs_id']]
+    # Remove ignored proposal IDs
+    remove = np.logical_or.reduce([wfss['program'] == p for p in ignore_ids])
+    wfss = wfss[~remove]
+    print(f'Found {len(wfss)} observations')
 
-    # Rename columns
-    del results['ArchiveFileID'], results['s_region']
-    results.rename_columns(
-        [
-            'obs_id',
-            'fileSetName',
-            'targ_ra',
-            'targ_dec',
-            'program',
-            'effinttm',
-        ],
-        [
-            'mission_id',
-            'obs_id',
-            'ra',
-            'dec',
-            'program_id',
-            'exp_time',
-        ],
-    )
-    results['obs_id'] = results['obs_id'] + '_nis'
+    # Remove empty columns
+    wfss.remove_columns([c for c in wfss.colnames if wfss.mask[c].sum()])
 
-    # Get all products
-    obs = Observations.query_criteria(proposal_id=proposal_ids, obs_collection='JWST')
+    # Order by observation date
+    wfss.sort('date_obs')
 
-    # For each invidually extracted spectra, only keep one from each association (limit server load)
-    isx = np.array([o.endswith('x1d.fits') for o in obs['dataURL']])
-    xassoc = ['_'.join((s := o.split('_'))[0:1] + s[2:]) for o in obs[isx]['obs_id']]
-    obs = vstack([obs[~isx], obs[isx][np.unique(xassoc, return_index=True)[1]]])
+    # Compute primary ID
+    wfss['primary_id'] = [int(o[1:6]) for o in wfss['obs_id']]
 
-    # Get all products
-    products = Observations.get_product_list(obs)
-    products = Observations.filter_products(
-        products, productSubGroupDescription='UNCAL'
-    )
-    products = products[np.unique(products['productFilename'], return_index=True)[1]]
-
-    # Join products and observations (also restrict to columns we want)
-    obs = obs['obsid', 's_region']
-    obs.rename_column('obsid', 'parent_obsid')
-    products = products[
-        'obsID',
-        'obs_id',
-        'filters',
-        'productFilename',
-        'dataURI',
-        'parent_obsid',
-    ]
-    products = join(products, obs, keys='parent_obsid')
-    del products['parent_obsid']
-
-    # Join with results
-    obs = join(results, products, keys='obs_id')
-    obs.sort('date_obs')
-
-    # Compute regions
-    print('Computing Overlapping Regions (Cartesian Approximation)...')
-    regs = [SRegion(o).shapely[0] for o in obs['s_region']]
-    obs = [Table(o) for o in obs]
+    # Create regions for all observations
+    print('Breaking into invidual observations')
+    obs = [wfss[i : i + 1] for i in trange(len(wfss))]
+    regs = [create_region(row) for row in wfss]
 
     # Combine all overlapping fields
     fields = [obs[0]]
@@ -209,14 +137,15 @@ if __name__ == '__main__':
     regs = regs[1:]
 
     # Iterate until all regions have been assigned to a field
-    pbar = tqdm.tqdm(total=len(regs))
+    print('Combining Nearby Fields')
+    pbar = tqdm(total=len(regs))
     while len(regs) > 0:
         # Iterate over regions
         for i, r in enumerate(regs):
-            # Check if region intersects with most recent field (approximating in Cartesian)
-            if f_regs[-1].intersects(r):
+            # If most recent field is within separation distance
+            if sph.distance(f_regs[-1], r, radius=180 / np.pi) < separation / 3600:
                 # Combine regions and observations
-                f_regs[-1] = f_regs[-1].union(regs.pop(i))
+                f_regs[-1] = sph.union(f_regs[-1], regs.pop(i))
                 fields[-1] = vstack([fields[-1], obs.pop(i)])
                 pbar.update(1)
 
@@ -234,61 +163,67 @@ if __name__ == '__main__':
             pbar.update(1)
     pbar.close()
 
-    # Combine fields that are too close
-    print('Combine Nearly Fields (Spherical)...')
+    # Multiprocess to get products for each field
+    print('Getting products for each field...')
+    with ThreadPoolExecutor(max_workers=args.maxcpu) as executor:
+        results = list(tqdm(executor.map(get_products, fields), total=len(fields)))
 
-    # Check distance between fields (in Spherical)
-    i = 0
-    pbar = tqdm.tqdm(total=len(fields))
-    while i < len(fields):
-        # Check against all other fields
-        for j in range(i + 1, len(fields)):
-            # Check distance between regions
-            if distance_between_shapely(f_regs[i], f_regs[j]) < separation / 3600:
-                # Combine fields
-                f_regs[i] = f_regs[i].union(f_regs.pop(j))
-                fields[i] = vstack([fields[i], fields.pop(j)])
+    # Load names if it exists
+    if os.path.isfile('resources/names.yaml'):
+        with open('resources/names.yaml', 'r') as f:
+            names = yaml.safe_load(f)
+    else:
+        names = {}
 
-                # Break loop and start over
-                i -= 1  # Decrement index to counteract increment
-                break
+    # Iterate over results to assign names
+    for result in results:
+        # Get first observation in the field
+        r = result[0]
 
-        # Increment index
-        i += 1
-        pbar.update(1)
-    pbar.close()
+        # Get unique key for the field
+        key = str(r['obs_id'])
 
-    # Get field names from Constellations
-    names = []
-    for i, f in enumerate(fields):
-        # Create field Name
+        # If the field already has a name, skip it
+        if key in names:
+            continue
+
+        # Get constellation name
         con = get_constellation(
-            SkyCoord(*f['ra', 'dec'][0], unit='deg'), short_name=True
+            SkyCoord(*r['targ_ra', 'targ_dec'], unit='deg'), short_name=True
         ).lower()
 
         # Find instance of constellation
         j = 0
-        while f'{con}-{str(j).zfill(2)}' in names:
+        while f'{con}-{str(j).zfill(2)}' in names.values():
             j += 1
         name = f'{con}-{str(j).zfill(2)}'
 
-        # Keep track
-        names.append(name)
+        # Assign name to field
+        names[key] = name
+
+    # Save names to file
+    with open('resources/names.yaml', 'w') as f:
+        yaml.dump(names, f, default_flow_style=False, sort_keys=False)
 
     # Write field names to file
     if not os.path.isdir('FIELDS'):
         os.mkdir('FIELDS')
-    with open('FIELDS/fields.txt', 'w') as f:
-        f.write('\n'.join(names))
 
     # Save fields to FITS file
     print('Saving to FITS...')
-    obs_hdul = fits.HDUList([fits.PrimaryHDU()])
-    prod_hdul = fits.HDUList([fits.PrimaryHDU()])
-    for i, f in enumerate(fields):
+    hdul = fits.HDUList([fits.PrimaryHDU()])
+    field_names = []
+    for i, f in enumerate(tqdm(results)):
         # Append field observations
-        obs_hdul.append(fits.BinTableHDU(f))
-        obs_hdul[-1].header['EXTNAME'] = names[i]
+        hdul.append(fits.BinTableHDU(f))
+        field_name = names[str(f[0]['obs_id'])]
+        hdul[-1].header['EXTNAME'] = field_name
+        field_names.append(field_name)
 
     # Save FITS file
-    obs_hdul.writeto('FIELDS/fields.fits', overwrite=True)
+    hdul.writeto('FIELDS/fields.fits', overwrite=True)
+
+    # Write field names
+    with open('FIELDS/fields.txt', 'w') as f:
+        f.write('\n'.join(field_names))
+    print('Done! Fields saved to FIELDS/fields.fits and FIELDS/fields.txt')

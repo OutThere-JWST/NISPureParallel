@@ -10,7 +10,7 @@ from sklearn.cluster import KMeans
 with open('FIELDS/fields.txt') as f: FIELDS = np.array(f.read().splitlines())
 
 # List of UNCAL files
-uncal = dict((f,Table.read('FIELDS/fields.fits',f)['productFilename'].tolist()) for f in FIELDS)
+uncal = dict((f,Table.read('FIELDS/fields.fits',f)['filename'].tolist()) for f in FIELDS)
 alluncal = [i for j in uncal.values() for i in j]
 
 # Split into groups so each group has roughly same compute time

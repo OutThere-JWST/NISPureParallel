@@ -79,7 +79,8 @@ def main():
     )
 
     # Create Exposure time maps
-    for f in [f.split(';')[1] for f in np.unique(obs['filters']) if 'CLEAR' in f]:
+    direct_filters = np.unique(obs['niriss_pupil'][obs['filter'] == 'CLEAR'])
+    for f in direct_filters:
         # Load context map
         hdul = fits.open(os.path.join(prep, f'{fname}-{f.lower()}n-clear_drc_ctx.fits'))
         ctx, h = hdul[0].data, hdul[0].header
@@ -88,7 +89,7 @@ def main():
         exptime = np.zeros(ctx.shape)
         for i in range(math.floor(np.log2(ctx.max())) + 1):  # Iterate over bits
             # Get exposure time of file
-            file = os.path.join(prep, h[f'FLT{str(i+1).zfill(5)}'])
+            file = os.path.join(prep, h[f'FLT{str(i + 1).zfill(5)}'])
             t = fits.getval(file, 'EXPTIME')
 
             # Set exposure time if bit i is set in ctx
@@ -102,13 +103,7 @@ def main():
 
     # Get filters for RGB
     scales = {'f200wn-clear': 1.65, 'f150wn-clear': 1.33, 'f115wn-clear': 1.0}
-    filts = np.sort(
-        [
-            f.split(';')[1].lower() + 'n-clear'
-            for f in np.unique(obs['filters'])
-            if 'CLEAR' in f
-        ]
-    )[::-1]
+    filts = np.sort([df.lower() + 'n-clear' for df in direct_filters])[::-1]
     scale = [scales[k] if k in filts else 0 for k in scales.keys()]
 
     # Create missing RGB filters
@@ -190,13 +185,8 @@ def main():
                 width=c['A_IMAGE'] * 3,
                 height=c['B_IMAGE'] * 3,
                 angle=c['THETA_IMAGE'] * u.rad,
-                visual={
-                    'color': '#008DF9',
-                    'linewidth': 2,
-                },
-                meta={
-                    'text': c['NUMBER'],
-                },
+                visual={'color': '#008DF9', 'linewidth': 2},
+                meta={'text': c['NUMBER']},
             )
             for c in cat
         ]

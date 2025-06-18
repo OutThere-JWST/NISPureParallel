@@ -43,11 +43,36 @@ def main():
         fname = hdu.header['EXTNAME']
         obs = Table(hdu.data)
 
-        # Get alias of field
-        alias = aliases[fname] if fname in aliases.keys() else '\u200b'
+        row = {}
+        row['field'] = fname
+        for f in np.unique(obs['filters']):
 
-        # Get link to field
-        flink = f'<a href="s3/maps/{fname}/index.html" target="_blank">{fname}</a>'
+
+            good = obs['filters'] == f
+            obsgood = obs[good]
+
+            # Get field area
+            reg = union_all([SRegion(o).shapely[0] for o in obsgood['s_region']])
+            area = np.round(get_area(reg) * (60**4), 1)  # In arcsec^2
+
+
+            row[f'{f}_area'] = area
+            # Get field obstime
+            obs_time = (obsgood['exp_time']).sum()
+
+            row[f'{f}_exptime'] = obs_time
+
+        rows.append(row)
+
+
+
+
+
+        # # Get alias of field
+        # alias = aliases[fname] if fname in aliases.keys() else '\u200b'
+
+        # # Get link to field
+        # flink = f'<a href="s3/maps/{fname}/index.html" target="_blank">{fname}</a>'
 
         # Get field area
         reg = union_all([SRegion(o).shapely[0] for o in obs['s_region']])
