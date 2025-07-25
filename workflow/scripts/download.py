@@ -10,7 +10,10 @@ import numpy as np
 
 # Astropy Packages
 from astropy.table import Table, join
-from astroquery.mast import Observations
+from astroquery.mast import MastMissions
+
+# Query MAST for JWST data
+missions = MastMissions(mission='jwst')
 
 if __name__ == '__main__':
     # Parse arguements
@@ -49,7 +52,7 @@ if __name__ == '__main__':
         if ncpu > 1:
             with ThreadPoolExecutor(ncpu) as executor:
                 executor.map(
-                    lambda p: Observations.download_products(
+                    lambda p: missions.download_products(
                         p, download_dir=uncal, flat=True
                     ),
                     todo_prods,
@@ -57,6 +60,6 @@ if __name__ == '__main__':
 
         # Single-threaded download
         else:
-            Observations.download_products(todo_prods, download_dir=uncal, flat=True)
+            missions.download_products(todo_prods, download_dir=uncal, flat=True)
     
     print(f'Downloaded Products for {fname}')

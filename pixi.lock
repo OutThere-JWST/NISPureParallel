@@ -86,6 +86,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/fsspec-2025.3.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/gast-0.4.0-pyh9f0ad1d_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/linux-64/gdk-pixbuf-2.42.12-hb9ae30d_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/linux-64/geos-3.13.1-h97f6797_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/gflags-2.2.2-h5888daf_1005.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/glib-tools-2.84.1-h4833e2c_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/glog-0.7.1-hbabe93e_0.conda
@@ -236,6 +237,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/s2n-1.5.15-hd830067_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/s3fs-2025.3.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/scipy-1.15.2-py313h86fcf2b_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/linux-64/shapely-2.1.1-py313h576e190_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/six-1.17.0-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/snappy-1.2.1-h8bd8927_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sortedcontainers-2.4.0-pyhd8ed1ab_1.conda
@@ -366,6 +368,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/fsspec-2025.3.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/gast-0.4.0-pyh9f0ad1d_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/gdk-pixbuf-2.42.12-h7ddc832_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/geos-3.13.1-hc9a1286_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/gflags-2.2.2-hf9b8971_1005.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/glib-tools-2.84.0-h1dc7a0c_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/glog-0.7.1-heb240a5_0.conda
@@ -508,6 +511,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/s2geometry-0.11.1-h0f0a9b1_4.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/s3fs-2025.3.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/scipy-1.15.2-py313h9a24e0a_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/shapely-2.1.1-py313h76d6ede_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/six-1.17.0-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/snappy-1.2.1-h98b9ce2_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sortedcontainers-2.4.0-pyhd8ed1ab_1.conda
@@ -632,6 +636,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/fsspec-2025.3.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/gast-0.4.0-pyh9f0ad1d_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/linux-64/gdk-pixbuf-2.42.12-hb9ae30d_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/linux-64/geos-3.13.1-h97f6797_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/gflags-2.2.2-h5888daf_1005.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/glib-tools-2.84.1-h4833e2c_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/glog-0.7.1-hbabe93e_0.conda
@@ -783,6 +788,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/s2n-1.5.15-hd830067_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/s3fs-2025.3.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/scipy-1.15.2-py312ha707e6e_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/linux-64/shapely-2.1.1-py312h21f5128_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/six-1.17.0-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/snappy-1.2.1-h8bd8927_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sortedcontainers-2.4.0-pyhd8ed1ab_1.conda
@@ -858,7 +864,6 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/6b/b5/b75527c0f9532dd8a93e8e7cd8e62e547b9f207d4c11e24f0006e8646b36/scikit_image-0.25.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/54/24/b4293291fa1dd830f353d2cb163295742fa87f179fcc8a20a306a81978b7/SecretStorage-3.3.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/54/21/f43f0a1fa8b06b32812e0975981f4677d28e0f3271601dc88ac5a5b83220/setuptools-78.1.0-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/34/49/738e07d10bbc67cae0dcfe5a484c6e518a517f4f90550dda2adf3a78b9f2/shapely-2.1.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/6e/be/10d23cfd4078fbec6aba768a357eff9e70c0b6d2a07398425985c524ad2a/tifffile-2025.3.30-py3-none-any.whl
       osx-arm64:
       - conda: https://conda.anaconda.org/conda-forge/noarch/adwaita-icon-theme-48.0-unix_0.conda
@@ -934,6 +939,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/fsspec-2025.3.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/gast-0.4.0-pyh9f0ad1d_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/gdk-pixbuf-2.42.12-h7ddc832_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/geos-3.13.1-hc9a1286_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/gflags-2.2.2-hf9b8971_1005.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/glib-tools-2.84.0-h1dc7a0c_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/glog-0.7.1-heb240a5_0.conda
@@ -1075,6 +1081,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/s2geometry-0.11.1-h0f0a9b1_4.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/s3fs-2025.3.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/scipy-1.15.2-py312h99a188d_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/shapely-2.1.1-py312hf733f26_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/six-1.17.0-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/snappy-1.2.1-h98b9ce2_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sortedcontainers-2.4.0-pyhd8ed1ab_1.conda
@@ -1132,7 +1139,6 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/39/1b/a3501574fbf29118164314dbc800d568b8c1c7b3258b505360e8abb3902c/rpds_py-0.24.0-cp312-cp312-macosx_11_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/ce/e6/93bebe1abcdce9513ffec01d8af02528b4c41fb3c1e46336d70b9ed4ef0d/scikit_image-0.25.2-cp312-cp312-macosx_12_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/54/21/f43f0a1fa8b06b32812e0975981f4677d28e0f3271601dc88ac5a5b83220/setuptools-78.1.0-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/32/87/799e3e48be7ce848c08509b94d2180f4ddb02e846e3c62d0af33da4d78d3/shapely-2.1.0-cp312-cp312-macosx_11_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/6e/be/10d23cfd4078fbec6aba768a357eff9e70c0b6d2a07398425985c524ad2a/tifffile-2025.3.30-py3-none-any.whl
   grizli:
     channels:
@@ -1220,6 +1226,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/fsspec-2025.3.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/gast-0.4.0-pyh9f0ad1d_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/linux-64/gdk-pixbuf-2.42.12-hb9ae30d_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/linux-64/geos-3.13.1-h97f6797_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/gflags-2.2.2-h5888daf_1005.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/glib-tools-2.84.1-h4833e2c_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/glog-0.7.1-hbabe93e_0.conda
@@ -1374,6 +1381,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/s2n-1.5.15-hd830067_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/s3fs-2025.3.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/scipy-1.15.2-py312ha707e6e_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/linux-64/shapely-2.1.1-py312h21f5128_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/six-1.17.0-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/snappy-1.2.1-h8bd8927_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sortedcontainers-2.4.0-pyhd8ed1ab_1.conda
@@ -1442,7 +1450,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/1b/90/c3279a5f033fecd4324850fffb52a315f377ca3e84b9f9ef56b51da508b0/drizzlepac-3.6.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: git+https://github.com/karllark/dust_attenuation.git?rev=02a1067#02a1067a555562adb5ec74766d0569f6eb9de87d
       - pypi: https://files.pythonhosted.org/packages/07/80/9d0c9b0f1113e036efb0a59998c65b8fc9d9cef6d3f6e9e4cab9a10325bb/dust_extinction-1.5.tar.gz
-      - pypi: git+https://github.com/gbrammer/eazy-py.git#292172c331b67f34358e9ff2500fe09a82757635
+      - pypi: git+https://github.com/gbrammer/eazy-py.git?rev=292172c#292172c331b67f34358e9ff2500fe09a82757635
       - pypi: https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/02/49/5953406bccb6da9578f6617b5e4e2455653090520d344ac35cbd4ef5d2ec/extinction-0.4.7-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/4d/36/2a115987e2d8c300a974597416d9de88f2444426de9571f4b59b2cca3acc/filelock-3.18.0-py3-none-any.whl
@@ -1451,7 +1459,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/da/71/ae30dadffc90b9006d77af76b393cb9dfbfc9629f339fc1574a1c52e6806/future-1.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/49/5b/b8acf74c01187a36aa41b6523deb9baa59c8c6d5112a798dc2bdf9616097/geos-0.2.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/eb/cf/da17fc0919ba0349899666eccd461ea20501ac858f430b33c845a94d0196/grismconf-1.32-py3-none-any.whl
-      - pypi: git+https://github.com/TheSkyentist/grizli.git?branch=dev#4b3efbf2cd517d4ccbee39f7b78da14a1c361c67
+      - pypi: git+https://github.com/TheSkyentist/grizli.git?rev=bb32e83#bb32e83853ca20944daec689d323381a47172500
       - pypi: https://files.pythonhosted.org/packages/e2/e3/5c4e32c05ad6a6577530a053a84ff4bf43efd52f55a1ca36031a31fca3b1/gwcs-0.24.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/cb/bd/b394387b598ed84d8d0fa90611a90bee0adc2021820ad5729f7ced74a8e2/imageio-2.37.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/04/96/92447566d16df59b2a776c0fb82dbc4d9e07cd95062562af01e408583fc4/itsdangerous-2.2.0-py3-none-any.whl
@@ -1498,7 +1506,6 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/6a/23/8146aad7d88f4fcb3a6218f41a60f6c2d4e3a72de72da1825dc7c8f7877c/semantic_version-2.10.0-py2.py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/8f/da/736680727905e0fc099edfeb11d93d8774b5509db3549e036142ec36ece1/sep-1.4.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/54/21/f43f0a1fa8b06b32812e0975981f4677d28e0f3271601dc88ac5a5b83220/setuptools-78.1.0-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/34/49/738e07d10bbc67cae0dcfe5a484c6e518a517f4f90550dda2adf3a78b9f2/shapely-2.1.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/6f/2b/4480abbe19e1f86195694670509ad64fc5a91feeadce3d24a657a3f61ffb/snowblind-0.2.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/df/a1/26be91772893d7cfdac1f2190667435e888bd6204bc88553394a35943608/spherical_geometry-1.3.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/48/84/c2586e213e6cae458bfbe33cbc41702a420abd18748b9d626dc4a32dc413/sregion-1.4.2.tar.gz
@@ -1596,6 +1603,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/fsspec-2025.3.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/gast-0.4.0-pyh9f0ad1d_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/gdk-pixbuf-2.42.12-h7ddc832_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/geos-3.13.1-hc9a1286_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/gflags-2.2.2-hf9b8971_1005.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/glib-tools-2.84.0-h1dc7a0c_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/glog-0.7.1-heb240a5_0.conda
@@ -1740,6 +1748,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/s2geometry-0.11.1-h0f0a9b1_4.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/s3fs-2025.3.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/scipy-1.15.2-py312h99a188d_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/shapely-2.1.1-py312hf733f26_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/six-1.17.0-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/snappy-1.2.1-h98b9ce2_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sortedcontainers-2.4.0-pyhd8ed1ab_1.conda
@@ -1792,7 +1801,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/c2/69/5cee4fb38111f385f72819e63be0fe6fa41f403663126e93c8d465f0cb7e/drizzlepac-3.6.2.tar.gz
       - pypi: git+https://github.com/karllark/dust_attenuation.git?rev=02a1067#02a1067a555562adb5ec74766d0569f6eb9de87d
       - pypi: https://files.pythonhosted.org/packages/07/80/9d0c9b0f1113e036efb0a59998c65b8fc9d9cef6d3f6e9e4cab9a10325bb/dust_extinction-1.5.tar.gz
-      - pypi: git+https://github.com/gbrammer/eazy-py.git#292172c331b67f34358e9ff2500fe09a82757635
+      - pypi: git+https://github.com/gbrammer/eazy-py.git?rev=292172c#292172c331b67f34358e9ff2500fe09a82757635
       - pypi: https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/25/ac/67b0806db482711b5cdb04dfbbb66ee9ebdf8d52f1c0bb005f5de2e32431/extinction-0.4.7-cp312-cp312-macosx_11_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/4d/36/2a115987e2d8c300a974597416d9de88f2444426de9571f4b59b2cca3acc/filelock-3.18.0-py3-none-any.whl
@@ -1801,7 +1810,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/da/71/ae30dadffc90b9006d77af76b393cb9dfbfc9629f339fc1574a1c52e6806/future-1.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/49/5b/b8acf74c01187a36aa41b6523deb9baa59c8c6d5112a798dc2bdf9616097/geos-0.2.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/eb/cf/da17fc0919ba0349899666eccd461ea20501ac858f430b33c845a94d0196/grismconf-1.32-py3-none-any.whl
-      - pypi: git+https://github.com/TheSkyentist/grizli.git?branch=dev#4b3efbf2cd517d4ccbee39f7b78da14a1c361c67
+      - pypi: git+https://github.com/TheSkyentist/grizli.git?rev=bb32e83#bb32e83853ca20944daec689d323381a47172500
       - pypi: https://files.pythonhosted.org/packages/e2/e3/5c4e32c05ad6a6577530a053a84ff4bf43efd52f55a1ca36031a31fca3b1/gwcs-0.24.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/cb/bd/b394387b598ed84d8d0fa90611a90bee0adc2021820ad5729f7ced74a8e2/imageio-2.37.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/04/96/92447566d16df59b2a776c0fb82dbc4d9e07cd95062562af01e408583fc4/itsdangerous-2.2.0-py3-none-any.whl
@@ -1846,7 +1855,6 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/6a/23/8146aad7d88f4fcb3a6218f41a60f6c2d4e3a72de72da1825dc7c8f7877c/semantic_version-2.10.0-py2.py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/91/de/708c216328fd99dfbd70f04f6ebf274468d0de6da6cf2ddb91b4478f87d9/sep-1.4.1-cp312-cp312-macosx_11_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/54/21/f43f0a1fa8b06b32812e0975981f4677d28e0f3271601dc88ac5a5b83220/setuptools-78.1.0-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/32/87/799e3e48be7ce848c08509b94d2180f4ddb02e846e3c62d0af33da4d78d3/shapely-2.1.0-cp312-cp312-macosx_11_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/6f/2b/4480abbe19e1f86195694670509ad64fc5a91feeadce3d24a657a3f61ffb/snowblind-0.2.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/e2/d5/6e7ca1b12b621095c098f76830717b7b77ec41f4913360d782a46f59d58e/spherical_geometry-1.3.3-cp312-cp312-macosx_11_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/48/84/c2586e213e6cae458bfbe33cbc41702a420abd18748b9d626dc4a32dc413/sregion-1.4.2.tar.gz
@@ -1956,6 +1964,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/fsspec-2025.3.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/gast-0.4.0-pyh9f0ad1d_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/linux-64/gdk-pixbuf-2.42.12-hb9ae30d_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/linux-64/geos-3.13.1-h97f6797_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/gflags-2.2.2-h5888daf_1005.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/glib-tools-2.84.1-h4833e2c_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/glog-0.7.1-hbabe93e_0.conda
@@ -2109,6 +2118,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/s2n-1.5.15-hd830067_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/s3fs-2025.3.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/scipy-1.15.2-py312ha707e6e_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/linux-64/shapely-2.1.1-py312h21f5128_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/six-1.17.0-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/snappy-1.2.1-h8bd8927_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sortedcontainers-2.4.0-pyhd8ed1ab_1.conda
@@ -2156,11 +2166,11 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/zstandard-0.23.0-py312h66e93f0_1.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/zstd-1.5.7-hb8e6e7a_2.conda
       - pypi: https://files.pythonhosted.org/packages/21/b8/1425b8ba63a1b1175a24ea46c50b967d6749d745cca136a243d1d3d1a266/asdf-4.1.0-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/a0/b1/1d1356769cf7dbe9884dd8f028d3a6d2f890c97e44973958e271aa2f4233/asdf_astropy-0.7.1-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/cf/f7/059e6e9e93b2ad110dc75a82c7b84cc133dfa375bb851b719e8f2ae89e9e/asdf_coordinates_schemas-0.3.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/7f/f9/7cc4dd46a431fe49ddc344d41aa8bbd9a4427dac219e707dd500ae588cef/asdf_astropy-0.8.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/a2/a8/7ec4b2ce4c70cf323bfba14ba424ea0226bee4d0994fafa804205ba734f2/asdf_coordinates_schemas-0.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/51/86/2818771491fc4004f5cb5f297c6a94e786db704e9b091abedf9fc0248771/asdf_standard-1.1.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/4f/1b/b6696f03e2320509ad9526190061ec7acf62330bddeb639d37a0a77e20a8/asdf_transform_schemas-0.6.0-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/79/89/d952bc874e9aeb5b907d5258e66a9a89386946c73d0d3a53b9ee27970005/asdf_wcs_schemas-0.4.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/8e/5f/cd19b53e571853dfd12033f0fb3674e64b8397ff73857e1e09f17943409c/asdf_wcs_schemas-0.5.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/73/8c/64ac07bf58f14d861127d8583122e10686e23161cc9e874b979a35810065/astroquery-0.4.10-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/22/c7/a7b313848c1ef764044252c091da6f5a5681ca5736ea0800c815e98de509/BayesicFitting-3.2.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/3e/a2/513f6cbe752421f16d969e32f3583762bfd583848b763913ddab8d9bfd4f/charset_normalizer-3.4.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
@@ -2169,7 +2179,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/ca/9f/48828224d6b5a729e6a48fb80538ff754e26932e6971303e32145938ebb2/drizzle-2.0.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/4d/36/2a115987e2d8c300a974597416d9de88f2444426de9571f4b59b2cca3acc/filelock-3.18.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/da/71/ae30dadffc90b9006d77af76b393cb9dfbfc9629f339fc1574a1c52e6806/future-1.0.0-py3-none-any.whl
-      - pypi: git+https://github.com/spacetelescope/gwcs.git?rev=master#a7edd46076a7bcb3c2cb6457663bd14be1068299
+      - pypi: git+https://github.com/spacetelescope/gwcs.git?rev=master#86a587ee59aa517c11c5fef77850b5b9ce1fad0b
       - pypi: https://files.pythonhosted.org/packages/cb/bd/b394387b598ed84d8d0fa90611a90bee0adc2021820ad5729f7ced74a8e2/imageio-2.37.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/7f/66/b15ce62552d84bbfcec9a4873ab79d993a1dd4edb922cbfccae192bd5b5f/jaraco.classes-3.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/ff/db/0c52c4cf5e4bd9f5d7135ec7669a3a767af21b3a308e1ed3674881e52b62/jaraco.context-6.0.1-py3-none-any.whl
@@ -2178,7 +2188,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/69/4a/4f9dbeb84e8850557c02365a0eee0649abe5eb1d84af92a25731c6c0f922/jsonschema-4.23.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/d1/0f/8910b19ac0670a0f80ce1008e5e751c4a57e14d2c4c13a482aa6079fa9d6/jsonschema_specifications-2024.10.1-py3-none-any.whl
       - pypi: git+https://github.com/TheSkyentist/jwst-tools.git?subdirectory=columnjump&rev=cdc163b#cdc163bd11270aeb441680431c836f543e4be00b
-      - pypi: git+https://github.com/TheSkyentist/jwst.git?rev=82679dc#82679dc953a05b9adc96c947afc18b9bb79dad2d
+      - pypi: git+https://github.com/TheSkyentist/jwst.git?rev=9f56346a8#9f56346a8b6550fb81bb4ab64460da90d22ea6f3
       - pypi: https://files.pythonhosted.org/packages/d3/32/da7f44bcb1105d3e88a0b74ebdca50c59121d2ddf71c9e34ba47df7f3a56/keyring-25.6.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/83/60/d497a310bde3f01cb805196ac61b7ad6dc5dcf8dce66634dc34364b20b4f/lazy_loader-0.4-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/23/62/0fe302c6d1be1c777cab0616e6302478251dfbf9055ad426f5d0def75c89/more_itertools-10.6.0-py3-none-any.whl
@@ -2194,9 +2204,9 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/54/24/b4293291fa1dd830f353d2cb163295742fa87f179fcc8a20a306a81978b7/SecretStorage-3.3.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/6a/23/8146aad7d88f4fcb3a6218f41a60f6c2d4e3a72de72da1825dc7c8f7877c/semantic_version-2.10.0-py2.py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/df/a1/26be91772893d7cfdac1f2190667435e888bd6204bc88553394a35943608/spherical_geometry-1.3.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
-      - pypi: git+https://github.com/spacetelescope/stcal.git?rev=main#9632ff0e4070681dc2873b8e6c024438be278fa5
-      - pypi: git+https://github.com/spacetelescope/stdatamodels.git?rev=main#5f6aa65379a0cbb42714c150d19ca51d903f3b0d
-      - pypi: git+https://github.com/spacetelescope/stpipe.git?rev=main#149b1b2ff9f5c82372b7681e418d7287701b210f
+      - pypi: git+https://github.com/spacetelescope/stcal.git?rev=main#8590561259c5019553c65dee694edf4181948891
+      - pypi: git+https://github.com/spacetelescope/stdatamodels.git?rev=main#b9a49c2355507cccd07b7f18f60c0518d3070283
+      - pypi: https://files.pythonhosted.org/packages/c2/78/12eed5bc290e5213b51ffc84f7b41ea4afb35888535f9ca337d24c9949a7/stpipe-0.10.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/33/bf/94b3224b867dc89c7e2ca9ebd4c141f86044ed67b4d0a15759704dc906cd/stsci.imagestats-1.8.3-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/63/64/7f8541840186fb1f20e34028b23087697c6540c8888fcf8c31d9086cfcab/stsci_stimage-0.3.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/23/ed/d6610abe2c02879de2728fe4b58b586905f48ad11861e2f533c8aadccd53/synphot-1.5.0-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl
@@ -2277,6 +2287,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/fsspec-2025.3.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/gast-0.4.0-pyh9f0ad1d_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/gdk-pixbuf-2.42.12-h7ddc832_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/geos-3.13.1-hc9a1286_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/gflags-2.2.2-hf9b8971_1005.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/glib-tools-2.84.0-h1dc7a0c_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/glog-0.7.1-heb240a5_0.conda
@@ -2420,6 +2431,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/s2geometry-0.11.1-h0f0a9b1_4.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/s3fs-2025.3.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/scipy-1.15.2-py312h99a188d_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/shapely-2.1.1-py312hf733f26_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/six-1.17.0-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/snappy-1.2.1-h98b9ce2_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sortedcontainers-2.4.0-pyhd8ed1ab_1.conda
@@ -2452,11 +2464,11 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/zstandard-0.23.0-py312hea69d52_1.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/zstd-1.5.7-h6491c7d_2.conda
       - pypi: https://files.pythonhosted.org/packages/21/b8/1425b8ba63a1b1175a24ea46c50b967d6749d745cca136a243d1d3d1a266/asdf-4.1.0-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/a0/b1/1d1356769cf7dbe9884dd8f028d3a6d2f890c97e44973958e271aa2f4233/asdf_astropy-0.7.1-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/cf/f7/059e6e9e93b2ad110dc75a82c7b84cc133dfa375bb851b719e8f2ae89e9e/asdf_coordinates_schemas-0.3.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/7f/f9/7cc4dd46a431fe49ddc344d41aa8bbd9a4427dac219e707dd500ae588cef/asdf_astropy-0.8.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/a2/a8/7ec4b2ce4c70cf323bfba14ba424ea0226bee4d0994fafa804205ba734f2/asdf_coordinates_schemas-0.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/51/86/2818771491fc4004f5cb5f297c6a94e786db704e9b091abedf9fc0248771/asdf_standard-1.1.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/4f/1b/b6696f03e2320509ad9526190061ec7acf62330bddeb639d37a0a77e20a8/asdf_transform_schemas-0.6.0-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/79/89/d952bc874e9aeb5b907d5258e66a9a89386946c73d0d3a53b9ee27970005/asdf_wcs_schemas-0.4.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/8e/5f/cd19b53e571853dfd12033f0fb3674e64b8397ff73857e1e09f17943409c/asdf_wcs_schemas-0.5.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/73/8c/64ac07bf58f14d861127d8583122e10686e23161cc9e874b979a35810065/astroquery-0.4.10-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/22/c7/a7b313848c1ef764044252c091da6f5a5681ca5736ea0800c815e98de509/BayesicFitting-3.2.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/0a/9a/dd1e1cdceb841925b7798369a09279bd1cf183cef0f9ddf15a3a6502ee45/charset_normalizer-3.4.1-cp312-cp312-macosx_10_13_universal2.whl
@@ -2464,7 +2476,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/6f/14/076af9a5672a627932a59dafdd61365aed7284bbae0fc928f2ba13386101/drizzle-2.0.1-cp312-cp312-macosx_11_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/4d/36/2a115987e2d8c300a974597416d9de88f2444426de9571f4b59b2cca3acc/filelock-3.18.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/da/71/ae30dadffc90b9006d77af76b393cb9dfbfc9629f339fc1574a1c52e6806/future-1.0.0-py3-none-any.whl
-      - pypi: git+https://github.com/spacetelescope/gwcs.git?rev=master#a7edd46076a7bcb3c2cb6457663bd14be1068299
+      - pypi: git+https://github.com/spacetelescope/gwcs.git?rev=master#86a587ee59aa517c11c5fef77850b5b9ce1fad0b
       - pypi: https://files.pythonhosted.org/packages/cb/bd/b394387b598ed84d8d0fa90611a90bee0adc2021820ad5729f7ced74a8e2/imageio-2.37.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/7f/66/b15ce62552d84bbfcec9a4873ab79d993a1dd4edb922cbfccae192bd5b5f/jaraco.classes-3.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/ff/db/0c52c4cf5e4bd9f5d7135ec7669a3a767af21b3a308e1ed3674881e52b62/jaraco.context-6.0.1-py3-none-any.whl
@@ -2472,7 +2484,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/69/4a/4f9dbeb84e8850557c02365a0eee0649abe5eb1d84af92a25731c6c0f922/jsonschema-4.23.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/d1/0f/8910b19ac0670a0f80ce1008e5e751c4a57e14d2c4c13a482aa6079fa9d6/jsonschema_specifications-2024.10.1-py3-none-any.whl
       - pypi: git+https://github.com/TheSkyentist/jwst-tools.git?subdirectory=columnjump&rev=cdc163b#cdc163bd11270aeb441680431c836f543e4be00b
-      - pypi: git+https://github.com/TheSkyentist/jwst.git?rev=82679dc#82679dc953a05b9adc96c947afc18b9bb79dad2d
+      - pypi: git+https://github.com/TheSkyentist/jwst.git?rev=9f56346a8#9f56346a8b6550fb81bb4ab64460da90d22ea6f3
       - pypi: https://files.pythonhosted.org/packages/d3/32/da7f44bcb1105d3e88a0b74ebdca50c59121d2ddf71c9e34ba47df7f3a56/keyring-25.6.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/83/60/d497a310bde3f01cb805196ac61b7ad6dc5dcf8dce66634dc34364b20b4f/lazy_loader-0.4-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/23/62/0fe302c6d1be1c777cab0616e6302478251dfbf9055ad426f5d0def75c89/more_itertools-10.6.0-py3-none-any.whl
@@ -2487,9 +2499,9 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/ce/e6/93bebe1abcdce9513ffec01d8af02528b4c41fb3c1e46336d70b9ed4ef0d/scikit_image-0.25.2-cp312-cp312-macosx_12_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/6a/23/8146aad7d88f4fcb3a6218f41a60f6c2d4e3a72de72da1825dc7c8f7877c/semantic_version-2.10.0-py2.py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/e2/d5/6e7ca1b12b621095c098f76830717b7b77ec41f4913360d782a46f59d58e/spherical_geometry-1.3.3-cp312-cp312-macosx_11_0_arm64.whl
-      - pypi: git+https://github.com/spacetelescope/stcal.git?rev=main#9632ff0e4070681dc2873b8e6c024438be278fa5
-      - pypi: git+https://github.com/spacetelescope/stdatamodels.git?rev=main#5f6aa65379a0cbb42714c150d19ca51d903f3b0d
-      - pypi: git+https://github.com/spacetelescope/stpipe.git?rev=main#149b1b2ff9f5c82372b7681e418d7287701b210f
+      - pypi: git+https://github.com/spacetelescope/stcal.git?rev=main#8590561259c5019553c65dee694edf4181948891
+      - pypi: git+https://github.com/spacetelescope/stdatamodels.git?rev=main#b9a49c2355507cccd07b7f18f60c0518d3070283
+      - pypi: https://files.pythonhosted.org/packages/c2/78/12eed5bc290e5213b51ffc84f7b41ea4afb35888535f9ca337d24c9949a7/stpipe-0.10.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/ba/03/43ff9034fb96d362eae83ab7abb9a0bf05279e15ef832561c1bf2d2ac762/stsci.imagestats-1.8.3-cp312-cp312-macosx_11_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/7e/b6/9d91e847bc7adaaf00081fd82e7455c45c175af64a38ec300321632c76bd/stsci_stimage-0.3.0-cp312-cp312-macosx_11_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/bb/7d/32307b55d822364dd3704af75efa90bcc848ce481235ca7c9bfe96933292/synphot-1.5.0-cp312-cp312-macosx_11_0_arm64.whl
@@ -2600,6 +2612,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/fsspec-2025.3.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/gast-0.4.0-pyh9f0ad1d_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/linux-64/gdk-pixbuf-2.42.12-hb9ae30d_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/linux-64/geos-3.13.1-h97f6797_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/gflags-2.2.2-h5888daf_1005.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/gitdb-4.0.12-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/gitpython-3.1.44-pyhff2d567_0.conda
@@ -2784,6 +2797,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/scikit-learn-1.6.1-py312h7a48858_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/scipy-1.15.2-py312ha707e6e_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/setuptools-78.1.0-pyhff2d567_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/linux-64/shapely-2.1.1-py312h21f5128_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/shellingham-1.5.4-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/six-1.17.0-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/slack-sdk-3.35.0-pyhd8ed1ab_0.conda
@@ -2956,6 +2970,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/fsspec-2025.3.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/gast-0.4.0-pyh9f0ad1d_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/gdk-pixbuf-2.42.12-h7ddc832_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/geos-3.13.1-hc9a1286_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/gflags-2.2.2-hf9b8971_1005.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/gitdb-4.0.12-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/gitpython-3.1.44-pyhff2d567_0.conda
@@ -3130,6 +3145,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/scikit-learn-1.6.1-py312h39203ce_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/scipy-1.15.2-py312h99a188d_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/setuptools-78.1.0-pyhff2d567_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/shapely-2.1.1-py312hf733f26_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/shellingham-1.5.4-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/six-1.17.0-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/slack-sdk-3.35.0-pyhd8ed1ab_0.conda
@@ -3472,6 +3488,31 @@ packages:
   - pytest ; extra == 'test'
   - scipy ; extra == 'test'
   requires_python: '>=3.10'
+- pypi: https://files.pythonhosted.org/packages/7f/f9/7cc4dd46a431fe49ddc344d41aa8bbd9a4427dac219e707dd500ae588cef/asdf_astropy-0.8.0-py3-none-any.whl
+  name: asdf-astropy
+  version: 0.8.0
+  sha256: e4c76eabb73df4025a4eda6b464e99aa92222166fae7e1d08ff08a78cafe050f
+  requires_dist:
+  - asdf>=2.15.0
+  - asdf-coordinates-schemas>=0.4
+  - asdf-transform-schemas>=0.6
+  - asdf-standard>=1.1.0
+  - astropy>=5.2.0
+  - numpy>=1.25
+  - packaging>=19
+  - docutils ; extra == 'docs'
+  - graphviz ; extra == 'docs'
+  - matplotlib ; extra == 'docs'
+  - sphinx ; extra == 'docs'
+  - sphinx-asdf ; extra == 'docs'
+  - sphinx-astropy ; extra == 'docs'
+  - sphinx-automodapi ; extra == 'docs'
+  - tomli ; extra == 'docs'
+  - coverage ; extra == 'test'
+  - pytest-astropy ; extra == 'test'
+  - pytest ; extra == 'test'
+  - scipy ; extra == 'test'
+  requires_python: '>=3.11'
 - pypi: https://files.pythonhosted.org/packages/cf/f7/059e6e9e93b2ad110dc75a82c7b84cc133dfa375bb851b719e8f2ae89e9e/asdf_coordinates_schemas-0.3.0-py3-none-any.whl
   name: asdf-coordinates-schemas
   version: 0.3.0
@@ -3488,6 +3529,25 @@ packages:
   - matplotlib ; extra == 'docs'
   - docutils ; extra == 'docs'
   - sphinx-rtd-theme ; extra == 'docs'
+  - pytest ; extra == 'test'
+  - asdf-astropy>=0.2.0 ; extra == 'test'
+  requires_python: '>=3.9'
+- pypi: https://files.pythonhosted.org/packages/a2/a8/7ec4b2ce4c70cf323bfba14ba424ea0226bee4d0994fafa804205ba734f2/asdf_coordinates_schemas-0.4.0-py3-none-any.whl
+  name: asdf-coordinates-schemas
+  version: 0.4.0
+  sha256: 1e1cad457730a1c84ed9993be2824ad9909add417cf304416bfaf1358296ae9c
+  requires_dist:
+  - asdf>=2.12.1
+  - asdf-standard>=1.1.0
+  - tomli ; extra == 'docs'
+  - sphinx ; extra == 'docs'
+  - sphinx-asdf>=0.1.3 ; extra == 'docs'
+  - sphinx-astropy ; extra == 'docs'
+  - astropy>=5.0.4 ; extra == 'docs'
+  - graphviz ; extra == 'docs'
+  - matplotlib ; extra == 'docs'
+  - docutils ; extra == 'docs'
+  - furo ; extra == 'docs'
   - pytest ; extra == 'test'
   - asdf-astropy>=0.2.0 ; extra == 'test'
   requires_python: '>=3.9'
@@ -3545,6 +3605,27 @@ packages:
   - matplotlib ; extra == 'docs'
   - docutils ; extra == 'docs'
   - sphinx-rtd-theme ; extra == 'docs'
+  - pytest>=4.6.0 ; extra == 'test'
+  - asdf>=2.8.0 ; extra == 'test'
+  - asdf-astropy ; extra == 'test'
+  requires_python: '>=3.9'
+- pypi: https://files.pythonhosted.org/packages/8e/5f/cd19b53e571853dfd12033f0fb3674e64b8397ff73857e1e09f17943409c/asdf_wcs_schemas-0.5.0-py3-none-any.whl
+  name: asdf-wcs-schemas
+  version: 0.5.0
+  sha256: 7050c7dfd252f2aa9c32e4fe3711c1823336d923f631816f8f3e9f27c95491f7
+  requires_dist:
+  - asdf-standard>=1.1.0
+  - asdf-transform-schemas>=0.6.0
+  - asdf-coordinates-schemas>=0.4.0
+  - tomli ; extra == 'docs'
+  - sphinx ; extra == 'docs'
+  - sphinx-asdf>=0.1.3 ; extra == 'docs'
+  - sphinx-astropy ; extra == 'docs'
+  - astropy>=5.0.4 ; extra == 'docs'
+  - graphviz ; extra == 'docs'
+  - matplotlib ; extra == 'docs'
+  - docutils ; extra == 'docs'
+  - furo ; extra == 'docs'
   - pytest>=4.6.0 ; extra == 'test'
   - asdf>=2.8.0 ; extra == 'test'
   - asdf-astropy ; extra == 'test'
@@ -5715,7 +5796,7 @@ packages:
   - matplotlib ; extra == 'docs'
   - graphviz ; extra == 'docs'
   requires_python: '>=3.7'
-- pypi: git+https://github.com/gbrammer/eazy-py.git#292172c331b67f34358e9ff2500fe09a82757635
+- pypi: git+https://github.com/gbrammer/eazy-py.git?rev=292172c#292172c331b67f34358e9ff2500fe09a82757635
   name: eazy
   version: 0.8.5
   requires_dist:
@@ -6193,6 +6274,27 @@ packages:
   - lxml
   - pillow
   - pytest ; extra == 'test'
+- conda: https://conda.anaconda.org/conda-forge/linux-64/geos-3.13.1-h97f6797_0.conda
+  sha256: 3a9c854fa8cf1165015b6ee994d003c3d6a8b0f532ca22b6b29cd6e8d03942ed
+  md5: 5bc18c66111bc94532b0d2df00731c66
+  depends:
+  - __glibc >=2.17,<3.0.a0
+  - libgcc >=13
+  - libstdcxx >=13
+  license: LGPL-2.1-only
+  purls: []
+  size: 1871567
+  timestamp: 1741051481612
+- conda: https://conda.anaconda.org/conda-forge/osx-arm64/geos-3.13.1-hc9a1286_0.conda
+  sha256: b3f116968699ef72271f608a8ef2794b609e9a3cecbd5c178d8ccb797be709d6
+  md5: 3528352bdf54e8b11eca0eb97daf7d55
+  depends:
+  - __osx >=11.0
+  - libcxx >=18
+  license: LGPL-2.1-only
+  purls: []
+  size: 1470335
+  timestamp: 1741051878236
 - conda: https://conda.anaconda.org/conda-forge/linux-64/gflags-2.2.2-h5888daf_1005.conda
   sha256: 6c33bf0c4d8f418546ba9c250db4e4221040936aef8956353bc764d4877bc39a
   md5: d411fc29e338efb48c5fd4576d71d881
@@ -6361,9 +6463,9 @@ packages:
   name: grismconf
   version: '1.32'
   sha256: 8f74750c8669c8072531d079320cfaae078d4e74d6f1f96a476f8f685359179f
-- pypi: git+https://github.com/TheSkyentist/grizli.git?branch=dev#4b3efbf2cd517d4ccbee39f7b78da14a1c361c67
+- pypi: git+https://github.com/TheSkyentist/grizli.git?rev=bb32e83#bb32e83853ca20944daec689d323381a47172500
   name: grizli
-  version: 0.1.dev3343+g4b3efbf
+  version: 0.1.dev3355+gbb32e83
   requires_dist:
   - astro-prospector
   - astropy
@@ -6520,17 +6622,16 @@ packages:
   - pytest>=8.0.0 ; extra == 'test'
   - pytest-astropy>=0.11.0 ; extra == 'test'
   requires_python: '>=3.10'
-- pypi: git+https://github.com/spacetelescope/gwcs.git?rev=master#a7edd46076a7bcb3c2cb6457663bd14be1068299
+- pypi: git+https://github.com/spacetelescope/gwcs.git?rev=master#86a587ee59aa517c11c5fef77850b5b9ce1fad0b
   name: gwcs
-  version: 0.25.dev54
+  version: 0.25.2.dev8
   requires_dist:
   - asdf>=3.3.0
   - astropy>=6.0
-  - numpy>=1.24
+  - numpy>=1.25
   - scipy>=1.14.1
-  - asdf-wcs-schemas>=0.4.0
-  - asdf-astropy>=0.5.0
-  - importlib-metadata>=4.11.4 ; python_full_version < '3.12'
+  - asdf-wcs-schemas>=0.5.0
+  - asdf-astropy>=0.8.0
   - sphinx ; extra == 'docs'
   - sphinx-automodapi ; extra == 'docs'
   - sphinx-astropy ; extra == 'docs'
@@ -6538,6 +6639,7 @@ packages:
   - sphinx-asdf ; extra == 'docs'
   - furo ; extra == 'docs'
   - sphinx-tabs ; extra == 'docs'
+  - matplotlib ; extra == 'docs'
   - ci-watson>=0.3.0 ; extra == 'test'
   - pytest>=8.0.0 ; extra == 'test'
   - pytest-astropy>=0.11.0 ; extra == 'test'
@@ -7292,15 +7394,15 @@ packages:
   - pkg:pypi/jupyterlab-widgets?source=compressed-mapping
   size: 187102
   timestamp: 1744291153222
-- pypi: git+https://github.com/TheSkyentist/jwst.git?rev=82679dc#82679dc953a05b9adc96c947afc18b9bb79dad2d
+- pypi: git+https://github.com/TheSkyentist/jwst.git?rev=9f56346a8#9f56346a8b6550fb81bb4ab64460da90d22ea6f3
   name: jwst
-  version: 1.4.3.dev520+g82679dc95
+  version: 1.4.3.dev838+g9f56346a8
   requires_dist:
   - asdf>=4.0,<5
   - astropy>=6.1
   - bayesicfitting>=3.2.2
   - crds>=12.0.3
-  - drizzle>=2.0.1
+  - drizzle>=2.0.1,<2.1.0
   - gwcs @ git+https://github.com/spacetelescope/gwcs.git@master
   - numpy>=1.25
   - opencv-python-headless>=4.6.0.66
@@ -7312,11 +7414,10 @@ packages:
   - spherical-geometry>=1.3
   - stdatamodels @ git+https://github.com/spacetelescope/stdatamodels.git@main
   - stcal @ git+https://github.com/spacetelescope/stcal.git@main
-  - stpipe @ git+https://github.com/spacetelescope/stpipe.git@main
+  - stpipe>=0.10.0,<0.11.0
   - stsci-imagestats>=1.6.3
   - synphot>=1.3
   - tweakwcs>=0.8.8
-  - asdf-astropy>=0.6.0
   - wiimatch>=0.3.2
   - packaging>20.0
   - importlib-metadata>=4.11.4
@@ -7336,7 +7437,7 @@ packages:
   - requests-mock>=1.0 ; extra == 'test'
   - pre-commit>=4.1.0 ; extra == 'contrib'
   - jwst[docs,test] ; extra == 'contrib'
-  requires_python: '>=3.11,<3.14'
+  requires_python: '>=3.11'
 - pypi: https://files.pythonhosted.org/packages/3c/da/b663f30fa4a24d2cc08241d8e676f23d2a9e5fcecc9b61d65fe64d1dcd87/jwst-1.18.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
   name: jwst
   version: 1.18.0
@@ -13022,36 +13123,70 @@ packages:
   - pkg:pypi/setuptools?source=compressed-mapping
   size: 786557
   timestamp: 1743775941985
-- pypi: https://files.pythonhosted.org/packages/32/87/799e3e48be7ce848c08509b94d2180f4ddb02e846e3c62d0af33da4d78d3/shapely-2.1.0-cp312-cp312-macosx_11_0_arm64.whl
-  name: shapely
-  version: 2.1.0
-  sha256: 3cab20b665d26dbec0b380e15749bea720885a481fa7b1eedc88195d4a98cfa4
-  requires_dist:
-  - numpy>=1.21
-  - pytest ; extra == 'test'
-  - pytest-cov ; extra == 'test'
-  - scipy-doctest ; extra == 'test'
-  - numpydoc==1.1.* ; extra == 'docs'
-  - matplotlib ; extra == 'docs'
-  - sphinx ; extra == 'docs'
-  - sphinx-book-theme ; extra == 'docs'
-  - sphinx-remove-toctrees ; extra == 'docs'
-  requires_python: '>=3.10'
-- pypi: https://files.pythonhosted.org/packages/34/49/738e07d10bbc67cae0dcfe5a484c6e518a517f4f90550dda2adf3a78b9f2/shapely-2.1.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
-  name: shapely
-  version: 2.1.0
-  sha256: edaec656bdd9b71278b98e6f77c464b1c3b2daa9eace78012ff0f0b4b5b15b04
-  requires_dist:
-  - numpy>=1.21
-  - numpydoc==1.1.* ; extra == 'docs'
-  - matplotlib ; extra == 'docs'
-  - sphinx ; extra == 'docs'
-  - sphinx-book-theme ; extra == 'docs'
-  - sphinx-remove-toctrees ; extra == 'docs'
-  - pytest ; extra == 'test'
-  - pytest-cov ; extra == 'test'
-  - scipy-doctest ; extra == 'test'
-  requires_python: '>=3.10'
+- conda: https://conda.anaconda.org/conda-forge/linux-64/shapely-2.1.1-py312h21f5128_0.conda
+  sha256: 5e4086909b5884d6ba1244f63ac83b6cff9d1a871e1c334cd07eb28d0feda5cd
+  md5: d38eb6d34385f82b02ff776a66977cc4
+  depends:
+  - __glibc >=2.17,<3.0.a0
+  - geos >=3.13.1,<3.13.2.0a0
+  - libgcc >=13
+  - numpy >=1.19,<3
+  - python >=3.12,<3.13.0a0
+  - python_abi 3.12.* *_cp312
+  license: BSD-3-Clause
+  license_family: BSD
+  purls:
+  - pkg:pypi/shapely?source=hash-mapping
+  size: 639956
+  timestamp: 1747664455853
+- conda: https://conda.anaconda.org/conda-forge/linux-64/shapely-2.1.1-py313h576e190_0.conda
+  sha256: cc26e085eaeb530986bec1beeffa4a47963e1bdba5be61ef6c8fb675e6f913fe
+  md5: 186fd0068dea82af028d34f8271a0d2f
+  depends:
+  - __glibc >=2.17,<3.0.a0
+  - geos >=3.13.1,<3.13.2.0a0
+  - libgcc >=13
+  - numpy >=1.21,<3
+  - python >=3.13,<3.14.0a0
+  - python_abi 3.13.* *_cp313
+  license: BSD-3-Clause
+  license_family: BSD
+  purls:
+  - pkg:pypi/shapely?source=hash-mapping
+  size: 654435
+  timestamp: 1747664458154
+- conda: https://conda.anaconda.org/conda-forge/osx-arm64/shapely-2.1.1-py312hf733f26_0.conda
+  sha256: 9d4b0ef4b15f3b3a61e814db1949e0553b939e7a6ba9a2ca012bb0e141f54a7b
+  md5: a4d268689748c518130e8879c6a97ffe
+  depends:
+  - __osx >=11.0
+  - geos >=3.13.1,<3.13.2.0a0
+  - numpy >=1.19,<3
+  - python >=3.12,<3.13.0a0
+  - python >=3.12,<3.13.0a0 *_cpython
+  - python_abi 3.12.* *_cp312
+  license: BSD-3-Clause
+  license_family: BSD
+  purls:
+  - pkg:pypi/shapely?source=hash-mapping
+  size: 600145
+  timestamp: 1747664641197
+- conda: https://conda.anaconda.org/conda-forge/osx-arm64/shapely-2.1.1-py313h76d6ede_0.conda
+  sha256: 883427fb69804db47cc835cdd0e69dd1b7cdc23ca8d7f64dc9b9dcae4c17d835
+  md5: b60bbe49ebe4706a66304c61c64597a0
+  depends:
+  - __osx >=11.0
+  - geos >=3.13.1,<3.13.2.0a0
+  - numpy >=1.21,<3
+  - python >=3.13,<3.14.0a0
+  - python >=3.13,<3.14.0a0 *_cp313
+  - python_abi 3.13.* *_cp313
+  license: BSD-3-Clause
+  license_family: BSD
+  purls:
+  - pkg:pypi/shapely?source=hash-mapping
+  size: 615151
+  timestamp: 1747664649504
 - conda: https://conda.anaconda.org/conda-forge/noarch/shellingham-1.5.4-pyhd8ed1ab_1.conda
   sha256: 0557c090913aa63cdbe821dbdfa038a321b488e22bc80196c4b3b1aace4914ef
   md5: 7c3c2a0f3ebdea2bbc35538d162b43bf
@@ -13514,9 +13649,9 @@ packages:
   - pytest-cov ; extra == 'test'
   - pytest-doctestplus ; extra == 'test'
   requires_python: '>=3.11'
-- pypi: git+https://github.com/spacetelescope/stcal.git?rev=main#9632ff0e4070681dc2873b8e6c024438be278fa5
+- pypi: git+https://github.com/spacetelescope/stcal.git?rev=main#8590561259c5019553c65dee694edf4181948891
   name: stcal
-  version: 1.13.1.dev44+g9632ff0
+  version: 1.14.1.dev23+g8590561
   requires_dist:
   - astropy>=6.0.0
   - drizzle>=2.0.1
@@ -13541,27 +13676,6 @@ packages:
   - pytest-cov ; extra == 'test'
   - pytest-doctestplus ; extra == 'test'
   requires_python: '>=3.11'
-- pypi: git+https://github.com/spacetelescope/stdatamodels.git?rev=main#5f6aa65379a0cbb42714c150d19ca51d903f3b0d
-  name: stdatamodels
-  version: 3.0.2.dev88+g5f6aa65
-  requires_dist:
-  - asdf>=3.3.0
-  - asdf-transform-schemas>=0.6.0
-  - asdf-astropy>=0.6.0
-  - numpy>=1.25
-  - astropy>=6.1
-  - psutil ; extra == 'test'
-  - pyyaml ; extra == 'test'
-  - pytest>=4.6.0 ; extra == 'test'
-  - pytest-doctestplus ; extra == 'test'
-  - crds>=11.17.1 ; extra == 'test'
-  - requests ; extra == 'test'
-  - sphinx ; extra == 'docs'
-  - sphinx-automodapi ; extra == 'docs'
-  - numpydoc ; extra == 'docs'
-  - sphinx-rtd-theme ; extra == 'docs'
-  - sphinx-asdf>=0.1.1 ; extra == 'docs'
-  requires_python: '>=3.11'
 - pypi: https://files.pythonhosted.org/packages/62/0e/ac81ca5b42daec31cd551b906d21ef6855799b9b8c69de2bcc292b9f0197/stdatamodels-3.0.2-py3-none-any.whl
   name: stdatamodels
   version: 3.0.2
@@ -13578,6 +13692,28 @@ packages:
   - pytest-doctestplus ; extra == 'test'
   - crds>=11.17.1 ; extra == 'test'
   - requests ; extra == 'test'
+  - sphinx ; extra == 'docs'
+  - sphinx-automodapi ; extra == 'docs'
+  - numpydoc ; extra == 'docs'
+  - sphinx-rtd-theme ; extra == 'docs'
+  - sphinx-asdf>=0.1.1 ; extra == 'docs'
+  requires_python: '>=3.11'
+- pypi: git+https://github.com/spacetelescope/stdatamodels.git?rev=main#b9a49c2355507cccd07b7f18f60c0518d3070283
+  name: stdatamodels
+  version: 4.0.1.dev16+gb9a49c2
+  requires_dist:
+  - asdf>=3.3.0
+  - asdf-transform-schemas>=0.6.0
+  - asdf-astropy>=0.6.0
+  - numpy>=1.25
+  - astropy>=6.1
+  - psutil ; extra == 'test'
+  - pyyaml ; extra == 'test'
+  - pytest>=4.6.0 ; extra == 'test'
+  - pytest-doctestplus ; extra == 'test'
+  - crds>=11.17.1 ; extra == 'test'
+  - requests ; extra == 'test'
+  - scipy>=1.9.2 ; extra == 'test'
   - sphinx ; extra == 'docs'
   - sphinx-automodapi ; extra == 'docs'
   - numpydoc ; extra == 'docs'
@@ -13602,9 +13738,10 @@ packages:
   - pytest>=7.0.0 ; extra == 'test'
   - pytest-doctestplus>=0.10.0 ; extra == 'test'
   requires_python: '>=3.10'
-- pypi: git+https://github.com/spacetelescope/stpipe.git?rev=main#149b1b2ff9f5c82372b7681e418d7287701b210f
+- pypi: https://files.pythonhosted.org/packages/c2/78/12eed5bc290e5213b51ffc84f7b41ea4afb35888535f9ca337d24c9949a7/stpipe-0.10.0-py3-none-any.whl
   name: stpipe
-  version: 0.8.2.dev21+g149b1b2
+  version: 0.10.0
+  sha256: bae4df0d6236cc51136cc48d29c272fd00bff326949077e971b26385d19ccb53
   requires_dist:
   - asdf>=2.13
   - crds>=7.4.1.3

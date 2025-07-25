@@ -10,8 +10,8 @@ import numpy as np
 from multiprocessing import Pool
 
 # Packages for Plotting
-from sregion import SRegion
-from shapely import union_all
+import shapely
+import spherely as sph
 from matplotlib import pyplot, patches
 
 # Astropy packages
@@ -81,10 +81,7 @@ def main():
 
     # Initialize images
     files = sorted(
-        [
-            os.path.join(rate, f).replace('uncal', 'rate')
-            for f in prods['filename']
-        ]
+        [os.path.join(rate, f).replace('uncal', 'rate') for f in prods['filename']]
     )
 
     # Multiprocess
@@ -106,8 +103,8 @@ def main():
     # os.chdir(raw)
     # for group in all_groups:
     #     if 'direct' in group:  #
-    #         visit_grism_sky(grism=group['direct'], column_average=False, ignoreNA=True)
-    os.chdir(fields)
+    #         visit_grism_sky(grism=group['grism'], column_average=False, ignoreNA=True)
+    # os.chdir(fields)
 
     # Make visit associations
     assoc = info['EXPSTART', 'EXPTIME', 'INSTRUME']
@@ -143,6 +140,7 @@ def main():
         'oneoverf_kwargs': None,
         'snowball_kwargs': None,
         'imaging_bkg_params': None,
+        'column_average': False,
     }
 
     # Other arguements
@@ -195,31 +193,21 @@ def main():
 # Plot Field in context
 def plot_field(fname, fields, plots):
     # Plot the field in context
-    hdul_obs = fits.open(os.path.join(fields, 'fields.fits'))
+    hdul = fits.open(os.path.join(fields, 'fields.fits'))
 
     # Create figure
     fig, ax = pyplot.subplots(figsize=(12, 12))
 
     # Plot current region in red
     ra, dec = plot_shapely(
-        union_all(
-            [SRegion(sr).shapely[0] for sr in Table(hdul_obs[fname].data)['s_region']]
-        ),
-        ax,
-        ec='#009F81',
-        fc='#00FCCF',
+        create_shapely(Table(hdul[fname].data)), ax, ec='#009F81', fc='#00FCCF'
     )
 
     # Plot all regions (except region we are on) in gray
-    for hdu in hdul_obs[1:]:
+    for hdu in hdul[1:]:
         if hdu.name == fname:
             continue
-        plot_shapely(
-            union_all([SRegion(sr).shapely[0] for sr in Table(hdu.data)['s_region']]),
-            ax,
-            ec='k',
-            fc='gray',
-        )
+        plot_shapely(create_shapely(Table(hdu.data)), ax, ec='k', fc='gray')
 
     # Axis labels and limits
     ra_cen, dec_cen = (np.max(ra) + np.min(ra)) / 2, (np.max(dec) + np.min(dec)) / 2
@@ -339,6 +327,33 @@ def plot_visits(visits, fname, plots):
     pyplot.close(fig)
 
 
+def create_shapely(field):
+    """Create a region from a row of the table."""
+
+    regions = []
+    for row in field:
+        # Get the target ra, dec and v3 pa
+        ra, dec = row['targ_ra'], row['targ_dec']
+        pa = -row['gs_v3_pa'] * np.pi / 180  # Convert to radians
+
+        # Create the unite square and rotate it
+        side_length = 1.1 / 60  # Degrees
+        x = side_length * np.array([-1, 1, 1, -1])
+        y = side_length * np.array([-1, -1, 1, 1])
+        xr = x * np.cos(pa) - y * np.sin(pa)
+        yr = x * np.sin(pa) + y * np.cos(pa)
+        xr /= np.cos(np.deg2rad(dec))
+        x, y = xr + ra, yr + dec
+
+        regions.append(sph.create_polygon(np.array([x, y]).T))
+
+    region = regions[0]
+    for i, r in enumerate(regions[1:]):
+        region = sph.union(region, r)
+
+    return shapely.from_wkt(sph.to_wkt(region))
+
+
 # Plot Shapely Object
 def plot_shapely(r, ax, ec='r', fc='r'):
     # If MultiPolygon, plot each
@@ -353,6 +368,9 @@ def plot_shapely(r, ax, ec='r', fc='r'):
 
         # Return list of all coordinates
         return np.concatenate(ras), np.concatenate(decs)
+
+    if r.geom_type == 'LineString':
+        return [], []
 
     # Get ra,dec of exterior
     coords = np.array(r.exterior.xy)

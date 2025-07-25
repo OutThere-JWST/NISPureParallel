@@ -34,13 +34,13 @@ def main():
 
     # Fetch updated NIRISS trace files
     # https://zenodo.org/records/7628094
-    for filetype in ['config', 'sens']:
-        filename = f'niriss_{filetype}_221215.tar.gz'
-        url = f'https://zenodo.org/record/7628094/files/{filename}'
-        if os.path.exists(filename):
-            os.remove(filename)
-        os.system(f'wget {url} -O {filename}')
-        os.system(f'tar xzvf {filename}')
+    # for filetype in ['config', 'sens']:
+    #     filename = f'niriss_{filetype}_221215.tar.gz'
+    #     url = f'https://zenodo.org/record/7628094/files/{filename}'
+    #     if os.path.exists(filename):
+    #         os.remove(filename)
+    #     os.system(f'wget {url} -O {filename}')
+    #     os.system(f'tar xzvf {filename}')
 
     # Multiprocess
     dispersers = ['CLEAR'] # + ['GR150R', 'GR150C'] # Ignore Grisms if you want

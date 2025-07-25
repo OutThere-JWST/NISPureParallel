@@ -13,7 +13,8 @@ from astropy.io import fits
 # JWST Pipeline
 import jwst
 from columnjump import ColumnJumpStep
-from jwst.pipeline import Detector1Pipeline
+from jwst.pipeline import Detector1Pipeline, Image2Pipeline
+from jwst.clean_flicker_noise import clean_flicker_noise as cfn
 
 
 # Run pipeline in parallel
@@ -46,17 +47,23 @@ def cal(file, out):
     cjs.nsigma1jump, cjs.nsigma2jumps = 5.0, 5.0
 
     # Set 1/f parameters
-    imaging = fits.getval(file, 'FILTER', 'PRIMARY') != 'CLEAR' # Determine if wfss or imaging
-    bm = 'median' if imaging else 'model'  # Background method
-    fbc = False #True if imaging else False  # Fit by channel
-    aff = True if imaging else False
+    imaging = (
+        fits.getval(file, 'FILTER', 'PRIMARY') == 'CLEAR'
+    )  # Determine if wfss or imaging
+    bm = 'median' if imaging else 'wfssbkg'  # Background method
+    fbc = True
+    aff = True if imaging else False  # Apply flat field
 
     # Define Detector 1 steps
     steps = dict(
         persistence=dict(skip=True),  # Not implemented
         jump=dict(pre_hooks=[cjs], rejection_threshold=5.0),
         clean_flicker_noise=dict(
-            skip=False, fit_by_channel=fbc, background_method=bm, apply_flat_field=aff
+            skip=False,
+            fit_by_channel=fbc,
+            background_method=bm,
+            apply_flat_field=aff,
+            n_sigma=3.0,
         ),
     )
 
@@ -67,6 +74,31 @@ def cal(file, out):
     stage1.save(out)
 
     return
+
+    # Subtract background
+    background_filename = cjs.get_reference_file(stage1, 'wfssbkg')
+    background_image = cfn._read_image_file(stage1, background_filename, 'image')
+    mask, _ = cfn._make_scene_mask(
+        None, stage1, False, background_image, 3.0, False, True, False
+    )
+    background = cfn.background_level(
+        stage1.data,
+        mask,
+        background_method='wfssbkg',
+        background_image=background_image,
+    )
+    stage1.data -= background
+
+    # Flat Field
+    steps = dict(
+        bkg_subtract=dict(skip=True),
+        assign_wcs=dict(skip=True),
+        flat_field=dict(skip=False),
+        photom=dict(skip=True),
+        resample=dict(skip=True),
+    )
+    stage2 = Image2Pipeline.call(stage1, steps=steps)[0]
+    stage2.save(file.replace('_uncal.fits', '_cal.fits'))
 
 
 if __name__ == '__main__':
