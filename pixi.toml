@@ -11,7 +11,7 @@ GRIZLI = '$(pwd)/GRIZLI'
 CRDS_PATH = '$(pwd)/CRDS_CACHE'
 iref = '$GRIZLI/iref'
 jref = '$GRIZLI/jref'
-CRDS_CONTEXT = 'jwst_1376.pmap'
+CRDS_CONTEXT = 'jwst_1413.pmap'
 CRDS_SERVER_URL = 'https://jwst-crds.stsci.edu'
 
 [feature.grizli.activation.env]
@@ -56,8 +56,7 @@ numpy = '<2'
 
 [feature.jwst.pypi-dependencies]
 columnjump = { git = 'https://github.com/TheSkyentist/jwst-tools.git', subdirectory = 'columnjump' , rev = 'cdc163b' }
-jwst = { git = 'https://github.com/TheSkyentist/jwst.git', rev = '9f56346a8' }
-# jwst = { path = '/opt/jwst/' , editable = true }
+jwst = ">=1.19.1, <2"
 
 [feature.grizli.dependencies]
 numba = '>=0.60.0,<0.61'

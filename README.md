@@ -29,7 +29,7 @@ This repository includes the following:
 
 
 ### Configure Grizli and CRDS
-Those who have installed grizli and/or the JWST pipeline before may be familiar with the process of installing grizli, configuring the relevant environment variables, and downloading the necessary configuration files. Pixi allows us to make this process easy. Running `pixi run grizli-setup` will automatically install all necessary packages, configure the relevant environment variables, and download the grizli configurations, including the latest NIRISS dispersion solutions and WFSS Backgrounds.
+Those who have installed grizli and/or the JWST pipeline before may be familiar with the process of installing grizli, configuring the relevant environment variables, and downloading the necessary configuration files. Pixi allows us to make this process easy. Running `pixi run -e grizli grizli-setup` will automatically install all necessary packages, configure the relevant environment variables, and download the grizli configurations, including the latest NIRISS dispersion solutions and WFSS Backgrounds.
 
 For advanced users who have existing CRDS cache and grizli conf locations, you can configure the defaults in `pixi.toml`. By default, these will be downloaded to extra directories within this directory. 
 
@@ -83,7 +83,7 @@ Note: If you get tired of prepending `pixi run` each time, you can simply do `pi
 With just four commands we can process the entire pipeline:
 ```
 git clone git@github.com:OutThere-JWST/NISPureParallel.git
-pixi run grizli-setup
+pixi run -e grizli grizli-setup
 pixi run compute-fields
 pixi run -e snakemake snakemake
 ```

@@ -52,7 +52,7 @@ def get_products(field):
         allprods = missions.get_product_list(field)
 
         # Filter for 1b products
-        prods = missions.filter_products(allprods, category='1b')
+        prods = missions.filter_products(allprods, category='1b', file_suffix='_uncal')
 
     # Remove overlapping columns
     field.remove_columns(['access', 'category'])

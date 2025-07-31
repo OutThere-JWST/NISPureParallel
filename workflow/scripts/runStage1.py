@@ -7,14 +7,20 @@ import argparse
 # Multiprocessing
 from threadpoolctl import threadpool_limits
 
-# Astropy
+# Numerical and Astronomy packages
+import numpy as np
 from astropy.io import fits
+from astropy.stats import SigmaClip
+from photutils.background import Background2D, MedianBackground
+from astropy.modeling import fitting, models, Parameter, Fittable1DModel
+
+# Photutils
 
 # JWST Pipeline
 import jwst
 from columnjump import ColumnJumpStep
-from jwst.pipeline import Detector1Pipeline, Image2Pipeline
-from jwst.clean_flicker_noise import clean_flicker_noise as cfn
+from jwst.pipeline import Detector1Pipeline
+from jwst.ramp_fitting.ramp_fit_step import RampFitStep
 
 
 # Run pipeline in parallel
@@ -47,58 +53,134 @@ def cal(file, out):
     cjs.nsigma1jump, cjs.nsigma2jumps = 5.0, 5.0
 
     # Set 1/f parameters
-    imaging = (
-        fits.getval(file, 'FILTER', 'PRIMARY') == 'CLEAR'
-    )  # Determine if wfss or imaging
-    bm = 'median' if imaging else 'wfssbkg'  # Background method
-    fbc = True
-    aff = True if imaging else False  # Apply flat field
+    imaging = fits.getval(file, 'FILTER', 'PRIMARY') == 'CLEAR'
+    fit_by_channel = False
+    fit_bkg = False
 
     # Define Detector 1 steps
     steps = dict(
         persistence=dict(skip=True),  # Not implemented
         jump=dict(pre_hooks=[cjs], rejection_threshold=5.0),
-        clean_flicker_noise=dict(
-            skip=False,
-            fit_by_channel=fbc,
-            background_method=bm,
-            apply_flat_field=aff,
-            n_sigma=3.0,
-        ),
+        ramp_fit=dict(skip=True),
+        gain_scale=dict(skip=True),
     )
 
-    # Run the pipeline
-    stage1 = Detector1Pipeline.call(file, steps=steps)
+    # Run the pipeline up to jump step
+    jump = Detector1Pipeline.call(file, steps=steps)
+
+    # Run initial ramp fitting
+    rfs = RampFitStep()
+    rate_init, _ = rfs.run(jump)
+
+    # Get the number of groups and ints and array dimension
+    Ngroups = jump.meta.exposure.ngroups
+    Nints = jump.meta.exposure.nints
+    N = jump.data.shape[-1]
+
+    # Get background
+    bkg_im = fits.getdata(
+        cjs.get_reference_file(jump, 'flat' if imaging else 'wfssbkg'), 'SCI'
+    )
+
+    # Create the generic sigma clipping fitter and model
+    model = models.Linear1D(slope=1.0, intercept=0.0, fixed={'intercept': True})
+    sigma_clip = SigmaClip(sigma=3, maxiters=5)
+    fitter = fitting.FittingWithOutlierRemoval(fitting.LinearLSQFitter(), sigma_clip)
+
+    # Create background mask
+    mask = np.full(rate_init.dq.shape, True)
+    mask[np.isnan(rate_init.data) | (rate_init.data == 0) | np.isnan(bkg_im)] = False
+    fit, outliers = fitter(model, bkg_im[mask], rate_init.data[mask])
+    mask[mask] = np.invert(outliers)
+
+    # NaN out mask
+    nan_mask = mask.astype(float)
+    nan_mask[~mask] = np.nan
+
+    # Calculate difference image
+    raw_diffs = jump.data[:, 1:] - jump.data[:, :-1]
+    diffs = raw_diffs * nan_mask
+
+    # Fitting inputs
+    x = (bkg_im[mask],)
+    X = (np.tile(bkg_im[mask], Nints),)
+
+    if fit_bkg:
+        # Get flat image
+        flat_im = fits.getdata(cjs.get_reference_file(jump, 'flat'), 'SCI')
+
+        # Compute smooth background
+        remainder = rate_init.data
+        remainder[mask] -= fit(bkg_im[mask])
+        smooth_bkg = Background2D(
+            remainder / flat_im,
+            box_size=(32, 32),
+            filter_size=(5, 5),
+            mask=~mask,
+            sigma_clip=sigma_clip,
+            bkg_estimator=MedianBackground(),
+        ).background
+        smooth_bkg *= flat_im
+
+        # Use the two component model
+        model = Linear2ImageModel()
+
+        # Add to fitting inputs
+        x += (smooth_bkg[mask],)
+        X += (np.tile(smooth_bkg[mask], Nints),)
+
+    # Fit and subtract the background
+    for j in range(Ngroups - 1):
+        y = diffs[:, j, :, :][:, mask].ravel()
+        fit, _ = fitter(model, *X, y)
+        diffs[:, j, :, :][:, mask] -= fit(*X).reshape((Nints, -1))
+
+    # Unravel the difference data
+    Nchannel = 4 if fit_by_channel else 1
+    width = diffs.shape[3] // Nchannel
+    diffs_unravel = diffs.reshape(Nints, Ngroups - 1, Nchannel, width, N)
+
+    # Compute 1/f noise correction
+    oof = np.nan_to_num(np.nanmedian(diffs_unravel, axis=-2), copy=False, nan=0.0)
+    correction_unravel = np.zeros_like(diffs_unravel) + oof[..., None, :]
+    correction = correction_unravel.reshape(Nints, Ngroups - 1, Nchannel * width, N)
+
+    # Apply correction to the data
+    jump.data[:, 1:] = jump.data[:, 0:1] + np.cumsum(raw_diffs - correction, axis=1)
+
+    # Run ramp fitting
+    stage1, _ = rfs.run(jump)
 
     # Save to file
     stage1.save(out)
 
-    return
 
-    # Subtract background
-    background_filename = cjs.get_reference_file(stage1, 'wfssbkg')
-    background_image = cfn._read_image_file(stage1, background_filename, 'image')
-    mask, _ = cfn._make_scene_mask(
-        None, stage1, False, background_image, 3.0, False, True, False
-    )
-    background = cfn.background_level(
-        stage1.data,
-        mask,
-        background_method='wfssbkg',
-        background_image=background_image,
-    )
-    stage1.data -= background
+class Linear2ImageModel(Fittable1DModel):
+    """
+    Linear model: y = a * x1 + b * x2
+    """
 
-    # Flat Field
-    steps = dict(
-        bkg_subtract=dict(skip=True),
-        assign_wcs=dict(skip=True),
-        flat_field=dict(skip=False),
-        photom=dict(skip=True),
-        resample=dict(skip=True),
-    )
-    stage2 = Image2Pipeline.call(stage1, steps=steps)[0]
-    stage2.save(file.replace('_uncal.fits', '_cal.fits'))
+    n_inputs = 2
+    n_outputs = 1
+
+    a = Parameter(default=1.0)
+    b = Parameter(default=1.0)
+
+    linear = True  # Enables use with LinearLSQFitter
+
+    @staticmethod
+    def evaluate(x1, x2, a, b):
+        """
+        Evaluate the model: y = a * x1 + b * x2
+        """
+        return a * x1 + b * x2
+
+    @staticmethod
+    def fit_deriv(x1, x2, a, b):
+        """
+        Derivatives with respect to parameters a and b.
+        """
+        return [x1, x2]
 
 
 if __name__ == '__main__':

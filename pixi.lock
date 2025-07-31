@@ -2179,7 +2179,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/ca/9f/48828224d6b5a729e6a48fb80538ff754e26932e6971303e32145938ebb2/drizzle-2.0.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/4d/36/2a115987e2d8c300a974597416d9de88f2444426de9571f4b59b2cca3acc/filelock-3.18.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/da/71/ae30dadffc90b9006d77af76b393cb9dfbfc9629f339fc1574a1c52e6806/future-1.0.0-py3-none-any.whl
-      - pypi: git+https://github.com/spacetelescope/gwcs.git?rev=master#86a587ee59aa517c11c5fef77850b5b9ce1fad0b
+      - pypi: https://files.pythonhosted.org/packages/f8/34/b0f8527af602e0adb789ada1abea1f3dd7a5a3dc50fa99d3035c73995bdd/gwcs-0.25.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/cb/bd/b394387b598ed84d8d0fa90611a90bee0adc2021820ad5729f7ced74a8e2/imageio-2.37.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/7f/66/b15ce62552d84bbfcec9a4873ab79d993a1dd4edb922cbfccae192bd5b5f/jaraco.classes-3.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/ff/db/0c52c4cf5e4bd9f5d7135ec7669a3a767af21b3a308e1ed3674881e52b62/jaraco.context-6.0.1-py3-none-any.whl
@@ -2187,8 +2187,8 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/b2/a3/e137168c9c44d18eff0376253da9f1e9234d0239e0ee230d2fee6cea8e55/jeepney-0.9.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/69/4a/4f9dbeb84e8850557c02365a0eee0649abe5eb1d84af92a25731c6c0f922/jsonschema-4.23.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/d1/0f/8910b19ac0670a0f80ce1008e5e751c4a57e14d2c4c13a482aa6079fa9d6/jsonschema_specifications-2024.10.1-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/8f/1f/b2fb7c39f25a68e4093718646a5bca1374541d31a1bf148de1bf9f8f39d2/jwst-1.19.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl
       - pypi: git+https://github.com/TheSkyentist/jwst-tools.git?subdirectory=columnjump&rev=cdc163b#cdc163bd11270aeb441680431c836f543e4be00b
-      - pypi: git+https://github.com/TheSkyentist/jwst.git?rev=9f56346a8#9f56346a8b6550fb81bb4ab64460da90d22ea6f3
       - pypi: https://files.pythonhosted.org/packages/d3/32/da7f44bcb1105d3e88a0b74ebdca50c59121d2ddf71c9e34ba47df7f3a56/keyring-25.6.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/83/60/d497a310bde3f01cb805196ac61b7ad6dc5dcf8dce66634dc34364b20b4f/lazy_loader-0.4-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/23/62/0fe302c6d1be1c777cab0616e6302478251dfbf9055ad426f5d0def75c89/more_itertools-10.6.0-py3-none-any.whl
@@ -2204,8 +2204,8 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/54/24/b4293291fa1dd830f353d2cb163295742fa87f179fcc8a20a306a81978b7/SecretStorage-3.3.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/6a/23/8146aad7d88f4fcb3a6218f41a60f6c2d4e3a72de72da1825dc7c8f7877c/semantic_version-2.10.0-py2.py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/df/a1/26be91772893d7cfdac1f2190667435e888bd6204bc88553394a35943608/spherical_geometry-1.3.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
-      - pypi: git+https://github.com/spacetelescope/stcal.git?rev=main#8590561259c5019553c65dee694edf4181948891
-      - pypi: git+https://github.com/spacetelescope/stdatamodels.git?rev=main#b9a49c2355507cccd07b7f18f60c0518d3070283
+      - pypi: https://files.pythonhosted.org/packages/b5/20/37b8819e7914dc90bc09d72f9744ec7dfc000132d53740919f5909222e08/stcal-1.14.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+      - pypi: https://files.pythonhosted.org/packages/57/f1/5b5a1ce137fcc8ce286735885ad6d3c2b3b8513a1d8cfffd5cf85fe2de32/stdatamodels-4.0.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c2/78/12eed5bc290e5213b51ffc84f7b41ea4afb35888535f9ca337d24c9949a7/stpipe-0.10.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/33/bf/94b3224b867dc89c7e2ca9ebd4c141f86044ed67b4d0a15759704dc906cd/stsci.imagestats-1.8.3-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/63/64/7f8541840186fb1f20e34028b23087697c6540c8888fcf8c31d9086cfcab/stsci_stimage-0.3.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
@@ -2476,15 +2476,15 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/6f/14/076af9a5672a627932a59dafdd61365aed7284bbae0fc928f2ba13386101/drizzle-2.0.1-cp312-cp312-macosx_11_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/4d/36/2a115987e2d8c300a974597416d9de88f2444426de9571f4b59b2cca3acc/filelock-3.18.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/da/71/ae30dadffc90b9006d77af76b393cb9dfbfc9629f339fc1574a1c52e6806/future-1.0.0-py3-none-any.whl
-      - pypi: git+https://github.com/spacetelescope/gwcs.git?rev=master#86a587ee59aa517c11c5fef77850b5b9ce1fad0b
+      - pypi: https://files.pythonhosted.org/packages/f8/34/b0f8527af602e0adb789ada1abea1f3dd7a5a3dc50fa99d3035c73995bdd/gwcs-0.25.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/cb/bd/b394387b598ed84d8d0fa90611a90bee0adc2021820ad5729f7ced74a8e2/imageio-2.37.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/7f/66/b15ce62552d84bbfcec9a4873ab79d993a1dd4edb922cbfccae192bd5b5f/jaraco.classes-3.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/ff/db/0c52c4cf5e4bd9f5d7135ec7669a3a767af21b3a308e1ed3674881e52b62/jaraco.context-6.0.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/9f/4f/24b319316142c44283d7540e76c7b5a6dbd5db623abd86bb7b3491c21018/jaraco.functools-4.1.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/69/4a/4f9dbeb84e8850557c02365a0eee0649abe5eb1d84af92a25731c6c0f922/jsonschema-4.23.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/d1/0f/8910b19ac0670a0f80ce1008e5e751c4a57e14d2c4c13a482aa6079fa9d6/jsonschema_specifications-2024.10.1-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/85/f0/100dde290cd1ecb97895d4e1812598cb2efb7829f802b56f62fae8282655/jwst-1.19.1-cp312-cp312-macosx_11_0_arm64.whl
       - pypi: git+https://github.com/TheSkyentist/jwst-tools.git?subdirectory=columnjump&rev=cdc163b#cdc163bd11270aeb441680431c836f543e4be00b
-      - pypi: git+https://github.com/TheSkyentist/jwst.git?rev=9f56346a8#9f56346a8b6550fb81bb4ab64460da90d22ea6f3
       - pypi: https://files.pythonhosted.org/packages/d3/32/da7f44bcb1105d3e88a0b74ebdca50c59121d2ddf71c9e34ba47df7f3a56/keyring-25.6.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/83/60/d497a310bde3f01cb805196ac61b7ad6dc5dcf8dce66634dc34364b20b4f/lazy_loader-0.4-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/23/62/0fe302c6d1be1c777cab0616e6302478251dfbf9055ad426f5d0def75c89/more_itertools-10.6.0-py3-none-any.whl
@@ -2499,8 +2499,8 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/ce/e6/93bebe1abcdce9513ffec01d8af02528b4c41fb3c1e46336d70b9ed4ef0d/scikit_image-0.25.2-cp312-cp312-macosx_12_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/6a/23/8146aad7d88f4fcb3a6218f41a60f6c2d4e3a72de72da1825dc7c8f7877c/semantic_version-2.10.0-py2.py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/e2/d5/6e7ca1b12b621095c098f76830717b7b77ec41f4913360d782a46f59d58e/spherical_geometry-1.3.3-cp312-cp312-macosx_11_0_arm64.whl
-      - pypi: git+https://github.com/spacetelescope/stcal.git?rev=main#8590561259c5019553c65dee694edf4181948891
-      - pypi: git+https://github.com/spacetelescope/stdatamodels.git?rev=main#b9a49c2355507cccd07b7f18f60c0518d3070283
+      - pypi: https://files.pythonhosted.org/packages/9c/e4/ecf76330e95b68fe7d3ce675ee42350b6b99ca227b312ecb80adabddcf67/stcal-1.14.1-cp312-cp312-macosx_11_0_arm64.whl
+      - pypi: https://files.pythonhosted.org/packages/57/f1/5b5a1ce137fcc8ce286735885ad6d3c2b3b8513a1d8cfffd5cf85fe2de32/stdatamodels-4.0.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c2/78/12eed5bc290e5213b51ffc84f7b41ea4afb35888535f9ca337d24c9949a7/stpipe-0.10.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/ba/03/43ff9034fb96d362eae83ab7abb9a0bf05279e15ef832561c1bf2d2ac762/stsci.imagestats-1.8.3-cp312-cp312-macosx_11_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/7e/b6/9d91e847bc7adaaf00081fd82e7455c45c175af64a38ec300321632c76bd/stsci_stimage-0.3.0-cp312-cp312-macosx_11_0_arm64.whl
@@ -6622,9 +6622,10 @@ packages:
   - pytest>=8.0.0 ; extra == 'test'
   - pytest-astropy>=0.11.0 ; extra == 'test'
   requires_python: '>=3.10'
-- pypi: git+https://github.com/spacetelescope/gwcs.git?rev=master#86a587ee59aa517c11c5fef77850b5b9ce1fad0b
+- pypi: https://files.pythonhosted.org/packages/f8/34/b0f8527af602e0adb789ada1abea1f3dd7a5a3dc50fa99d3035c73995bdd/gwcs-0.25.1-py3-none-any.whl
   name: gwcs
-  version: 0.25.2.dev8
+  version: 0.25.1
+  sha256: d56194587efac5bdbc36f5b1916b9ff697b3584e3dbf959823e27f9b71f1b1b7
   requires_dist:
   - asdf>=3.3.0
   - astropy>=6.0
@@ -7394,50 +7395,6 @@ packages:
   - pkg:pypi/jupyterlab-widgets?source=compressed-mapping
   size: 187102
   timestamp: 1744291153222
-- pypi: git+https://github.com/TheSkyentist/jwst.git?rev=9f56346a8#9f56346a8b6550fb81bb4ab64460da90d22ea6f3
-  name: jwst
-  version: 1.4.3.dev838+g9f56346a8
-  requires_dist:
-  - asdf>=4.0,<5
-  - astropy>=6.1
-  - bayesicfitting>=3.2.2
-  - crds>=12.0.3
-  - drizzle>=2.0.1,<2.1.0
-  - gwcs @ git+https://github.com/spacetelescope/gwcs.git@master
-  - numpy>=1.25
-  - opencv-python-headless>=4.6.0.66
-  - photutils>=1.5.0
-  - pyparsing>=2.2.1
-  - requests>=2.31
-  - scikit-image>=0.20.0
-  - scipy>=1.14.1
-  - spherical-geometry>=1.3
-  - stdatamodels @ git+https://github.com/spacetelescope/stdatamodels.git@main
-  - stcal @ git+https://github.com/spacetelescope/stcal.git@main
-  - stpipe>=0.10.0,<0.11.0
-  - stsci-imagestats>=1.6.3
-  - synphot>=1.3
-  - tweakwcs>=0.8.8
-  - wiimatch>=0.3.2
-  - packaging>20.0
-  - importlib-metadata>=4.11.4
-  - jsonschema>=4.8
-  - matplotlib ; extra == 'docs'
-  - sphinx ; extra == 'docs'
-  - sphinx-astropy ; extra == 'docs'
-  - sphinx-automodapi ; extra == 'docs'
-  - sphinx-rtd-theme ; extra == 'docs'
-  - jplephem>=2.9 ; extra == 'sdp'
-  - pysiaf>=0.13.0 ; extra == 'sdp'
-  - ci-watson @ git+https://github.com/spacetelescope/ci_watson.git@main ; extra == 'test'
-  - pysiaf>=0.13.0 ; extra == 'test'
-  - pytest>=6.0.0 ; extra == 'test'
-  - pytest-cov>=2.9.0 ; extra == 'test'
-  - pytest-doctestplus>=0.10.0 ; extra == 'test'
-  - requests-mock>=1.0 ; extra == 'test'
-  - pre-commit>=4.1.0 ; extra == 'contrib'
-  - jwst[docs,test] ; extra == 'contrib'
-  requires_python: '>=3.11'
 - pypi: https://files.pythonhosted.org/packages/3c/da/b663f30fa4a24d2cc08241d8e676f23d2a9e5fcecc9b61d65fe64d1dcd87/jwst-1.18.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
   name: jwst
   version: 1.18.0
@@ -7532,6 +7489,96 @@ packages:
   - pre-commit>=4.1.0 ; extra == 'contrib'
   - jwst[docs,test] ; extra == 'contrib'
   requires_python: '>=3.11,<3.14'
+- pypi: https://files.pythonhosted.org/packages/85/f0/100dde290cd1ecb97895d4e1812598cb2efb7829f802b56f62fae8282655/jwst-1.19.1-cp312-cp312-macosx_11_0_arm64.whl
+  name: jwst
+  version: 1.19.1
+  sha256: c437139920959864fab11c7d5653483fce9b7927ac04274a465a41cc55b99f7b
+  requires_dist:
+  - asdf>=4.0,<5
+  - astropy>=6.1
+  - bayesicfitting>=3.2.2
+  - crds>=12.0.3
+  - drizzle>=2.0.1,<2.1.0
+  - gwcs>=0.25.0,<0.26.0
+  - numpy>=1.25
+  - opencv-python-headless>=4.6.0.66
+  - photutils>=1.5.0
+  - pyparsing>=2.2.1
+  - requests>=2.31
+  - scikit-image>=0.20.0
+  - scipy>=1.14.1
+  - spherical-geometry>=1.3
+  - stdatamodels>=4.0.1,<4.1.0
+  - stcal>=1.14.1,<1.15.0
+  - stpipe>=0.10.0,<0.11.0
+  - stsci-imagestats>=1.6.3
+  - synphot>=1.3
+  - tweakwcs>=0.8.8
+  - wiimatch>=0.3.2
+  - packaging>20.0
+  - importlib-metadata>=4.11.4
+  - jsonschema>=4.8
+  - matplotlib ; extra == 'docs'
+  - sphinx ; extra == 'docs'
+  - sphinx-astropy ; extra == 'docs'
+  - sphinx-automodapi ; extra == 'docs'
+  - sphinx-rtd-theme ; extra == 'docs'
+  - jplephem>=2.9 ; extra == 'sdp'
+  - pysiaf>=0.13.0 ; extra == 'sdp'
+  - ci-watson>=0.10.0 ; extra == 'test'
+  - pysiaf>=0.13.0 ; extra == 'test'
+  - pytest>=6.0.0 ; extra == 'test'
+  - pytest-cov>=2.9.0 ; extra == 'test'
+  - pytest-doctestplus>=0.10.0 ; extra == 'test'
+  - requests-mock>=1.0 ; extra == 'test'
+  - pre-commit>=4.1.0 ; extra == 'contrib'
+  - jwst[docs,test] ; extra == 'contrib'
+  requires_python: '>=3.11'
+- pypi: https://files.pythonhosted.org/packages/8f/1f/b2fb7c39f25a68e4093718646a5bca1374541d31a1bf148de1bf9f8f39d2/jwst-1.19.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl
+  name: jwst
+  version: 1.19.1
+  sha256: 9c65b23fb23fa4d86507f07b77931135f57d03c2212b76fe0731ae4bf0bd7346
+  requires_dist:
+  - asdf>=4.0,<5
+  - astropy>=6.1
+  - bayesicfitting>=3.2.2
+  - crds>=12.0.3
+  - drizzle>=2.0.1,<2.1.0
+  - gwcs>=0.25.0,<0.26.0
+  - numpy>=1.25
+  - opencv-python-headless>=4.6.0.66
+  - photutils>=1.5.0
+  - pyparsing>=2.2.1
+  - requests>=2.31
+  - scikit-image>=0.20.0
+  - scipy>=1.14.1
+  - spherical-geometry>=1.3
+  - stdatamodels>=4.0.1,<4.1.0
+  - stcal>=1.14.1,<1.15.0
+  - stpipe>=0.10.0,<0.11.0
+  - stsci-imagestats>=1.6.3
+  - synphot>=1.3
+  - tweakwcs>=0.8.8
+  - wiimatch>=0.3.2
+  - packaging>20.0
+  - importlib-metadata>=4.11.4
+  - jsonschema>=4.8
+  - matplotlib ; extra == 'docs'
+  - sphinx ; extra == 'docs'
+  - sphinx-astropy ; extra == 'docs'
+  - sphinx-automodapi ; extra == 'docs'
+  - sphinx-rtd-theme ; extra == 'docs'
+  - jplephem>=2.9 ; extra == 'sdp'
+  - pysiaf>=0.13.0 ; extra == 'sdp'
+  - ci-watson>=0.10.0 ; extra == 'test'
+  - pysiaf>=0.13.0 ; extra == 'test'
+  - pytest>=6.0.0 ; extra == 'test'
+  - pytest-cov>=2.9.0 ; extra == 'test'
+  - pytest-doctestplus>=0.10.0 ; extra == 'test'
+  - requests-mock>=1.0 ; extra == 'test'
+  - pre-commit>=4.1.0 ; extra == 'contrib'
+  - jwst[docs,test] ; extra == 'contrib'
+  requires_python: '>=3.11'
 - pypi: https://files.pythonhosted.org/packages/d3/32/da7f44bcb1105d3e88a0b74ebdca50c59121d2ddf71c9e34ba47df7f3a56/keyring-25.6.0-py3-none-any.whl
   name: keyring
   version: 25.6.0
@@ -13649,9 +13696,38 @@ packages:
   - pytest-cov ; extra == 'test'
   - pytest-doctestplus ; extra == 'test'
   requires_python: '>=3.11'
-- pypi: git+https://github.com/spacetelescope/stcal.git?rev=main#8590561259c5019553c65dee694edf4181948891
+- pypi: https://files.pythonhosted.org/packages/9c/e4/ecf76330e95b68fe7d3ce675ee42350b6b99ca227b312ecb80adabddcf67/stcal-1.14.1-cp312-cp312-macosx_11_0_arm64.whl
   name: stcal
-  version: 1.14.1.dev23+g8590561
+  version: 1.14.1
+  sha256: 3221ca535420c5c74eac48aefe7f8f397676f2bb81577971223c27d10d8e4c02
+  requires_dist:
+  - astropy>=6.0.0
+  - drizzle>=2.0.1
+  - scipy>=1.14.1
+  - scikit-image>=0.20.0
+  - numpy>=1.25.0
+  - opencv-python-headless>=4.6.0.66
+  - asdf>=3.3.0
+  - gwcs>=0.22.0
+  - tweakwcs>=0.8.8
+  - requests>=2.22
+  - spherical-geometry>=1.2.22
+  - numpydoc ; extra == 'docs'
+  - packaging>=17 ; extra == 'docs'
+  - sphinx ; extra == 'docs'
+  - sphinx-asdf ; extra == 'docs'
+  - sphinx-astropy ; extra == 'docs'
+  - sphinx-rtd-theme ; extra == 'docs'
+  - tomli ; python_full_version < '3.12' and extra == 'docs'
+  - psutil ; extra == 'test'
+  - pytest>=6 ; extra == 'test'
+  - pytest-cov ; extra == 'test'
+  - pytest-doctestplus ; extra == 'test'
+  requires_python: '>=3.11'
+- pypi: https://files.pythonhosted.org/packages/b5/20/37b8819e7914dc90bc09d72f9744ec7dfc000132d53740919f5909222e08/stcal-1.14.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+  name: stcal
+  version: 1.14.1
+  sha256: 6aed2dd26fe54ced0ea1b981bf4e3e41f9193068003e3f50d8301970e799a62b
   requires_dist:
   - astropy>=6.0.0
   - drizzle>=2.0.1
@@ -13698,9 +13774,10 @@ packages:
   - sphinx-rtd-theme ; extra == 'docs'
   - sphinx-asdf>=0.1.1 ; extra == 'docs'
   requires_python: '>=3.11'
-- pypi: git+https://github.com/spacetelescope/stdatamodels.git?rev=main#b9a49c2355507cccd07b7f18f60c0518d3070283
+- pypi: https://files.pythonhosted.org/packages/57/f1/5b5a1ce137fcc8ce286735885ad6d3c2b3b8513a1d8cfffd5cf85fe2de32/stdatamodels-4.0.1-py3-none-any.whl
   name: stdatamodels
-  version: 4.0.1.dev16+gb9a49c2
+  version: 4.0.1
+  sha256: ec50b2db659cbdbf401de1ca933f872243bf8386c939c2c8d7c4db547075db25
   requires_dist:
   - asdf>=3.3.0
   - asdf-transform-schemas>=0.6.0
@@ -13713,7 +13790,6 @@ packages:
   - pytest-doctestplus ; extra == 'test'
   - crds>=11.17.1 ; extra == 'test'
   - requests ; extra == 'test'
-  - scipy>=1.9.2 ; extra == 'test'
   - sphinx ; extra == 'docs'
   - sphinx-automodapi ; extra == 'docs'
   - numpydoc ; extra == 'docs'
