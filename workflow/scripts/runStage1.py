@@ -54,8 +54,8 @@ def cal(file, out):
 
     # Set 1/f parameters
     imaging = fits.getval(file, 'FILTER', 'PRIMARY') == 'CLEAR'
-    fit_by_channel = False
-    fit_bkg = False
+    fit_by_channel = True
+    fit_bkg = True
 
     # Define Detector 1 steps
     steps = dict(

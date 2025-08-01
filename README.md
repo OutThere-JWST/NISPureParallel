@@ -14,6 +14,8 @@ This repository contains to process all of the available JWST NIRISS Pure Parall
 This pipeline uses [pixi](https://pixi.sh/latest/) as an environment manager. To learn more about pixi, check out their documentation but most users can install it with:
 `curl -fsSL https://pixi.sh/install.sh | bash`
 
+You may want to configure pixi to install its cache to a specific directory. This is especially relevant for situations where your home directory storage is limited, like on HPC systems. You can configure the [pixi cache](https://pixi.sh/latest/reference/environment_variables/) using the `PIXI_CACHE_DIR` environment variable. The best place to set this is in your `.bashrc` or other relevant user profile.
+
 ### Clone this Repository
 To get started, of course the first step is to clone this repository either over HTTPS or SSH:
 
