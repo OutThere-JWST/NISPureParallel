@@ -8,6 +8,7 @@ from sklearn.cluster import KMeans
 
 # Names of fields
 with open('FIELDS/fields.txt') as f: FIELDS = np.array(f.read().splitlines())
+FIELDS = np.array(['cam-00'])
 
 # List of UNCAL files
 uncal = dict((f,Table.read('FIELDS/fields.fits',f)['filename'].tolist()) for f in FIELDS)

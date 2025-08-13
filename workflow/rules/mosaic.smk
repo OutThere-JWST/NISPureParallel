@@ -7,7 +7,7 @@ rule mosaic:
     log:
         'FIELDS/{field}/logs/mos.log'
     group:
-        lambda wildcards: f'mos-{groups[wildcards.field]}'
+        'imaging'
     resources:
         # tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:

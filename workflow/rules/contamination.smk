@@ -7,7 +7,6 @@ rule contam:
     log:
         'FIELDS/{field}/logs/contam.log'
     group:
-        lambda wildcards: f'contam-{groups[wildcards.field]}'
     resources:
         # tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:

@@ -7,7 +7,7 @@ rule preProcess:
     log:
         'FIELDS/{field}/logs/proc.log'
     group:
-        lambda wildcards: f'proc-{groups[wildcards.field]}'
+        'imaging'
     resources:
         # tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:

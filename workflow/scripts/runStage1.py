@@ -55,7 +55,7 @@ def cal(file, out):
     # Set 1/f parameters
     imaging = fits.getval(file, 'FILTER', 'PRIMARY') == 'CLEAR'
     fit_by_channel = True
-    fit_bkg = True
+    fit_bkg = False
 
     # Define Detector 1 steps
     steps = dict(
@@ -98,7 +98,7 @@ def cal(file, out):
     nan_mask[~mask] = np.nan
 
     # Calculate difference image
-    raw_diffs = jump.data[:, 1:] - jump.data[:, :-1]
+    raw_diffs = np.diff(jump.data, axis=1)
     diffs = raw_diffs * nan_mask
 
     # Fitting inputs
