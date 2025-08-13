@@ -14,22 +14,17 @@ use-envmodules: True
 
 # Default job requests
 default-resources:
-    nodes: 1
-    tasks: 1
-    cpus_per_task: 72
     runtime: 2880
-    mem_mb: 250000
 
 # Group components
 group-components:
     imaging: 72
+    stage1: 72
 set-resources:
     download:
         cpus_per_task: 1
-        tasks: 1
         mem_mb: 3400
     stage1:
         cpus_per_task: 1
-        tasks: 1
         mem_mb: 3400
     
