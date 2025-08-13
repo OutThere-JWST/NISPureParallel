@@ -6,7 +6,6 @@ rule zfit:
         'FIELDS/{field}/logs/zfit.log'
     log:
         'FIELDS/{field}/logs/zfit.log'
-    group:
     resources:
         # tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:
