@@ -18,7 +18,7 @@ default-resources:
 
 # Group components
 group-components:
-    imaging: 72
+    download: 72
     stage1: 72
 set-resources:
     download:
