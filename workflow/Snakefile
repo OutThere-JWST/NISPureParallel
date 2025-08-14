@@ -22,7 +22,7 @@ rule all:
 
 # Include rules
 include: "rules/download.smk"
-include: "rules/runStage1.smk"
+include: "rules/stage1.smk"
 include: "rules/preprocess.smk"
 include: "rules/mosaic.smk"
 include: "rules/contamination.smk"

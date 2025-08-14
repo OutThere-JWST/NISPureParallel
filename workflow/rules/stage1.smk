@@ -12,6 +12,5 @@ rule stage1:
     #     mem_mb = lambda _, input: 5 * input.size_mb
     shell: 
         """
-        ./workflow/scripts/download.py {input} > {log} 2>&1
-        pixi run --no-lockfile-update --environment jwst crds sync --contexts $CRDS_CONTEXT --fetch-references --dataset-files {input} >> {log} 2>&1
+        pixi run --no-lockfile-update --environment jwst ./workflow/scripts/stage1.py --scratch {input} {output} >> {log} 2>&1
         """
