@@ -8,8 +8,8 @@ rule stage1:
         'FIELDS/{field}/logs/files/{file}.log'
     group:
         'stage1'
-    resources:
-        mem_mb = lambda _, input: 5 * input.size_mb
+    # resources:
+    #     mem_mb = lambda _, input: 5 * input.size_mb
     shell: 
         """
         ./workflow/scripts/download.py {input} > {log} 2>&1

@@ -12,12 +12,6 @@ jobs: 200
 executor: slurm
 use-envmodules: True
 
-# Maximum resources
-resources:
-    runtime: 10080
-    cpus_per_task: 64
-    mem_mb: 256000
-
 # Default job requests
 default-resources:
     runtime: 1440
@@ -36,6 +30,7 @@ set-resources:
         slurm_partition: trevor
     stage1:
         cpus_per_task: 1
+        mem_mb: 2500
     imaging:
         cpus_per_task: 12
         mem_mb: 30000
