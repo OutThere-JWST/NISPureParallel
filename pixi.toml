@@ -1,7 +1,7 @@
 [project]
 authors = ['TheSkyentist <raphael.hviding@gmail.com>']
 channels = ['conda-forge', 'bioconda']
-description = 'NIRISS Pure Paralle Reduction Pipeline'
+description = 'NIRISS Pure Parallel Reduction Pipeline'
 name = 'NISPureParallel'
 platforms = ['osx-arm64', 'linux-64']
 version = '2.0.0'

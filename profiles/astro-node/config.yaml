@@ -1,5 +1,5 @@
 # Number of cores allowed on the system
-cores: 2
+cores: 144
 
 # Settings to continue running and keep incomplete
 keep-going: True
