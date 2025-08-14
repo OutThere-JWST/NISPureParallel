@@ -66,7 +66,7 @@ def model_contam(fname, filt, directs, dirs, mags, projs, grism_files):
         files=grism_files,
         model_kwargs={'compute_size': False, 'size': 48},
         subtract_median_filter=False,
-        use_jwst_crds=False,
+        use_jwst_crds=True,
         force_ref=ref,
         cpu_count=1,
         refine_threads=1,
