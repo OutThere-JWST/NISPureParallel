@@ -1,5 +1,5 @@
 # Preprocess Rule
-rule preProcess:
+rule preprocess:
     input:
         lookup(dpath='{field}', within=rate)
     output:

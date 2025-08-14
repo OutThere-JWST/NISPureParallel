@@ -36,3 +36,4 @@ set-resources:
         mem_mb: 30000
         slurm_partition: trevor
     
+# Note, ensure that the sum of runtimes across preprocess + mosaic does not exceed the limit, since these are grouped together.
