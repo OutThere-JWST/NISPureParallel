@@ -4,7 +4,7 @@ channels = ['conda-forge', 'bioconda']
 description = 'NIRISS Pure Paralle Reduction Pipeline'
 name = 'NISPureParallel'
 platforms = ['osx-arm64', 'linux-64']
-version = '1.1.0'
+version = '2.0.0'
 
 [activation.env]
 GRIZLI = '$(pwd)/GRIZLI'

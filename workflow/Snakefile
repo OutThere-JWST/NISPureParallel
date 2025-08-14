@@ -1,38 +1,24 @@
 # Import packages
-import os
-import yaml
-import warnings
-import numpy as np
-from astropy.table import Table
-from sklearn.cluster import KMeans
+from os.path import join
+from astropy.io import fits
 
 # Names of fields
-with open('FIELDS/fields.txt') as f: FIELDS = np.array(f.read().splitlines())
-FIELDS = np.array(['cam-00'])
+fields = fits.open('FIELDS/fields.fits')
 
-# List of UNCAL files
-uncal = dict((f,Table.read('FIELDS/fields.fits',f)['filename'].tolist()) for f in FIELDS)
-alluncal = [i for j in uncal.values() for i in j]
-
-# Split into groups so each group has roughly same compute time
-Nnodes = workflow.resource_settings.nodes # Number of jobs
-if Nnodes is None: Nnodes = 1 # Default to 1 if not on a cluster
-if Nnodes > len(FIELDS): Nnodes = len(FIELDS) # Don't need more jobs than fields
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore")
-    labels = KMeans(n_clusters=Nnodes,random_state=0).fit(np.array([len(uncal[f]) for f in FIELDS]).reshape(-1,1)).labels_ # KMeans
-groups = {FIELDS[i]:l for i,l in enumerate(labels)}
-
-# Creat configuration file for group components
-rules = ['stage1','proc','mos','contam','extr','zfit','fmap']
-config = {f'{r}-{i}':int((labels==i).sum()) for r in rules for i in range(Nnodes)}
-config = {'group_components':config}
+# List of RATE files
+rate = {
+    f.name: [
+        join('FIELDS', f.name, 'RATE', r.replace('uncal', 'rate'))
+        for r in f.data['filename'].tolist()
+    ]
+    for f in fields[1:]
+}
 
 # Final Rule
-rules = ['download','stage1','proc','mos','contam','extr','zfit','fmap']
+logs = ['fmap']
 rule all:
     input:
-        expand('FIELDS/{field}/logs/{log}.log',field=FIELDS,log=rules)
+        expand('FIELDS/{field}/logs/{log}.log',field=rate.keys(),log=logs)
 
 # Include rules
 include: "rules/download.smk"

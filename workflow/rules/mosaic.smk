@@ -8,8 +8,6 @@ rule mosaic:
         'FIELDS/{field}/logs/mos.log'
     group:
         'imaging'
-    resources:
-        # tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:
         """
         pixi run --no-lockfile-update --environment grizli ./workflow/scripts/mosaic.py {wildcards.field} > {log} 2>&1

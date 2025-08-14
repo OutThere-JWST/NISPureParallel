@@ -17,8 +17,6 @@ rule extract:
         'FIELDS/{field}/logs/extr.log'
     log:
         'FIELDS/{field}/logs/extr.log'
-    group:
-        lambda wildcards: f'extr-{groups[wildcards.field]}'
     # resources:
     #     cpus_per_task = lambda wc: resources[wc.field]
     shell:

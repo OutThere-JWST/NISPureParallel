@@ -1,6 +1,6 @@
 # Fitsmap Creation Rule
 def create_rule(field):
-    priority = len(uncal[field])
+    priority = len(rate[field])
     rule:
         name: f"fmap_{field}"
         input:
@@ -9,12 +9,8 @@ def create_rule(field):
             f'FIELDS/{field}/logs/fmap.log'
         log:
             f'FIELDS/{field}/logs/fmap.log'
-        group:
-            lambda wildcards: f'fmap-{groups[field]}'
         priority:
             priority
-        resources:
-            # tasks = lambda wildcards: len(uncal[wildcards.field])
         shell:
             f"""
             pixi run --no-lockfile-update --environment fitsmap ./workflow/scripts/makeFitsmap.py {field} --ncpu {{resources.cpus_per_task}} > {{log}} 2>&1
@@ -23,4 +19,4 @@ def create_rule(field):
 
 
 # Create rules for all fields
-for field in FIELDS: create_rule(field)
+for field in rate.keys(): create_rule(field)

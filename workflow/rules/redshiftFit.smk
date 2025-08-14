@@ -6,8 +6,6 @@ rule zfit:
         'FIELDS/{field}/logs/zfit.log'
     log:
         'FIELDS/{field}/logs/zfit.log'
-    resources:
-        # tasks = lambda wildcards: len(uncal[wildcards.field])
     shell:
         """
         pixi run --no-lockfile-update --environment grizli ./workflow/scripts/redshiftFit.py {wildcards.field} --ncpu {resources.cpus_per_task} > {log} 2>&1
