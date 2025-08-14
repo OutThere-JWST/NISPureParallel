@@ -21,7 +21,7 @@ def download_spectrum(extract, local_dir, remote, password):
 
     # Files
     types = ['1D', 'beams', 'full', 'row', 'stack']
-    files = [f'{field}_{str(extract['NUMBER']).zfill(5)}_{t}.fits' for t in types]
+    files = [f'{field}_{str(extract['NUMBER']).zfill(5)}.{t}.fits' for t in types]
 
     # Execute command
     for file in files:
@@ -50,7 +50,7 @@ def main():
         '--remote',
         type=str,
         help='Remote URL',
-        default='http://outthere-mpia.org/s3/data',
+        default='https://outthere-mpia.org/s3/data',
     )
     parser.add_argument('--ncpu', type=int, default=1)
     args = parser.parse_args()

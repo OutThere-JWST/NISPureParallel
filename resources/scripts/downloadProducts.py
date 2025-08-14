@@ -37,7 +37,7 @@ def main():
         '--remote',
         type=str,
         help='Remote URL',
-        default='http://outthere-mpia.org/s3/data',
+        default='https://outthere-mpia.org/s3/data',
     )
     args = parser.parse_args()
 
