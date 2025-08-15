@@ -20,12 +20,135 @@ rule all:
     input:
         expand('FIELDS/{field}/logs/{log}.log',field=rate.keys(),log=logs)
 
-# Include rules
-include: "rules/download.smk"
-include: "rules/stage1.smk"
-include: "rules/preprocess.smk"
-include: "rules/mosaic.smk"
-include: "rules/contamination.smk"
-include: "rules/extract.smk"
-include: "rules/redshiftFit.smk"
-include: "rules/makeFitsmap.smk"
+# Can we make an onstart rule to sync CRDS contexts?
+# onstart:
+#     shell:
+#         """
+#         pixi run --no-lockfile-update --environment jwst crds sync --contexts $CRDS_CONTEXT --fetch-references
+#         """
+
+# Download Rule
+rule download:
+    output:
+        'FIELDS/{field}/UNCAL/{file}_uncal.fits'
+    log: 
+        'FIELDS/{field}/logs/files/{file}.log'
+    group:
+        'download'
+    shell: 
+        """
+        ./workflow/scripts/download.py {output} > {log} 2>&1
+        pixi run --no-lockfile-update --environment jwst crds sync --contexts $CRDS_CONTEXT --fetch-references --dataset-files {output} >> {log} 2>&1
+        """
+
+# Stage1 Rule
+rule stage1:
+    input:
+        'FIELDS/{field}/UNCAL/{file}_uncal.fits'
+    output:
+        'FIELDS/{field}/RATE/{file}_rate.fits'
+    log: 
+        'FIELDS/{field}/logs/files/{file}.log'
+    group:
+        'stage1'
+    # resources:
+    #     mem_mb = lambda _, input: 5 * input.size_mb
+    shell: 
+        """
+        pixi run --no-lockfile-update --environment jwst ./workflow/scripts/stage1.py --scratch {input} {output} >> {log} 2>&1
+        """
+
+# Preprocess Rule
+rule preprocess:
+    input:
+        lookup(dpath='{field}', within=rate)
+    output:
+        'FIELDS/{field}/logs/proc.log'
+    log:
+        'FIELDS/{field}/logs/proc.log'
+    group:
+        'imaging'
+    shell:
+        """
+        pixi run --no-lockfile-update --environment grizli ./workflow/scripts/preprocess.py {wildcards.field} --ncpu {resources.cpus_per_task} > {log} 2>&1
+        """
+
+# Mosaic Rule
+rule mosaic:
+    input:
+        'FIELDS/{field}/logs/proc.log'
+    output:
+        'FIELDS/{field}/logs/mos.log'
+    log:
+        'FIELDS/{field}/logs/mos.log'
+    group:
+        'imaging'
+    shell:
+        """
+        pixi run --no-lockfile-update --environment grizli ./workflow/scripts/mosaic.py {wildcards.field} > {log} 2>&1
+        """
+
+# Contamination Rule
+rule contam:
+    input:
+        'FIELDS/{field}/logs/mos.log'
+    output:
+        'FIELDS/{field}/logs/contam.log'
+    log:
+        'FIELDS/{field}/logs/contam.log'
+    shell:
+        """
+        pixi run --no-lockfile-update --environment grizli ./workflow/scripts/contamination.py {wildcards.field} --ncpu {resources.cpus_per_task} > {log} 2>&1
+        """
+
+# Extraction Rule
+cpus_per_task = workflow.resource_settings.default_resources.parsed['cpus_per_task']
+rule extract:
+    input:
+        'FIELDS/{field}/logs/contam.log'
+    output:
+        'FIELDS/{field}/logs/extr.log'
+    log:
+        'FIELDS/{field}/logs/extr.log'
+    resources:
+        cpus_per_task = lambda wc: cpus_per_task // 2 if wc.field in ['gru-00'] else cpus_per_task
+    shell:
+        """
+        pixi run --no-lockfile-update --environment grizli ./workflow/scripts/extract.py {wildcards.field} --ncpu {resources.cpus_per_task} > {log} 2>&1
+        """
+
+# Redshift Fitting Rule
+rule zfit:
+    input:
+        'FIELDS/{field}/logs/extr.log'
+    output:
+        'FIELDS/{field}/logs/zfit.log'
+    log:
+        'FIELDS/{field}/logs/zfit.log'
+    shell:
+        """
+        pixi run --no-lockfile-update --environment grizli ./workflow/scripts/redshiftFit.py {wildcards.field} --ncpu {resources.cpus_per_task} > {log} 2>&1
+        """
+
+# Fitsmap Creation Rule
+# We can remove this function once my snakemake PR is merged that allows wildcards in priority
+def create_rule(field):
+    priority = len(rate[field])
+    rule:
+        name: f"fmap_{field}"
+        input:
+            f'FIELDS/{field}/logs/zfit.log'
+        output:
+            f'FIELDS/{field}/logs/fmap.log'
+        log:
+            f'FIELDS/{field}/logs/fmap.log'
+        priority:
+            priority
+        shell:
+            f"""
+            pixi run --no-lockfile-update --environment fitsmap ./workflow/scripts/makeFitsmap.py {field} --ncpu {{resources.cpus_per_task}} > {{log}} 2>&1
+            """
+            # tar -cf FIELDS/{wildcards.field}/fitsmap/{wildcards.field}.tar -C FIELDS/{wildcards.field}/fitsmap/ {wildcards.field}/
+
+# Create rules for all fields
+for field in rate.keys(): create_rule(field)

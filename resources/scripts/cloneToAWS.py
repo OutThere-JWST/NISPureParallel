@@ -6,6 +6,7 @@ import toml
 import glob
 import subprocess
 from os import path
+from astropy.io import fits
 from astropy.table import Table, vstack
 
 # Remote Path
@@ -36,13 +37,7 @@ def copy_files(filelist, local_dir, remote_dir, options=default_options):
             f.write(f'{item}\n')
 
     # Copy command
-    command = [
-        'rclone',
-        'copy',
-        f'--files-from={file}',
-        local_dir,
-        remote_dir,
-    ]
+    command = ['rclone', 'copy', f'--files-from={file}', local_dir, remote_dir]
 
     # Execute Command
     try:
@@ -62,12 +57,7 @@ def sync_dir(local_dir, remote_dir, options=default_options):
     """Function to rclone a list of files to the remote server."""
 
     # Copy command
-    command = [
-        'rclone',
-        'sync',
-        local_dir,
-        remote_dir,
-    ]
+    command = ['rclone', 'sync', local_dir, remote_dir]
 
     # Execute Command
     try:
@@ -85,8 +75,7 @@ def main():
     data_remote_path = path.join(remote_path, 'data')
 
     # Get list of fields
-    with open(path.join(local_path, 'fields.txt')) as f:
-        fields = f.read().splitlines()
+    fields = [f.name for f in fits.open(path.join(local_path, 'fields.fits'))[1:]]
 
     # Iterate over fields
     phot_combined = []

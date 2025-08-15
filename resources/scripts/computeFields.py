@@ -224,6 +224,6 @@ if __name__ == '__main__':
     hdul.writeto('FIELDS/fields.fits', overwrite=True)
 
     # Write field names
-    with open('FIELDS/fields.txt', 'w') as f:
-        f.write('\n'.join(field_names))
-    print('Done! Fields saved to FIELDS/fields.fits and FIELDS/fields.txt')
+    # with open('FIELDS/fields.txt', 'w') as f:
+    #     f.write('\n'.join(field_names))
+    # print('Done! Fields saved to FIELDS/fields.fits and FIELDS/fields.txt')
