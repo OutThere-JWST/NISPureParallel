@@ -33,7 +33,7 @@ This repository includes the following:
 ### Configure Grizli and CRDS
 Those who have installed grizli and/or the JWST pipeline before may be familiar with the process of installing grizli, configuring the relevant environment variables, and downloading the necessary configuration files. Pixi allows us to make this process easy. Running `pixi run grizli-setup` will automatically install all necessary packages, configure the relevant environment variables, and download the grizli configurations, including the latest NIRISS dispersion solutions and WFSS Backgrounds.
 
-In addition, we have to download the CRDS files, while the download step attempts to automate this, it can cause issues when first syncing the cache due to concurrent file operations. You can sync the entire CRDS cache using the `pixi run sync-crds` command. It is under development to build this into the pipeline automatically and restrict it to just the NIRISS references.
+In addition, we have to download the CRDS files, while the download step attempts to automate this, it can cause issues when first syncing the cache due to concurrent file operations. You can sync the entire CRDS cache using the `pixi run crds-sync` command. It is under development to build this into the pipeline automatically and restrict it to just the NIRISS references.
 
 For advanced users who have existing CRDS cache and grizli conf locations, you can configure the defaults in `pixi.toml`. By default, these will be downloaded to extra directories within this directory. 
 
