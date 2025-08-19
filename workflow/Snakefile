@@ -33,7 +33,6 @@ rule all:
 #         """
 #     )
 
-
 # Download Rule
 rule download:
     output:
@@ -58,8 +57,8 @@ rule stage1:
         'FIELDS/{field}/logs/files/{file}_stage1.log'
     group:
         'stage1'
-    # resources:
-    #     mem_mb = lambda _, input: 5 * input.size_mb
+    resources:
+        mem_mb = lambda _, input: max(20 * input.size_mb, workflow.resource_settings.overwrite_resources['stage1']['mem_mb'].value)
     shell: 
         """
         pixi run --no-lockfile-update --environment jwst ./workflow/scripts/stage1.py --scratch {input} {output} >> {log} 2>&1
