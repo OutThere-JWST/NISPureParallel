@@ -37,7 +37,7 @@ filt_ref = dict(
 
 
 # Model contamination for filt
-def model_contam(fname, filt, directs, dirs, mags, projs, grism_files):
+def model_contam(fname, filt, directs, dirs, mags, projs, grism_files, cpu_count):
     # Unpack
     fields, prep, plots, extract = dirs  # directories
     min_mag, extract_mag = mags  # magnitudes
@@ -68,7 +68,7 @@ def model_contam(fname, filt, directs, dirs, mags, projs, grism_files):
         subtract_median_filter=False,
         use_jwst_crds=True,
         force_ref=ref,
-        cpu_count=1,
+        cpu_count=cpu_count,
         refine_threads=1,
         # sep_background_kwargs={}
     )
@@ -194,6 +194,12 @@ def main():
         os.path.join(extract, 'extract_mag.fits'), overwrite=True
     )
 
+    # Compute number of filters where grism files are available
+    filts = [filt for filt in filt_ref if np.any(is_grism & un[filt])]
+
+    # Compute cpus available for each filter
+    cpu_count = max(ncpu // len(filts), 2)
+
     # Create multiprocess arguments
     directs = np.unique(obs['niriss_pupil'][obs['filter'] == 'CLEAR'])
     args = [
@@ -205,9 +211,9 @@ def main():
             (mag_min, extract_mag),
             (projref, projsize),
             ['{dataset}_rate.fits'.format(**row) for row in res[is_grism & un[filt]]],
+            cpu_count - 1,  # Don't overspawn processes (parent process counts)
         )
-        for filt in filt_ref
-        if np.any(is_grism & un[filt])  # Only if grism files are available
+        for filt in filts
     ]
 
     # Multiprocess over filters

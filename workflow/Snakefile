@@ -20,25 +20,31 @@ rule all:
     input:
         expand('FIELDS/{field}/logs/{log}.log',field=rate.keys(),log=logs)
 
-# Can we make an onstart rule to sync CRDS contexts?
+# Can we limit this to only NIS_WFSS and NIS_IMAGE?
 # onstart:
-#     shell:
+#     shell(
+#         r"""
+#         pixi run --no-lockfile-update --environment jwst crds sync --files $(
+#             pixi run --no-lockfile-update --environment jwst crds list \
+#                 --references \
+#                 --contexts $CRDS_CONTEXT \
+#             | grep -E '^jwst_niriss_.*[0-9]{{4}}\.fits$'
+#         )
 #         """
-#         pixi run --no-lockfile-update --environment jwst crds sync --contexts $CRDS_CONTEXT --fetch-references
-#         """
+#     )
+
 
 # Download Rule
 rule download:
     output:
         'FIELDS/{field}/UNCAL/{file}_uncal.fits'
     log: 
-        'FIELDS/{field}/logs/files/{file}.log'
+        'FIELDS/{field}/logs/files/{file}_download.log'
     group:
         'download'
     shell: 
         """
         ./workflow/scripts/download.py {output} > {log} 2>&1
-        pixi run --no-lockfile-update --environment jwst crds sync --contexts $CRDS_CONTEXT --fetch-references --dataset-files {output} >> {log} 2>&1
         """
 
 # Stage1 Rule
@@ -48,7 +54,7 @@ rule stage1:
     output:
         'FIELDS/{field}/RATE/{file}_rate.fits'
     log: 
-        'FIELDS/{field}/logs/files/{file}.log'
+        'FIELDS/{field}/logs/files/{file}_stage1.log'
     group:
         'stage1'
     # resources:
