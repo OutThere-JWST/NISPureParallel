@@ -37,7 +37,8 @@ rule all:
 # Download Rule
 rule download:
     output:
-        'FIELDS/{field}/UNCAL/{file}_uncal.fits'
+        ensure('FIELDS/{field}/UNCAL/{file}_uncal.fits', non_empty=True)
+    retries: 3
     log: 
         'FIELDS/{field}/logs/files/{file}_download.log'
     group:
