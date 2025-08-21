@@ -39,6 +39,8 @@ rule download:
         """
 
 # Stage1 Rule
+res = workflow.resource_settings.overwrite_resources
+stage1_mem_mb = res['stage1']['mem_mb'].value if 'stage1' in res else 0
 rule stage1:
     input:
         'FIELDS/{field}/UNCAL/{file}_uncal.fits'
@@ -49,7 +51,7 @@ rule stage1:
     group:
         'stage1'
     resources:
-        mem_mb = lambda _, input: max(20 * input.size_mb, workflow.resource_settings.overwrite_resources['stage1']['mem_mb'].value)
+        mem_mb = lambda _, input: max(20 * input.size_mb, stage1_mem_mb)
     shell: 
         """
         pixi run --as-is --environment jwst ./workflow/scripts/stage1.py --scratch {input} {output} >> {log} 2>&1
