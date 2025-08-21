@@ -25,5 +25,8 @@ keys = [
     'readpatt',
     'subarray',
 ]
+
+# Downlaod the references
+print('Downloading NIRISS references from CRDS...')
 for f in tqdm(fields):
     getreferences({c.upper(): f[c] for c in keys})
