@@ -1,39 +1,61 @@
 # MPCDF Ngarrgu Tindebeek configuration file
+# Number of CPU cores to use for local execution (non-cluster jobs)
 local-cores: 1
 
 # Settings to continue running and keep incomplete
+# Continue workflow execution even if some jobs fail
 keep-going: True
+# Keep output files from incomplete/failed jobs for debugging
 keep-incomplete: True
 
 # Max number of jobs to submit to the cluster at once
-jobs: 200
+# Controls the maximum number of concurrent jobs in the SLURM queue
+jobs: 5000
 
 # Queue system specification 
-executor: slurm
-use-envmodules: True
+executor: slurm  # Use SLURM workload manager for job scheduling
+use-envmodules: True  # Enable environment modules for software management
 
-# Default job requests
+# Resource infomation can be found here: https://supercomputing.swin.edu.au/docs/2-ozstar/oz-partition.html#memory-requests
+# in summary: trevor --> internet access with limited resources, ~25GB memory and 12 CPUs.
+#             milan--> nominal computing nodes with up to  ~1TB high memory nodes and 64 cpus. 
+#             skylake--> nominal computing nodes with up to ~700 GB memory but 32 cpu max.
+# Note max resources in link includes OS allocations, so requestes should be generally lower than the max. 
+
+# Default job requests - applied to all jobs unless overridden
 default-resources:
-    runtime: 1440
-    cpus_per_task: 64
-    mem_mb: 256000
-    slurm_partition: milan
+    runtime: 1440        # Maximum runtime in minutes 
+    cpus_per_task: 32    # Number of CPU cores per job
+    mem_mb: 240000       # Memory allocation in MB 
+    slurm_partition: milan  # SLURM partition/queue to submit jobs to
 
 # Group components
 group-components:
-    download: 12
-    stage1: 16
+    download: 12  # Group up to N download tasks together in a single job
+    stage1: 1    # Group up to N stage1 tasks together in a single job. Can be higher than 1, balance with queue wait time.
+    
+# Resource specifications for specific job types (overrides default-resources)
 set-resources:
     download:
-        cpus_per_task: 1
-        mem_mb: 2500
-        slurm_partition: trevor
+        cpus_per_task: 1         
+        mem_mb: 2560            
+        slurm_partition: trevor  
     stage1:
-        cpus_per_task: 1
-        mem_mb: 16000
-    imaging:
+        cpus_per_task: 1   
+        mem_mb: 16000      
+        runtime: 120
+    contam:
+        cpus_per_task: 64    
+        mem_mb: 1000000 
+        runtime: 7200 
+        slurm_partition: milan
+    preprocess:
         cpus_per_task: 12
-        mem_mb: 30000
+        mem_mb: 26000
         slurm_partition: trevor
-    
+    mosaic:
+        cpus_per_task: 12
+        mem_mb: 26000
+        slurm_partition: trevor
+
 # Note, ensure that the sum of runtimes across preprocess + mosaic does not exceed the limit, since these are grouped together.
