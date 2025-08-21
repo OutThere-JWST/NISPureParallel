@@ -20,18 +20,9 @@ rule all:
     input:
         expand('FIELDS/{field}/logs/{log}.log',field=rate.keys(),log=logs)
 
-# Can we limit this to only NIS_WFSS and NIS_IMAGE?
-# onstart:
-#     shell(
-#         r"""
-#         pixi run --as-is --environment jwst crds sync --files $(
-#             pixi run --as-is --environment jwst crds list \
-#                 --references \
-#                 --contexts $CRDS_CONTEXT \
-#             | grep -E '^jwst_niriss_.*[0-9]{{4}}\.fits$'
-#         )
-#         """
-#     )
+# Sync relevant CRDS cache
+onstart:
+    shell(r"pixi run --as-is --environment jwst ./workflow/scripts/fetchCRDS.py")
 
 # Download Rule
 rule download:

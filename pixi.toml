@@ -26,9 +26,6 @@ s3-sync = './resources/scripts/clonetoAWS.py'
 [feature.grizli.tasks]
 grizli-setup = './resources/scripts/setupGrizli.py'
 
-[feature.jwst.tasks]
-crds-sync = 'crds sync --contexts $CRDS_CONTEXT --fetch-references'
-
 [dependencies]
 python = ">=3.12.9,<3.14"
 libarchive = ">=3.7.7,<4"
