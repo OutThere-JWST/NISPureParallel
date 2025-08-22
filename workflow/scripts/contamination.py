@@ -198,7 +198,7 @@ def main():
     filts = [filt for filt in filt_ref if np.any(is_grism & un[filt])]
 
     # Compute cpus available for each filter
-    cpu_count = max(ncpu // len(filts), 2)
+    cpu_count = 2  # max(ncpu // len(filts), 2)
 
     # Create multiprocess arguments
     directs = np.unique(obs['niriss_pupil'][obs['filter'] == 'CLEAR'])
