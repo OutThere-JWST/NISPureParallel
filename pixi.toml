@@ -66,7 +66,7 @@ dust_attenuation = { git = 'https://github.com/karllark/dust_attenuation.git' , 
 eazy = { git = 'https://github.com/gbrammer/eazy-py.git' , rev = '292172c' }
 drizzlepac = '<3.7.1'
 reproject = '>=0.14.1, <0.15'
-grizli = { git = 'https://github.com/TheSkyentist/grizli.git', extras = ['jwst'], rev = '8e0ae2f'}
+grizli = { git = 'https://github.com/TheSkyentist/grizli.git', extras = ['jwst'], rev = '5de8da4'}
 
 [feature.fitsmap.dependencies]
 numpy = "<2"
