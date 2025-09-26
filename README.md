@@ -33,7 +33,7 @@ This repository includes the following:
 ### Configure Grizli and CRDS
 Those who have installed grizli and/or the JWST pipeline before may be familiar with the process of installing grizli, configuring the relevant environment variables, and downloading the necessary configuration files. Pixi allows us to make this process easy. Running `pixi run grizli-setup` will automatically install all necessary packages, configure the relevant environment variables, and download the grizli configurations, including the latest NIRISS dispersion solutions and WFSS Backgrounds.
 
-In addition, we have to download the CRDS files. The necessary NIRISS reference files will be fetched at the start of the Snakemake pipeline. The total download size is ~35GB.
+In addition, we have to download the CRDS files. The necessary NIRISS reference files will be fetched at the start of the Snakemake pipeline. The total download size is ~40GB.
 
 For advanced users who have existing CRDS cache and grizli conf locations, you can configure the defaults in `pixi.toml`. By default, these will be downloaded to extra directories within this directory. 
 
