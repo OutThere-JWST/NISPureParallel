@@ -4,14 +4,14 @@ channels = ['conda-forge', 'bioconda']
 description = 'NIRISS Pure Parallel Reduction Pipeline'
 name = 'NISPureParallel'
 platforms = ['osx-arm64', 'linux-64']
-version = '2.1.0'
+version = '2.1.1'
 
 [activation.env]
 GRIZLI = '$(pwd)/GRIZLI'
 CRDS_PATH = '$(pwd)/CRDS_CACHE'
 iref = '$GRIZLI/iref'
 jref = '$GRIZLI/jref'
-CRDS_CONTEXT = 'jwst_1413.pmap'
+CRDS_CONTEXT = 'jwst_1440.pmap'
 CRDS_SERVER_URL = 'https://jwst-crds.stsci.edu'
 
 [feature.grizli.activation.env]
@@ -62,11 +62,11 @@ jwst = ">=1.19.1, <2"
 numba = '>=0.60.0,<0.61'
 
 [feature.grizli.pypi-dependencies]
-dust_attenuation = { git = 'https://github.com/karllark/dust_attenuation.git' , rev ='02a1067'}
+dust_attenuation = { git = 'https://github.com/karllark/dust_attenuation.git' , rev ='12b5504'}
 eazy = { git = 'https://github.com/gbrammer/eazy-py.git' , rev = '292172c' }
 drizzlepac = '<3.7.1'
 reproject = '>=0.14.1, <0.15'
-grizli = { git = 'https://github.com/TheSkyentist/grizli.git', extras = ['jwst'], rev = '5de8da4'}
+grizli = { git = 'https://github.com/TheSkyentist/grizli.git', extras = ['jwst'], rev = '93b2c94'}
 
 [feature.fitsmap.dependencies]
 numpy = "<2"

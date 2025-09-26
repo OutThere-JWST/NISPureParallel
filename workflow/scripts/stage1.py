@@ -79,7 +79,7 @@ def cal(file, out):
 
     # Get background
     bkg_im = fits.getdata(
-        cjs.get_reference_file(jump, 'flat' if imaging else 'wfssbkg'), 'SCI'
+        cjs.get_reference_file(jump, 'flat' if imaging else 'bkg'), 'SCI'
     )
 
     # Create the generic sigma clipping fitter and model
