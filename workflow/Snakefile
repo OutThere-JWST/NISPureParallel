@@ -22,7 +22,7 @@ rule all:
 
 # Sync relevant CRDS cache
 onstart:
-    shell(r"pixi run --as-is --environment jwst ./workflow/scripts/fetchCRDS.py")
+    shell(r"pixi run --frozen --environment jwst ./workflow/scripts/fetchCRDS.py")
 
 # Download Rule
 rule download:
@@ -54,7 +54,7 @@ rule stage1:
         mem_mb = lambda _, input: max(20 * input.size_mb, stage1_mem_mb)
     shell: 
         """
-        pixi run --as-is --environment jwst ./workflow/scripts/stage1.py --scratch {input} {output} >> {log} 2>&1
+        pixi run --frozen --environment jwst ./workflow/scripts/stage1.py --scratch {input} {output} >> {log} 2>&1
         """
 
 # Preprocess Rule
@@ -69,7 +69,7 @@ rule preprocess:
         'imaging'
     shell:
         """
-        pixi run --as-is --environment grizli ./workflow/scripts/preprocess.py {wildcards.field} --ncpu {resources.cpus_per_task} > {log} 2>&1
+        pixi run --frozen --environment grizli ./workflow/scripts/preprocess.py {wildcards.field} --ncpu {resources.cpus_per_task} > {log} 2>&1
         """
 
 # Mosaic Rule
@@ -84,7 +84,7 @@ rule mosaic:
         'imaging'
     shell:
         """
-        pixi run --as-is --environment grizli ./workflow/scripts/mosaic.py {wildcards.field} > {log} 2>&1
+        pixi run --frozen --environment grizli ./workflow/scripts/mosaic.py {wildcards.field} > {log} 2>&1
         """
 
 # Contamination Rule
@@ -97,7 +97,7 @@ rule contam:
         'FIELDS/{field}/logs/contam.log'
     shell:
         """
-        pixi run --as-is --environment grizli ./workflow/scripts/contamination.py {wildcards.field} --ncpu {resources.cpus_per_task} > {log} 2>&1
+        pixi run --frozen --environment grizli ./workflow/scripts/contamination.py {wildcards.field} --ncpu {resources.cpus_per_task} > {log} 2>&1
         """
 
 # Extraction Rule
@@ -113,7 +113,7 @@ rule extract:
         cpus_per_task = lambda wc: cpus_per_task // 2 if wc.field in ['gru-00'] else cpus_per_task
     shell:
         """
-        pixi run --as-is --environment grizli ./workflow/scripts/extract.py {wildcards.field} --ncpu {resources.cpus_per_task} > {log} 2>&1
+        pixi run --frozen --environment grizli ./workflow/scripts/extract.py {wildcards.field} --ncpu {resources.cpus_per_task} > {log} 2>&1
         """
 
 # Redshift Fitting Rule
@@ -126,7 +126,7 @@ rule zfit:
         'FIELDS/{field}/logs/zfit.log'
     shell:
         """
-        pixi run --as-is --environment grizli ./workflow/scripts/redshiftFit.py {wildcards.field} --ncpu {resources.cpus_per_task} > {log} 2>&1
+        pixi run --frozen --environment grizli ./workflow/scripts/redshiftFit.py {wildcards.field} --ncpu {resources.cpus_per_task} > {log} 2>&1
         """
 
 # Fitsmap Creation Rule
@@ -145,7 +145,7 @@ def create_rule(field):
             priority
         shell:
             f"""
-            pixi run --as-is --environment fitsmap ./workflow/scripts/makeFitsmap.py {field} --ncpu {{resources.cpus_per_task}} > {{log}} 2>&1
+            pixi run --frozen --environment fitsmap ./workflow/scripts/makeFitsmap.py {field} --ncpu {{resources.cpus_per_task}} > {{log}} 2>&1
             """
             # tar -cf FIELDS/{wildcards.field}/fitsmap/{wildcards.field}.tar -C FIELDS/{wildcards.field}/fitsmap/ {wildcards.field}/
 
