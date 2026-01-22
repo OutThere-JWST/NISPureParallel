@@ -1,4 +1,4 @@
-[project]
+[workspace]
 authors = ['TheSkyentist <raphael.hviding@gmail.com>']
 channels = ['conda-forge', 'bioconda']
 description = 'NIRISS Pure Parallel Reduction Pipeline'
@@ -7,10 +7,10 @@ platforms = ['osx-arm64', 'linux-64']
 version = '2.1.1'
 
 [activation.env]
-GRIZLI = '$(pwd)/GRIZLI'
-CRDS_PATH = '$(pwd)/CRDS_CACHE'
-iref = '$GRIZLI/iref'
-jref = '$GRIZLI/jref'
+GRIZLI = '${PIXI_PROJECT_ROOT}/GRIZLI'
+CRDS_PATH = '${PIXI_PROJECT_ROOT}/CRDS_CACHE'
+iref = '${GRIZLI}/iref'
+jref = '${GRIZLI}/jref'
 CRDS_CONTEXT = 'jwst_1440.pmap'
 CRDS_SERVER_URL = 'https://jwst-crds.stsci.edu'
 
