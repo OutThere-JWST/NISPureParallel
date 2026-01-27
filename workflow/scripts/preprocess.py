@@ -247,7 +247,7 @@ def plot_field(fname, fields, plots):
 # Plot Visits
 def plot_visits(visits, fname, plots):
     # Get color cycle
-    ls_dic = {'CLEAR': '--', 'GR150R': '-.', 'GR150C': ':'}
+    ls_dic = {'CLEAR': '-', 'GR150R': '--', 'GR150C': ':'}
     color_dic = {
         'F090W': '#FFC33B',
         'F115W': '#FF6E3A',
