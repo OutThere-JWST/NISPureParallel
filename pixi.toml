@@ -47,7 +47,7 @@ fitsmap = { features = ['fitsmap'] }
 [feature.snakemake.dependencies]
 scikit-learn = ">=1.6.1,<2"
 snakemake = { version = ">=9.1.1,<10", channel = "bioconda" }
-snakemake-executor-plugin-slurm = ">=1.1.0,<2"
+snakemake-executor-plugin-slurm = ">=2.1.0,<3"
 
 [feature.jwst.dependencies]
 parallel = '>=20241222,<20241223'

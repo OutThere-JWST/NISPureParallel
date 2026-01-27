@@ -6,27 +6,27 @@ import glob
 import shutil
 import argparse
 import warnings
-import numpy as np
 from multiprocessing import Pool
+
+import numpy as np
 
 # Packages for Plotting
 import shapely
 import spherely as sph
-from matplotlib import pyplot, patches
 
 # Astropy packages
 from astropy.io import fits
+from grizli.aws import visit_processor
+from matplotlib import pyplot, patches
+from grizli.prep import visit_grism_sky
 from astropy.table import Table
+from astropy.io.fits import getdata, getheader
+from grizli.pipeline import auto_script
 from astropy.coordinates import Angle
-from astropy.io.fits import getheader, getdata
 
 # grizli packages
 import grizli
-from grizli import utils
-from grizli import jwst_utils
-from grizli.aws import visit_processor
-from grizli.prep import visit_grism_sky
-from grizli.pipeline import auto_script
+from grizli import utils, jwst_utils
 
 # Silence warnings
 warnings.filterwarnings('ignore')
@@ -248,16 +248,13 @@ def plot_field(fname, fields, plots):
 def plot_visits(visits, fname, plots):
     # Get color cycle
     ls_dic = {'CLEAR': '--', 'GR150R': '-.', 'GR150C': ':'}
-    colors = {
-        'F200W-CLEAR': '#A40122',
-        'F200W-GR150R': '#E20134',
-        'F200W-GR150C': '#FF6E3A',
-        'F150W-CLEAR': '#9F0162',
-        'F150W-GR150R': '#FF5AAF',
-        'F150W-GR150C': '#FFB2FD',
-        'F115W-CLEAR': '#8400CD',
-        'F115W-GR150R': '#008DF9',
-        'F115W-GR150C': '#00C2F9',
+    color_dic = {
+        'F090W': '#FFC33B',
+        'F115W': '#FF6E3A',
+        'F140M': '#FF5AAF',
+        'F150W': '#E20134',
+        'F158M': '#9F0162',
+        'F200W': '#A40122',
     }
 
     # Create figure
@@ -274,12 +271,12 @@ def plot_visits(visits, fname, plots):
             decs.append(dec)
 
         # Get filter-grism combo
-        fg = '-'.join(v['product'].split('-')[-2:]).upper()
-        fgs.append(fg)
+        f, g = v['product'].split('-')[-2:]
+        fgs.append(f'{f}-{g}')
 
         # Place patches for region
         for patch in sr.patch(
-            ec=colors[fg], fc='None', alpha=0.5, lw=3, ls=ls_dic[fg[6:]]
+            ec=color_dic[f], fc='None', alpha=0.5, lw=3, ls=ls_dic[g]
         ):
             ax.add_patch(patch)
 
@@ -289,7 +286,8 @@ def plot_visits(visits, fname, plots):
 
     # Add legend for fgs
     for fg in set(fgs):
-        ax.plot([], [], ls=ls_dic[fg[6:]], color=colors[fg], label=fg)
+        f, g = fg.split('-')
+        ax.plot([], [], color=color_dic[f], ls=ls_dic[g], label=fg)
     ax.legend(fontsize=20, frameon=True)
 
     # Set axis parameters
