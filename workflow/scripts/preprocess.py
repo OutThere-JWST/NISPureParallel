@@ -271,7 +271,7 @@ def plot_visits(visits, fname, plots):
             decs.append(dec)
 
         # Get filter-grism combo
-        f, g = v['product'].split('-')[-2:]
+        f, g = v['product'].upper().split('-')[-2:]
         fgs.append(f'{f}-{g}')
 
         # Place patches for region
