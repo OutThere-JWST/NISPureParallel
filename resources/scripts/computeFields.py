@@ -1,6 +1,5 @@
 #! /usr/bin/env python
 
-# Python Packages
 import os
 import argparse
 import multiprocessing as mpl
@@ -9,16 +8,16 @@ from concurrent.futures import ThreadPoolExecutor
 # Read YAML
 import yaml
 
-# Progress Bar
-from tqdm import tqdm, trange
-
 # Computational Packages
 import numpy as np
 import spherely as sph
 
+# Progress Bar
+from tqdm import tqdm, trange
+
 # Astropy Packages
 from astropy.io import fits
-from astropy.table import vstack, join
+from astropy.table import join, vstack
 from astroquery.mast import MastMissions
 from astropy.coordinates import SkyCoord, get_constellation
 
@@ -32,7 +31,7 @@ def create_region(row):
     ra, dec = row['targ_ra'], row['targ_dec']
     pa = -row['gs_v3_pa'] * np.pi / 180  # Convert to radians
 
-    # Create the unite square and rotate it
+    # Create the unit square and rotate it
     side_length = 1.1 / 60  # Degrees
     x = side_length * np.array([-1, 1, 1, -1])
     y = side_length * np.array([-1, -1, 1, 1])
@@ -101,15 +100,42 @@ if __name__ == '__main__':
     columns = list(missions.get_column_list()['name'])
     badcols = ['effexptm', 'gsstrttm', 'gsendtim', 'texptime']
 
-    # Query for all NIRISS
-    print('Querying MAST...')
-    wfss = missions.query_criteria(
+    # Query for prime and pure parallel
+    print('Querying MAST (Pure Parallel and Prime)...')
+    wfss_prime = missions.query_criteria(
         template='NIRISS Wide Field Slitless Spectroscopy',
         select_cols=[c for c in columns if c not in badcols],
         instrume='NIRISS',
         productLevel='1*',
         limit=10000,
     )
+
+    # Get Coordinated Parallel Observations
+    print('Querying MAST (Coordinated Parallel)...')
+    nis_parallel = missions.query_criteria(
+        select_cols=[c for c in columns if c not in badcols],
+        instrume='NIRISS',
+        productLevel='1*',
+        limit=10000,
+        expripar='PARALLEL_COORDINATED',
+    )
+
+    # Limit to only the WFSS observations in wfss_parallel
+    # Find programs with at least 1 grism
+    has_grism = np.logical_or.reduce(
+        [nis_parallel['filter'] == f'GR150{g}' for g in ['R', 'C']]
+    )
+    wfss_parallel = nis_parallel[
+        np.logical_or.reduce(
+            [
+                nis_parallel['program'] == p
+                for p in np.unique(nis_parallel[has_grism]['program'])
+            ]
+        )
+    ]
+
+    # Combine prime and parallel WFSS observations
+    wfss = vstack([wfss_prime, wfss_parallel])
 
     # Remove ignored proposal IDs
     remove = np.logical_or.reduce([wfss['program'] == p for p in ignore_ids])

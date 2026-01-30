@@ -1,26 +1,22 @@
 #! /usr/bin/env python
 
-# Import packages
 import os
 import glob
 import math
 import shutil
 import argparse
 import warnings
-import numpy as np
-from matplotlib import pyplot
 
-# Astropy packages
+import numpy as np
+import grizli
 import astropy.units as u
+from grizli import utils
+from regions import Regions, PixCoord, EllipsePixelRegion
 from astropy.io import fits
+from grizli.aws import visit_processor
+from matplotlib import pyplot
 from astropy.wcs import WCS
 from astropy.table import Table
-from regions import Regions, PixCoord, EllipsePixelRegion
-
-# grizli packages
-import grizli
-from grizli import utils
-from grizli.aws import visit_processor
 from grizli.pipeline import auto_script
 
 # Silence warnings
@@ -82,7 +78,9 @@ def main():
     direct_filters = np.unique(obs['niriss_pupil'][obs['filter'] == 'CLEAR'])
     for f in direct_filters:
         # Load context map
-        hdul = fits.open(os.path.join(prep, f'{fname}-{f.lower()}n-clear_drc_ctx.fits'))
+        hdul = fits.open(
+            os.path.join(prep, f'{fname.lower()}-{f.lower()}n-clear_drc_ctx.fits')
+        )
         ctx, h = hdul[0].data, hdul[0].header
 
         # Make exposure time map
@@ -97,7 +95,7 @@ def main():
 
         # Save exposure time map
         fits.PrimaryHDU(exptime, header=h).writeto(
-            os.path.join(prep, f'{fname}-{f.lower()}n-clear_drc_exp.fits'),
+            os.path.join(prep, f'{fname.lower()}-{f.lower()}n-clear_drc_exp.fits'),
             overwrite=True,
         )
 

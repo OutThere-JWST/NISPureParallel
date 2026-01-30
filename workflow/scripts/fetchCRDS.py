@@ -1,9 +1,9 @@
 #! /usr/bin/env python
 
+from crds import getreferences
 from tqdm import tqdm
 from astropy.io import fits
-from astropy.table import vstack, Table
-from crds import getreferences
+from astropy.table import Table, vstack
 
 # Concatenate all files
 fields = vstack([Table(h.data) for h in fits.open('FIELDS/fields.fits')[1:]])

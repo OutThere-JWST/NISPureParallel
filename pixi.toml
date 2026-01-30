@@ -7,7 +7,7 @@ platforms = ['osx-arm64', 'linux-64']
 version = '2.1.1'
 
 [activation.env]
-GRIZLI = '${PIXI_PROJECT_ROOT}/GRIZLI'
+GRIZLI = '${PIXI_PROJECT_ROOT}/GRIZLI_RESOURCES'
 CRDS_PATH = '${PIXI_PROJECT_ROOT}/CRDS_CACHE'
 iref = '${GRIZLI}/iref'
 jref = '${GRIZLI}/jref'

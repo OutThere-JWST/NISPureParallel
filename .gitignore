@@ -1,7 +1,7 @@
 # Ignored directories
 FIELDS/
 __pycache__/
-GRIZLI/
+GRIZLI_RESOURCES/
 CRDS_CACHE/
 
 # Ignore Snakmake files
