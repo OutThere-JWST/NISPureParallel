@@ -8,7 +8,7 @@ fields = fits.open('FIELDS/fields.fits')
 # List of RATE files
 rate = {
     f.name.lower(): [
-        join('FIELDS', f.name, 'RATE', r.replace('uncal', 'rate'))
+        join('FIELDS', f.name.lower(), 'RATE', r.replace('uncal', 'rate'))
         for r in f.data['filename'].tolist()
     ]
     for f in fields[1:]
