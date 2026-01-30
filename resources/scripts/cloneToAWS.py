@@ -1,11 +1,11 @@
 #! /usr/bin/env python
 
-# Import packages
 import os
-import toml
 import glob
 import subprocess
 from os import path
+
+import toml
 from astropy.io import fits
 from astropy.table import Table, vstack
 

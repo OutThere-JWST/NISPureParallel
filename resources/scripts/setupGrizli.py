@@ -1,10 +1,10 @@
 #! /usr/bin/env python
 
-# Import packages
 import os
-import grizli.utils
 from itertools import product
 from multiprocessing import Pool
+
+import grizli.utils
 
 
 # Main function
@@ -43,7 +43,7 @@ def main():
     #     os.system(f'tar xzvf {filename}')
 
     # Multiprocess
-    dispersers = ['CLEAR'] # + ['GR150R', 'GR150C'] # Ignore Grisms if you want
+    dispersers = ['CLEAR']  # + ['GR150R', 'GR150C'] # Ignore Grisms if you want
     gfs = product(dispersers, ['F115W', 'F150W', 'F200W'])
     with Pool(processes=9) as executor:
         executor.starmap(fetch_file, gfs)

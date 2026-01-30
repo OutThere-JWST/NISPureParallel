@@ -1,25 +1,17 @@
 #! /usr/bin/env python
 
-# Import packages
 import os
 import argparse
 
-# Multiprocessing
-from threadpoolctl import threadpool_limits
-
-# Numerical and Astronomy packages
+import jwst
 import numpy as np
 from astropy.io import fits
-from astropy.stats import SigmaClip
-from photutils.background import Background2D, MedianBackground
-from astropy.modeling import fitting, models, Parameter, Fittable1DModel
-
-# Photutils
-
-# JWST Pipeline
-import jwst
 from columnjump import ColumnJumpStep
+from astropy.stats import SigmaClip
 from jwst.pipeline import Detector1Pipeline
+from threadpoolctl import threadpool_limits
+from astropy.modeling import Parameter, Fittable1DModel, models, fitting
+from photutils.background import Background2D, MedianBackground
 from jwst.ramp_fitting.ramp_fit_step import RampFitStep
 
 

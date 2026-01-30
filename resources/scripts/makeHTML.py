@@ -1,19 +1,15 @@
 #! /usr/bin/env python
 
-# Import packages
 import os
+
 import yaml
 import numpy as np
-
-# Astropy packages
+from shapely import union_all
+from sregion import SRegion
 from astropy.io import fits
 from astropy.time import Time
 from astropy.table import Table
 from astropy.coordinates import SkyCoord
-
-# Geometry packages
-from sregion import SRegion
-from shapely import union_all
 from spherical_geometry.polygon import SingleSphericalPolygon
 
 
@@ -27,8 +23,8 @@ def get_area(reg):
     xy = reg.exterior.xy
     return SingleSphericalPolygon.from_radec(*xy, center=np.mean(xy, 1)).area()
 
-def main():
 
+def main():
     # Alias of fields
     with open('resources/aliases.yaml', 'r') as file:
         aliases = yaml.safe_load(file)
@@ -46,15 +42,12 @@ def main():
         row = {}
         row['field'] = fname
         for f in np.unique(obs['filters']):
-
-
             good = obs['filters'] == f
             obsgood = obs[good]
 
             # Get field area
             reg = union_all([SRegion(o).shapely[0] for o in obsgood['s_region']])
             area = np.round(get_area(reg) * (60**4), 1)  # In arcsec^2
-
 
             row[f'{f}_area'] = area
             # Get field obstime
@@ -63,10 +56,6 @@ def main():
             row[f'{f}_exptime'] = obs_time
 
         rows.append(row)
-
-
-
-
 
         # # Get alias of field
         # alias = aliases[fname] if fname in aliases.keys() else '\u200b'
@@ -108,14 +97,28 @@ def main():
         # JWST IDs
         prop_ids = np.unique(obs['program_id'])
         prim_ids = np.unique(obs['primary_id'])
-        jwst_url = 'https://www.stsci.edu/jwst/science-execution/program-information?id='
+        jwst_url = (
+            'https://www.stsci.edu/jwst/science-execution/program-information?id='
+        )
         prim_ids = ', '.join(
             [f'<a href="{jwst_url}{i}" target="_blank">{i}</a>' for i in prim_ids]
         )
 
         # Get row
         rows.append(
-            [flink, alias, ra, dec, area, exptime, gfs, t_beg, t_end, prop_ids, prim_ids]
+            [
+                flink,
+                alias,
+                ra,
+                dec,
+                area,
+                exptime,
+                gfs,
+                t_beg,
+                t_end,
+                prop_ids,
+                prim_ids,
+            ]
         )
 
     # Transpose list of lists
@@ -178,7 +181,7 @@ def main():
         fname = hdu.header['EXTNAME']
 
         # Replace relevant data
-        images.append(image_blank.format(fname=fname, info=f'PIDs: {tab[i]['PIDs']}'))
+        images.append(image_blank.format(fname=fname, info=f'PIDs: {tab[i]["PIDs"]}'))
     images = '\n'.join(images)
 
     # Read and replace the images in the HTML template
@@ -187,6 +190,7 @@ def main():
         html = html.replace('<!-- IMAGES HERE -->', images)
     with open('resources/html5up-phantom/images.html', 'w') as f:
         f.write(html)
+
 
 if __name__ == '__main__':
     main()

@@ -5,17 +5,10 @@ import argparse
 import multiprocessing as mpl
 from concurrent.futures import ThreadPoolExecutor
 
-# Read YAML
 import yaml
-
-# Computational Packages
 import numpy as np
 import spherely as sph
-
-# Progress Bar
 from tqdm import tqdm, trange
-
-# Astropy Packages
 from astropy.io import fits
 from astropy.table import join, vstack
 from astroquery.mast import MastMissions

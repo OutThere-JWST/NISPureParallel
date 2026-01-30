@@ -1,12 +1,12 @@
 #! /usr/bin/env python
 
-# Import packages
 import os
 import argparse
 import subprocess
+from concurrent.futures import ThreadPoolExecutor
+
 import numpy as np
 from astropy.table import Table
-from concurrent.futures import ThreadPoolExecutor
 
 
 # Download product with rsync
@@ -21,7 +21,7 @@ def download_spectrum(extract, local_dir, remote, password):
 
     # Files
     types = ['1D', 'beams', 'full', 'row', 'stack']
-    files = [f'{field}_{str(extract['NUMBER']).zfill(5)}.{t}.fits' for t in types]
+    files = [f'{field}_{str(extract["NUMBER"]).zfill(5)}.{t}.fits' for t in types]
 
     # Execute command
     for file in files:
@@ -77,8 +77,7 @@ def main():
     if ncpu > 1:
         with ThreadPoolExecutor(ncpu) as executor:
             executor.map(
-                lambda e: download_spectrum(e, home, remote, password),
-                extracted,
+                lambda e: download_spectrum(e, home, remote, password), extracted
             )
 
     # Single-threaded download

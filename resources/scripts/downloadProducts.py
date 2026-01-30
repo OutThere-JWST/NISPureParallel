@@ -1,10 +1,10 @@
 #! /usr/bin/env python
 
-# Import packages
 import os
-import toml
 import argparse
 import subprocess
+
+import toml
 
 
 # Download products with rsync

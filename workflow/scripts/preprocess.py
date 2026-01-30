@@ -1,6 +1,5 @@
 #! /usr/bin/env python
 
-# Import packages
 import os
 import glob
 import shutil
@@ -9,12 +8,10 @@ import warnings
 from multiprocessing import Pool
 
 import numpy as np
-
-# Packages for Plotting
+import grizli
 import shapely
 import spherely as sph
-
-# Astropy packages
+from grizli import utils, jwst_utils
 from astropy.io import fits
 from grizli.aws import visit_processor
 from matplotlib import pyplot, patches
@@ -23,10 +20,6 @@ from astropy.table import Table
 from astropy.io.fits import getdata, getheader
 from grizli.pipeline import auto_script
 from astropy.coordinates import Angle
-
-# grizli packages
-import grizli
-from grizli import utils, jwst_utils
 
 # Silence warnings
 warnings.filterwarnings('ignore')

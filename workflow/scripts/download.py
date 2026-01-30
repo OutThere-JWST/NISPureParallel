@@ -1,10 +1,8 @@
 #! /usr/bin/env python
 
-# Python Packages
 import os
 import argparse
 
-# Astropy Packages
 from astroquery.mast import MastMissions
 
 if __name__ == '__main__':

@@ -78,9 +78,7 @@ def main():
     direct_filters = np.unique(obs['niriss_pupil'][obs['filter'] == 'CLEAR'])
     for f in direct_filters:
         # Load context map
-        hdul = fits.open(
-            os.path.join(prep, f'{fname.lower()}-{f.lower()}n-clear_drc_ctx.fits')
-        )
+        hdul = fits.open(os.path.join(prep, f'{fname}-{f.lower()}n-clear_drc_ctx.fits'))
         ctx, h = hdul[0].data, hdul[0].header
 
         # Make exposure time map
@@ -95,7 +93,7 @@ def main():
 
         # Save exposure time map
         fits.PrimaryHDU(exptime, header=h).writeto(
-            os.path.join(prep, f'{fname.lower()}-{f.lower()}n-clear_drc_exp.fits'),
+            os.path.join(prep, f'{fname}-{f.lower()}n-clear_drc_exp.fits'),
             overwrite=True,
         )
 

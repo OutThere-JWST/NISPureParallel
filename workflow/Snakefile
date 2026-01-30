@@ -7,7 +7,7 @@ fields = fits.open('FIELDS/fields.fits')
 
 # List of RATE files
 rate = {
-    f.name: [
+    f.name.lower(): [
         join('FIELDS', f.name, 'RATE', r.replace('uncal', 'rate'))
         for r in f.data['filename'].tolist()
     ]
@@ -29,11 +29,11 @@ rule download:
     output:
         ensure('FIELDS/{field}/UNCAL/{file}_uncal.fits', non_empty=True)
     retries: 3
-    log: 
+    log:
         'FIELDS/{field}/logs/files/{file}_download.log'
     group:
         'download'
-    shell: 
+    shell:
         """
         ./workflow/scripts/download.py {output} > {log} 2>&1
         """
@@ -46,13 +46,13 @@ rule stage1:
         'FIELDS/{field}/UNCAL/{file}_uncal.fits'
     output:
         'FIELDS/{field}/RATE/{file}_rate.fits'
-    log: 
+    log:
         'FIELDS/{field}/logs/files/{file}_stage1.log'
     group:
         'stage1'
     resources:
         mem_mb = lambda _, input: max(20 * input.size_mb, stage1_mem_mb)
-    shell: 
+    shell:
         """
         pixi run --frozen --environment jwst ./workflow/scripts/stage1.py --scratch {input} {output} >> {log} 2>&1
         """

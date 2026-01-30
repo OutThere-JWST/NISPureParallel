@@ -1,15 +1,13 @@
 #! /usr/bin/env python
 
-# Import packages
 import os
-import warnings
 import argparse
+import warnings
 from multiprocessing import Pool
-from astropy.table import Table, vstack
 
-# Import grizli
 import grizli
 from grizli import fitting
+from astropy.table import Table, vstack
 from grizli.pipeline import auto_script
 
 # Silence warnings

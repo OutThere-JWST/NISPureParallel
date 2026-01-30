@@ -1,20 +1,16 @@
 #! /usr/bin/env python
 
-# Import packages
 import os
 import shutil
 import argparse
-import numpy as np
 from os import path
 from glob import glob
+
+import numpy as np
 import networkx as nx
-from tqdm import trange
-
-# Image processing
 from PIL import Image
+from tqdm import trange
 from fitsmap import convert
-
-# Astropy Packages
 from astropy.io import fits
 from astropy.table import Table, join
 

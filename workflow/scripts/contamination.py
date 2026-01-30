@@ -1,29 +1,25 @@
 #! /usr/bin/env python
 
-# Import packages
 import os
 import glob
 import math
 import shutil
 import argparse
 import warnings
-import numpy as np
-from matplotlib import pyplot
 from multiprocessing import Pool
-from scipy import stats, optimize
-from reproject import reproject_interp
 
-# Astropy packages
+import numpy as np
+import grizli
+from scipy import stats, optimize
+from grizli import utils
+from reproject import reproject_interp
 from astropy.io import fits
+from grizli.aws import visit_processor
+from matplotlib import pyplot
 from astropy.wcs import WCS
 from astropy.table import Table
-from astropy.visualization import make_lupton_rgb
-
-# grizli packages
-import grizli
-from grizli import utils
-from grizli.aws import visit_processor
 from grizli.pipeline import auto_script
+from astropy.visualization import make_lupton_rgb
 
 # Silence warnings
 warnings.filterwarnings('ignore')
