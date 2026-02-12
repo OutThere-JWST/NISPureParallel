@@ -98,7 +98,7 @@ rule trace:
         'FIELDS/{field}/logs/trace.log'
     shell:
         """
-        pixi run --frozen --environment jwst ./workflow/scripts/trace.py {wildcards.field} > {log} 2>&1
+        pixi run --frozen --environment jwst ./workflow/scripts/measureTraces.py {wildcards.field} > {log} 2>&1
         """
 
 # Contamination Rule
