@@ -2200,6 +2200,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/d3/32/da7f44bcb1105d3e88a0b74ebdca50c59121d2ddf71c9e34ba47df7f3a56/keyring-25.6.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/83/60/d497a310bde3f01cb805196ac61b7ad6dc5dcf8dce66634dc34364b20b4f/lazy_loader-0.4-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/23/62/0fe302c6d1be1c777cab0616e6302478251dfbf9055ad426f5d0def75c89/more_itertools-10.6.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/cf/18/781198339976245b53c4f6862b1781c3be27132be45f1f0e340027228c9c/ndcube-2.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/b9/54/dd730b32ea14ea797530a4479b2ed46a6fb250f682a9cfb997e968bf0261/networkx-3.4.2-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/dd/5c/c139a7876099916879609372bfa513b7f1257f7f1a908b0bdc1c2328241b/opencv_python_headless-4.11.0.86-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/2b/d6/4fed8d65e28a970e1c5cb33ce9c7e22e3de745e1b2ae37af051ef16aea3b/Parsley-1.3-py2.py3-none-any.whl
@@ -2211,6 +2212,8 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/6b/b5/b75527c0f9532dd8a93e8e7cd8e62e547b9f207d4c11e24f0006e8646b36/scikit_image-0.25.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/54/24/b4293291fa1dd830f353d2cb163295742fa87f179fcc8a20a306a81978b7/SecretStorage-3.3.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/6a/23/8146aad7d88f4fcb3a6218f41a60f6c2d4e3a72de72da1825dc7c8f7877c/semantic_version-2.10.0-py2.py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/22/00/460ad27e27c44ef21f9579285aa01341db18a0d048874407bd393c52081a/specreduce-1.7.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/85/86/290369a753af101916de41a20d445f5e0968cfa05597d187af445683eab9/specutils-2.2.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/df/a1/26be91772893d7cfdac1f2190667435e888bd6204bc88553394a35943608/spherical_geometry-1.3.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/b5/20/37b8819e7914dc90bc09d72f9744ec7dfc000132d53740919f5909222e08/stcal-1.14.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/57/f1/5b5a1ce137fcc8ce286735885ad6d3c2b3b8513a1d8cfffd5cf85fe2de32/stdatamodels-4.0.1-py3-none-any.whl
@@ -2496,6 +2499,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/d3/32/da7f44bcb1105d3e88a0b74ebdca50c59121d2ddf71c9e34ba47df7f3a56/keyring-25.6.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/83/60/d497a310bde3f01cb805196ac61b7ad6dc5dcf8dce66634dc34364b20b4f/lazy_loader-0.4-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/23/62/0fe302c6d1be1c777cab0616e6302478251dfbf9055ad426f5d0def75c89/more_itertools-10.6.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/cf/18/781198339976245b53c4f6862b1781c3be27132be45f1f0e340027228c9c/ndcube-2.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/b9/54/dd730b32ea14ea797530a4479b2ed46a6fb250f682a9cfb997e968bf0261/networkx-3.4.2-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/dc/53/2c50afa0b1e05ecdb4603818e85f7d174e683d874ef63a6abe3ac92220c8/opencv_python_headless-4.11.0.86-cp37-abi3-macosx_13_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/2b/d6/4fed8d65e28a970e1c5cb33ce9c7e22e3de745e1b2ae37af051ef16aea3b/Parsley-1.3-py2.py3-none-any.whl
@@ -2506,6 +2510,8 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/39/1b/a3501574fbf29118164314dbc800d568b8c1c7b3258b505360e8abb3902c/rpds_py-0.24.0-cp312-cp312-macosx_11_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/ce/e6/93bebe1abcdce9513ffec01d8af02528b4c41fb3c1e46336d70b9ed4ef0d/scikit_image-0.25.2-cp312-cp312-macosx_12_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/6a/23/8146aad7d88f4fcb3a6218f41a60f6c2d4e3a72de72da1825dc7c8f7877c/semantic_version-2.10.0-py2.py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/22/00/460ad27e27c44ef21f9579285aa01341db18a0d048874407bd393c52081a/specreduce-1.7.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/85/86/290369a753af101916de41a20d445f5e0968cfa05597d187af445683eab9/specutils-2.2.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/e2/d5/6e7ca1b12b621095c098f76830717b7b77ec41f4913360d782a46f59d58e/spherical_geometry-1.3.3-cp312-cp312-macosx_11_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/9c/e4/ecf76330e95b68fe7d3ce675ee42350b6b99ca227b312ecb80adabddcf67/stcal-1.14.1-cp312-cp312-macosx_11_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/57/f1/5b5a1ce137fcc8ce286735885ad6d3c2b3b8513a1d8cfffd5cf85fe2de32/stdatamodels-4.0.1-py3-none-any.whl
@@ -10057,6 +10063,46 @@ packages:
   purls: []
   size: 797030
   timestamp: 1738196177597
+- pypi: https://files.pythonhosted.org/packages/cf/18/781198339976245b53c4f6862b1781c3be27132be45f1f0e340027228c9c/ndcube-2.4.0-py3-none-any.whl
+  name: ndcube
+  version: 2.4.0
+  sha256: c572c8e03b58ce69e23cce36e08b0c1f285657df38ed0ce37ef34e163af5c0e0
+  requires_dist:
+  - astropy>=6.1.0
+  - gwcs>=0.21.0
+  - numpy>=1.26.0
+  - scipy>=1.12.0
+  - dask>=2024.1.0 ; extra == 'tests-optional'
+  - specutils>=1.13.0 ; extra == 'tests-optional'
+  - sunpy>=6.1.0 ; extra == 'tests-optional'
+  - pytest-astropy ; extra == 'tests-only'
+  - pytest-cov ; extra == 'tests-only'
+  - pytest-doctestplus ; extra == 'tests-only'
+  - pytest-mpl>=0.12 ; extra == 'tests-only'
+  - pytest-xdist ; extra == 'tests-only'
+  - pytest ; extra == 'tests-only'
+  - pytest-memray ; sys_platform != 'win32' and extra == 'tests-only'
+  - ndcube[plotting,reproject,tests-only] ; extra == 'tests-minimal'
+  - sunpy>=6.1.0 ; extra == 'tests-minimal'
+  - ndcube[asdf-tests,plotting,reproject,tests-only,tests-optional] ; extra == 'tests'
+  - ndcube[all,tests-optional] ; extra == 'docs'
+  - sphinx ; extra == 'docs'
+  - sphinx-automodapi ; extra == 'docs'
+  - sunpy-sphinx-theme ; extra == 'docs'
+  - packaging ; extra == 'docs'
+  - sphinx-changelog>=1.5.0 ; extra == 'docs'
+  - sphinx-gallery ; extra == 'docs'
+  - sphinxext-opengraph ; extra == 'docs'
+  - matplotlib>=3.9.0 ; extra == 'plotting'
+  - mpl-animators>=1.2 ; extra == 'plotting'
+  - reproject>=0.14 ; extra == 'reproject'
+  - asdf>=3.1.0 ; extra == 'asdf'
+  - asdf-astropy>=0.7.0 ; extra == 'asdf'
+  - ndcube[asdf] ; extra == 'asdf-tests'
+  - pytest-asdf-plugin ; extra == 'asdf-tests'
+  - ndcube[plotting,reproject] ; extra == 'all'
+  - ndcube[asdf,docs,plotting,reproject,tests-only] ; extra == 'dev'
+  requires_python: '>=3.11'
 - pypi: https://files.pythonhosted.org/packages/de/81/edb7ba51dae8d5a2879d39eb56651eeea4927f8292fc6286fae8b1cda0f1/ndindex-1.9.2-cp312-cp312-macosx_11_0_arm64.whl
   name: ndindex
   version: 1.9.2
@@ -13665,6 +13711,50 @@ packages:
   - pkg:pypi/soupsieve?source=hash-mapping
   size: 36754
   timestamp: 1693929424267
+- pypi: https://files.pythonhosted.org/packages/22/00/460ad27e27c44ef21f9579285aa01341db18a0d048874407bd393c52081a/specreduce-1.7.0-py3-none-any.whl
+  name: specreduce
+  version: 1.7.0
+  sha256: 669ded19b3cf4700d4bd0a73c45aef84e901899e628c92b3d08fe17c4bf11878
+  requires_dist:
+  - numpy>=1.24
+  - astropy>=5.3
+  - scipy>=1.10
+  - specutils>=1.9.1
+  - matplotlib>=3.10
+  - gwcs
+  - pytest-astropy ; extra == 'test'
+  - photutils>=1.0 ; extra == 'test'
+  - tox ; extra == 'test'
+  - sphinx-astropy ; extra == 'docs'
+  - photutils>=1.0 ; extra == 'docs'
+  - synphot ; extra == 'docs'
+  - nbsphinx ; extra == 'docs'
+  - ipykernel ; extra == 'docs'
+  - photutils>=1.0 ; extra == 'all'
+  - synphot ; extra == 'all'
+  requires_python: '>=3.11'
+- pypi: https://files.pythonhosted.org/packages/85/86/290369a753af101916de41a20d445f5e0968cfa05597d187af445683eab9/specutils-2.2.0-py3-none-any.whl
+  name: specutils
+  version: 2.2.0
+  sha256: 66fde3e399be51650b76dc24ec38445a2dcf743024665fa0c64a1c7837d427fe
+  requires_dist:
+  - numpy>=1.24
+  - scipy>=1.14
+  - astropy>=7.0
+  - gwcs>=0.22
+  - asdf-astropy>=0.5
+  - asdf>=3.3.0
+  - ndcube>=2.0
+  - pytest-asdf-plugin ; extra == 'test'
+  - pytest-astropy ; extra == 'test'
+  - tox ; extra == 'test'
+  - matplotlib ; extra == 'test'
+  - spectral-cube ; extra == 'test'
+  - stdatamodels>=1.1.0 ; extra == 'jwst'
+  - sphinx-astropy ; extra == 'docs'
+  - matplotlib ; extra == 'docs'
+  - graphviz ; extra == 'docs'
+  requires_python: '>=3.11'
 - conda: https://conda.anaconda.org/conda-forge/linux-64/spherely-0.1.0-py312h2ce32ef_2.conda
   sha256: 5fdf55c183bae2b63ef1524042c61cd29f2f47b0025385ac342cd9860fdf7f13
   md5: f0cca35dd15668f2d9c6475e6500b774
