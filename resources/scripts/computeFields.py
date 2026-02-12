@@ -70,11 +70,11 @@ if __name__ == '__main__':
         nargs='+',
         help='List of proposal IDs to ignore',
         default=[
-            1085,  # NIRISS Focus Sweep
-            1089,  # NIRISS Grism Flux Cal
-            1090,  # NIRISS Grism Wave Cal
+            # 1085,  # NIRISS Focus Sweep
+            # 1089,  # NIRISS Grism Flux Cal
+            # 1090,  # NIRISS Grism Wave Cal
             # 1202,  # Survey of Reflection Nebula
-            4477,  # NIRISS Grism Contam Cal
+            # 4477,  # NIRISS Grism Contam Cal
         ],
     )
     parser.add_argument(
