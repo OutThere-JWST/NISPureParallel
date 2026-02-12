@@ -131,8 +131,9 @@ if __name__ == '__main__':
     wfss = vstack([wfss_prime, wfss_parallel])
 
     # Remove ignored proposal IDs
-    remove = np.logical_or.reduce([wfss['program'] == p for p in ignore_ids])
-    wfss = wfss[~remove]
+    if ignore_ids:
+        remove = np.logical_or.reduce([wfss['program'] == p for p in ignore_ids])
+        wfss = wfss[~remove]
     print(f'Found {len(wfss)} observations')
 
     # Remove empty columns
