@@ -15,7 +15,7 @@ rate = {
 }
 
 # Final Rule
-logs = ['fmap']
+logs = ['trace']
 rule all:
     input:
         expand('FIELDS/{field}/logs/{log}.log',field=rate.keys(),log=logs)
