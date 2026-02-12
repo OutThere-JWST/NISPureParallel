@@ -1,19 +1,19 @@
 #! /usr/bin/env python
 
-import gc
-import os
-import glob
 import argparse
+import gc
+import glob
+import os
 import warnings
 
-import yaml
-import numpy as np
-import grizli
 import astropy.units as u
-from grizli import multifit
-from regions import Regions, PixCoord, EllipsePixelRegion
+import grizli
+import numpy as np
+import yaml
 from astropy.io import fits
 from astropy.table import Table, join
+from grizli import multifit
+from regions import EllipsePixelRegion, PixCoord, Regions
 
 # Silence warnings
 warnings.filterwarnings('ignore')

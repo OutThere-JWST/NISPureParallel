@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
-import os
 import argparse
+import os
 
 from astroquery.mast import MastMissions
 

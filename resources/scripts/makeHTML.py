@@ -2,15 +2,15 @@
 
 import os
 
-import yaml
 import numpy as np
-from shapely import union_all
-from sregion import SRegion
-from astropy.io import fits
-from astropy.time import Time
-from astropy.table import Table
+import yaml
 from astropy.coordinates import SkyCoord
+from astropy.io import fits
+from astropy.table import Table
+from astropy.time import Time
+from shapely import union_all
 from spherical_geometry.polygon import SingleSphericalPolygon
+from sregion import SRegion
 
 
 # Convert Shapely Polygon to Spherical
@@ -57,11 +57,11 @@ def main():
 
         rows.append(row)
 
-        # # Get alias of field
-        # alias = aliases[fname] if fname in aliases.keys() else '\u200b'
+        # Get alias of field
+        alias = aliases[fname] if fname in aliases.keys() else '\u200b'
 
-        # # Get link to field
-        # flink = f'<a href="s3/maps/{fname}/index.html" target="_blank">{fname}</a>'
+        # Get link to field
+        flink = f'<a href="s3/maps/{fname}/index.html" target="_blank">{fname}</a>'
 
         # Get field area
         reg = union_all([SRegion(o).shapely[0] for o in obs['s_region']])

@@ -1,18 +1,18 @@
 #! /usr/bin/env python
 
-import os
 import argparse
+import os
 
 import jwst
 import numpy as np
 from astropy.io import fits
-from columnjump import ColumnJumpStep
+from astropy.modeling import Fittable1DModel, Parameter, fitting, models
 from astropy.stats import SigmaClip
+from columnjump import ColumnJumpStep
 from jwst.pipeline import Detector1Pipeline
-from threadpoolctl import threadpool_limits
-from astropy.modeling import Parameter, Fittable1DModel, models, fitting
-from photutils.background import Background2D, MedianBackground
 from jwst.ramp_fitting.ramp_fit_step import RampFitStep
+from photutils.background import Background2D, MedianBackground
+from threadpoolctl import threadpool_limits
 
 
 # Run pipeline in parallel

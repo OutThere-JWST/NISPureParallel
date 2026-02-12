@@ -1,18 +1,18 @@
 #! /usr/bin/env python
 
-import os
 import argparse
 import multiprocessing as mpl
+import os
 from concurrent.futures import ThreadPoolExecutor
 
-import yaml
 import numpy as np
 import spherely as sph
-from tqdm import tqdm, trange
+import yaml
+from astropy.coordinates import SkyCoord, get_constellation
 from astropy.io import fits
 from astropy.table import join, vstack
 from astroquery.mast import MastMissions
-from astropy.coordinates import SkyCoord, get_constellation
+from tqdm import tqdm, trange
 
 # Query MAST for JWST data
 missions = MastMissions(mission='jwst')

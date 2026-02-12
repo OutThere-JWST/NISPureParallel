@@ -1,23 +1,23 @@
 #! /usr/bin/env python
 
-import os
+import argparse
 import glob
 import math
+import os
 import shutil
-import argparse
 import warnings
 
-import numpy as np
-import grizli
 import astropy.units as u
-from grizli import utils
-from regions import Regions, PixCoord, EllipsePixelRegion
+import grizli
+import numpy as np
 from astropy.io import fits
-from grizli.aws import visit_processor
-from matplotlib import pyplot
-from astropy.wcs import WCS
 from astropy.table import Table
+from astropy.wcs import WCS
+from grizli import utils
+from grizli.aws import visit_processor
 from grizli.pipeline import auto_script
+from matplotlib import pyplot
+from regions import EllipsePixelRegion, PixCoord, Regions
 
 # Silence warnings
 warnings.filterwarnings('ignore')

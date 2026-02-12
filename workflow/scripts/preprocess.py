@@ -1,25 +1,25 @@
 #! /usr/bin/env python
 
-import os
-import glob
-import shutil
 import argparse
+import glob
+import os
+import shutil
 import warnings
 from multiprocessing import Pool
 
-import numpy as np
 import grizli
+import numpy as np
 import shapely
 import spherely as sph
-from grizli import utils, jwst_utils
-from astropy.io import fits
-from grizli.aws import visit_processor
-from matplotlib import pyplot, patches
-from grizli.prep import visit_grism_sky
-from astropy.table import Table
-from astropy.io.fits import getdata, getheader
-from grizli.pipeline import auto_script
 from astropy.coordinates import Angle
+from astropy.io import fits
+from astropy.io.fits import getdata, getheader
+from astropy.table import Table
+from grizli import jwst_utils, utils
+from grizli.aws import visit_processor
+from grizli.pipeline import auto_script
+from grizli.prep import visit_grism_sky
+from matplotlib import patches, pyplot
 
 # Silence warnings
 warnings.filterwarnings('ignore')
@@ -223,9 +223,11 @@ def plot_field(fname, fields, plots):
     )
     ax.tick_params(axis='x', labelrotation=25)
     ax.yaxis.set_major_formatter(
-        lambda x, _: Angle(x, unit='deg')
-        .to_string(unit='degree', sep=(r'$^\circ$', r"$'$", r"$''$"))
-        .replace('-', r'$-$')
+        lambda x, _: (
+            Angle(x, unit='deg')
+            .to_string(unit='degree', sep=(r'$^\circ$', r"$'$", r"$''$"))
+            .replace('-', r'$-$')
+        )
     )
 
     # Add grid
@@ -304,9 +306,11 @@ def plot_visits(visits, fname, plots):
     )
     ax.tick_params(axis='x', labelrotation=25)
     ax.yaxis.set_major_formatter(
-        lambda x, _: Angle(x, unit='deg')
-        .to_string(unit='degree', sep=(r'$^\circ$', r"$'$", r"$''$"))
-        .replace('-', r'$-$')
+        lambda x, _: (
+            Angle(x, unit='deg')
+            .to_string(unit='degree', sep=(r'$^\circ$', r"$'$", r"$''$"))
+            .replace('-', r'$-$')
+        )
     )
 
     # Add grid

@@ -1,18 +1,18 @@
 #! /usr/bin/env python
 
+import argparse
 import os
 import shutil
-import argparse
-from os import path
 from glob import glob
+from os import path
 
-import numpy as np
 import networkx as nx
-from PIL import Image
-from tqdm import trange
-from fitsmap import convert
+import numpy as np
 from astropy.io import fits
 from astropy.table import Table, join
+from fitsmap import convert
+from PIL import Image
+from tqdm import trange
 
 
 def main():

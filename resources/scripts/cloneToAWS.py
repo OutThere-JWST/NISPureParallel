@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
-import os
 import glob
+import os
 import subprocess
 from os import path
 
