@@ -57,6 +57,7 @@ numpy = '<2'
 [feature.jwst.pypi-dependencies]
 columnjump = { git = 'https://github.com/TheSkyentist/jwst-tools.git', subdirectory = 'columnjump' , rev = 'cdc163b' }
 jwst = ">=1.19.1, <2"
+specreduce = ">=1.7.0, <2"
 
 [feature.grizli.dependencies]
 numba = '>=0.60.0,<0.61'
