@@ -11,7 +11,7 @@ GRIZLI = '${PIXI_PROJECT_ROOT}/GRIZLI_RESOURCES'
 CRDS_PATH = '${PIXI_PROJECT_ROOT}/CRDS_CACHE'
 iref = '${GRIZLI}/iref'
 jref = '${GRIZLI}/jref'
-CRDS_CONTEXT = 'jwst_1440.pmap'
+CRDS_CONTEXT = 'jwst_1477.pmap'
 CRDS_SERVER_URL = 'https://jwst-crds.stsci.edu'
 
 [feature.grizli.activation.env]
