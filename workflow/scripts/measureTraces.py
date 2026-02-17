@@ -43,7 +43,7 @@ GRISMS = ['GR150C', 'GR150R']
 
 ORDERS = ['+1', '-1', '+2']
 
-ORDER_MAG_LIMITS = {'+1': 24, '-1': 23, '+2': 22.5}
+ORDER_MAG_LIMITS = {'+1': 24, '-1': 24, '+2': 24}
 
 WAVELENGTH_GRIDS = {
     'F090W': np.arange(0.796, 1.005 + 0.05, 0.05),
@@ -368,7 +368,7 @@ def measure_traces_one_exposure(
 
     if outname is None:
         out_base = os.path.splitext(filename)[0]
-        outname = f'{out_base}_{filter_name}_{pupil}_traces.txt'
+        outname = f'{out_base}_{filter_name}_{pupil}_{order}_traces.txt'
 
     dir = os.path.dirname(filename)
     root = os.path.splitext(filename)[0].split('/')[-1]
@@ -386,7 +386,7 @@ def measure_traces_one_exposure(
     # Create output table (overwrite)
     with open(outname, 'w') as fh:
         fh.write(f'# input={os.path.basename(filename)} pupil={pupil}\n')
-        fh.write('# id ra dec order x_det y_det x_det_trace y_det_trace\n')
+        fh.write('# id ra dec mag order x_det y_det x_det_trace y_det_trace\n')
 
     grism_image = fits.getdata(filename, 1)
     ny, nx = grism_image.shape  # (y, x)
@@ -564,7 +564,7 @@ def measure_traces_one_exposure(
                 X, Y = xx + x0, yy + y0
                 with open(outname, 'a') as fh:
                     fh.write(
-                        f'{obj_id} {ra:.6f} {dec:.6f} {order} '
+                        f'{obj_id} {ra:.6f} {dec:.6f} {mag:.3f} {order} '
                         f'{x_det:.2f} {y_det:.2f} {X:.2f} {Y:.2f}\n'
                     )
 
@@ -577,7 +577,7 @@ def measure_traces_one_exposure(
                 X, Y = xx + x0, yy + y0
                 with open(outname, 'a') as fh:
                     fh.write(
-                        f'{obj_id} {ra:.6f} {dec:.6f} {order} '
+                        f'{obj_id} {ra:.6f} {dec:.6f} {mag:.3f} {order} '
                         f'{x_det:.2f} {y_det:.2f} {X:.2f} {Y:.2f}\n'
                     )
 
