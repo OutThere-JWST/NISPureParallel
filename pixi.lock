@@ -1465,7 +1465,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/da/71/ae30dadffc90b9006d77af76b393cb9dfbfc9629f339fc1574a1c52e6806/future-1.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/49/5b/b8acf74c01187a36aa41b6523deb9baa59c8c6d5112a798dc2bdf9616097/geos-0.2.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/eb/cf/da17fc0919ba0349899666eccd461ea20501ac858f430b33c845a94d0196/grismconf-1.32-py3-none-any.whl
-      - pypi: git+https://github.com/TheSkyentist/grizli.git?rev=93b2c94#93b2c947533f9850c947d7b3311d37c16d08265c
+      - pypi: git+https://github.com/TheSkyentist/grizli.git?rev=a4b80f3#a4b80f326ae713bcc404d135e9b60392761cbef0
       - pypi: https://files.pythonhosted.org/packages/ea/01/1d945421a34ab51ac5ff5f0318e667cea445956aa32cec3d441421813e81/gwcs-0.22.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/cb/bd/b394387b598ed84d8d0fa90611a90bee0adc2021820ad5729f7ced74a8e2/imageio-2.37.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/04/96/92447566d16df59b2a776c0fb82dbc4d9e07cd95062562af01e408583fc4/itsdangerous-2.2.0-py3-none-any.whl
@@ -1505,7 +1505,6 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/ad/b6/4b94328ab0abc496219fb334d35cf86f3b805eba544420ec4efd1ab49b64/reproject-0.14.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/f9/9b/335f9764261e915ed497fcdeb11df5dfd6f7bf257d4a6a2a686d80da4d54/requests-2.32.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/95/ae/5d15c83e337c082d0367053baeb40bfba683f42459f6ebff63a2fd7e5518/rpds_py-0.27.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
-      - pypi: https://files.pythonhosted.org/packages/d1/75/e5d44be90525cd28503e7f836d077ae6663ec0687a13ba7810b4114b3668/rtree-1.4.1-py3-none-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/6b/b5/b75527c0f9532dd8a93e8e7cd8e62e547b9f207d4c11e24f0006e8646b36/scikit_image-0.25.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/29/7a/8bce8968883e9465de20be15542f4c7e221952441727c4dad24d534c6d99/scikit_learn-1.6.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/54/24/b4293291fa1dd830f353d2cb163295742fa87f179fcc8a20a306a81978b7/SecretStorage-3.3.3-py3-none-any.whl
@@ -1531,6 +1530,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/6e/be/10d23cfd4078fbec6aba768a357eff9e70c0b6d2a07398425985c524ad2a/tifffile-2025.3.30-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/66/08/a5d9e53c65ddc2ad9e3cd4717cf2a9dadce8cff90e9bcdf7090a5d9e13e4/tristars-0.1.tar.gz
       - pypi: https://files.pythonhosted.org/packages/43/9f/26aecc3ef9ee2a985d8f13117ae2593d0cc1fffb2bdcd76bc83ab45a9871/tweakwcs-0.8.10-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/16/39/2c7917060e5c426773975659fcc7cecea0f3e6b717e71e396e0bf5a699ec/unik-1.0.tar.gz
       - pypi: https://files.pythonhosted.org/packages/c4/44/f50f2d22cdfb6d56c03d1b4cc3cfa03ebee2f21b59a7768f151e43415ba5/Werkzeug-2.1.2-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/09/26/34880e4c4a95ab7773c3d5278ce219bcb6900fca316c0328add694cbbfda/wiimatch-0.3.2-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/9a/6e/49408735dae940a0c1c225c6b908fd83bd6e3f5fae120f865754e72f78cb/xyzservices-2025.1.0-py3-none-any.whl
@@ -1816,7 +1816,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/da/71/ae30dadffc90b9006d77af76b393cb9dfbfc9629f339fc1574a1c52e6806/future-1.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/49/5b/b8acf74c01187a36aa41b6523deb9baa59c8c6d5112a798dc2bdf9616097/geos-0.2.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/eb/cf/da17fc0919ba0349899666eccd461ea20501ac858f430b33c845a94d0196/grismconf-1.32-py3-none-any.whl
-      - pypi: git+https://github.com/TheSkyentist/grizli.git?rev=93b2c94#93b2c947533f9850c947d7b3311d37c16d08265c
+      - pypi: git+https://github.com/TheSkyentist/grizli.git?rev=a4b80f3#a4b80f326ae713bcc404d135e9b60392761cbef0
       - pypi: https://files.pythonhosted.org/packages/ea/01/1d945421a34ab51ac5ff5f0318e667cea445956aa32cec3d441421813e81/gwcs-0.22.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/cb/bd/b394387b598ed84d8d0fa90611a90bee0adc2021820ad5729f7ced74a8e2/imageio-2.37.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/04/96/92447566d16df59b2a776c0fb82dbc4d9e07cd95062562af01e408583fc4/itsdangerous-2.2.0-py3-none-any.whl
@@ -1855,7 +1855,6 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/18/46/7bbf7f46cfa0e97e5156856686f3d23eadde3a29df8b83a8d6905cd59987/reproject-0.14.1-cp312-cp312-macosx_11_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/f9/9b/335f9764261e915ed497fcdeb11df5dfd6f7bf257d4a6a2a686d80da4d54/requests-2.32.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/93/2e/28c2fb84aa7aa5d75933d1862d0f7de6198ea22dfd9a0cca06e8a4e7509e/rpds_py-0.27.0-cp312-cp312-macosx_11_0_arm64.whl
-      - pypi: https://files.pythonhosted.org/packages/f3/cf/2710b6fd6b07ea0aef317b29f335790ba6adf06a28ac236078ed9bd8a91d/rtree-1.4.1-py3-none-macosx_11_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/ce/e6/93bebe1abcdce9513ffec01d8af02528b4c41fb3c1e46336d70b9ed4ef0d/scikit_image-0.25.2-cp312-cp312-macosx_12_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/c4/b7/2e35f8e289ab70108f8cbb2e7a2208f0575dc704749721286519dcf35f6f/scikit_learn-1.6.1-cp312-cp312-macosx_12_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/6a/23/8146aad7d88f4fcb3a6218f41a60f6c2d4e3a72de72da1825dc7c8f7877c/semantic_version-2.10.0-py2.py3-none-any.whl
@@ -1880,6 +1879,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/6e/be/10d23cfd4078fbec6aba768a357eff9e70c0b6d2a07398425985c524ad2a/tifffile-2025.3.30-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/66/08/a5d9e53c65ddc2ad9e3cd4717cf2a9dadce8cff90e9bcdf7090a5d9e13e4/tristars-0.1.tar.gz
       - pypi: https://files.pythonhosted.org/packages/43/9f/26aecc3ef9ee2a985d8f13117ae2593d0cc1fffb2bdcd76bc83ab45a9871/tweakwcs-0.8.10-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/16/39/2c7917060e5c426773975659fcc7cecea0f3e6b717e71e396e0bf5a699ec/unik-1.0.tar.gz
       - pypi: https://files.pythonhosted.org/packages/c4/44/f50f2d22cdfb6d56c03d1b4cc3cfa03ebee2f21b59a7768f151e43415ba5/Werkzeug-2.1.2-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/09/26/34880e4c4a95ab7773c3d5278ce219bcb6900fca316c0328add694cbbfda/wiimatch-0.3.2-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/9a/6e/49408735dae940a0c1c225c6b908fd83bd6e3f5fae120f865754e72f78cb/xyzservices-2025.1.0-py3-none-any.whl
@@ -6577,9 +6577,9 @@ packages:
   name: grismconf
   version: '1.32'
   sha256: 8f74750c8669c8072531d079320cfaae078d4e74d6f1f96a476f8f685359179f
-- pypi: git+https://github.com/TheSkyentist/grizli.git?rev=93b2c94#93b2c947533f9850c947d7b3311d37c16d08265c
+- pypi: git+https://github.com/TheSkyentist/grizli.git?rev=a4b80f3#a4b80f326ae713bcc404d135e9b60392761cbef0
   name: grizli
-  version: 0.1.dev3372+g93b2c9475
+  version: 0.1.dev3404+ga4b80f326
   requires_dist:
   - astro-prospector
   - astropy
@@ -6602,19 +6602,20 @@ packages:
   - stwcs
   - tqdm
   - tristars
-  - rtree
   - pillow<11.3
+  - unik
   - pytest>=5.1 ; extra == 'test'
   - flake8 ; extra == 'test'
   - drizzlepac<3.7.0 ; extra == 'test'
   - sphinx ; extra == 'docs'
   - sphinx-astropy ; extra == 'docs'
-  - jwst ; extra == 'jwst'
+  - jwst<1.17 ; extra == 'jwst'
   - pysiaf ; extra == 'jwst'
   - grismconf==1.32 ; extra == 'jwst'
   - numba ; extra == 'jwst'
   - drizzlepac<3.7.0 ; extra == 'jwst'
   - snowblind>=0.2.1 ; extra == 'jwst'
+  - crds<13.0 ; extra == 'jwst'
   - awscli ; extra == 'aws'
   - boto3 ; extra == 'aws'
   - psycopg2-binary ; extra == 'aws'
@@ -12725,16 +12726,6 @@ packages:
   - pkg:pypi/rpds-py?source=hash-mapping
   size: 363698
   timestamp: 1743037521077
-- pypi: https://files.pythonhosted.org/packages/d1/75/e5d44be90525cd28503e7f836d077ae6663ec0687a13ba7810b4114b3668/rtree-1.4.1-py3-none-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl
-  name: rtree
-  version: 1.4.1
-  sha256: 12de4578f1b3381a93a655846900be4e3d5f4cd5e306b8b00aa77c1121dc7e8c
-  requires_python: '>=3.9'
-- pypi: https://files.pythonhosted.org/packages/f3/cf/2710b6fd6b07ea0aef317b29f335790ba6adf06a28ac236078ed9bd8a91d/rtree-1.4.1-py3-none-macosx_11_0_arm64.whl
-  name: rtree
-  version: 1.4.1
-  sha256: a7e48d805e12011c2cf739a29d6a60ae852fb1de9fc84220bbcef67e6e595d7d
-  requires_python: '>=3.9'
 - conda: https://conda.anaconda.org/conda-forge/linux-64/s2geography-0.2.0-hbcb1661_1.conda
   sha256: 472d837f4b9a497259c3d2dcdaf435a7a3b34f6aec99079d05140085bfcfadbd
   md5: ca0098970b6352ab87db3a4e9e51a72e
@@ -14584,6 +14575,17 @@ packages:
   - pkg:pypi/unicodedata2?source=hash-mapping
   size: 409745
   timestamp: 1736692768349
+- pypi: https://files.pythonhosted.org/packages/16/39/2c7917060e5c426773975659fcc7cecea0f3e6b717e71e396e0bf5a699ec/unik-1.0.tar.gz
+  name: unik
+  version: '1.0'
+  sha256: 9252393f820494a0fe1cfb2d3a37fa1b5bc47ff6b2f11e89fd9bc574b12f0520
+  requires_dist:
+  - numpy
+  - pytest>=7.0 ; extra == 'test'
+  - build>=0.10.0 ; extra == 'test'
+  - twine>=4.0.0 ; extra == 'test'
+  - flake8 ; extra == 'test'
+  requires_python: '>=3.8'
 - conda: https://conda.anaconda.org/conda-forge/noarch/urllib3-2.4.0-pyhd8ed1ab_0.conda
   sha256: a25403b76f7f03ca1a906e1ef0f88521edded991b9897e7fed56a3e334b3db8c
   md5: c1e349028e0052c4eea844e94f773065
