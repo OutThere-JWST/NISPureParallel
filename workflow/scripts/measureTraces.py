@@ -177,11 +177,12 @@ def fit_trace_undersampled(spectrum, iter=3, init_sigma=0.6):
     )
 
     m_fit, b_fit, sigma_raw = res.x
-    sigma_fit = max(sigma_raw, min_sigma)  # noqa: F841
+    sigma_fit = max(sigma_raw, min_sigma)
 
     trace_y = m_fit * x_pix + b_fit
     trace = ArrayTrace(spectrum, trace_y)
     trace.trace_model_fit = Polynomial1D(degree=1, c0=b_fit, c1=m_fit)
+    trace.sigma_fit = sigma_fit
 
     # ---- iterative background subtraction ----
     bkg_sep = -4
@@ -524,6 +525,9 @@ def measure_traces_one_exposure(
         # Model returned by fit is defined in the sliced-subimage x-coordinates.
         # We wrap it so callers can use full WORK-frame coordinates.
         model_sub = tr.trace_model_fit
+        m_fit = model_sub.c1.value
+        b_fit = model_sub.c0.value
+        sigma_fit = tr.sigma_fit
         shift = edge_end
 
         def model_work(x, m=model_sub, s=shift):
@@ -565,7 +569,8 @@ def measure_traces_one_exposure(
                 with open(outname, 'a') as fh:
                     fh.write(
                         f'{obj_id} {ra:.6f} {dec:.6f} {mag:.3f} {order} '
-                        f'{x_det:.2f} {y_det:.2f} {X:.2f} {Y:.2f}\n'
+                        f'{x_det:.2f} {y_det:.2f} {X:.2f} {Y:.2f} '
+                        f'{m_fit:.6f} {b_fit:.4f} {sigma_fit:.4f}\n'
                     )
 
         else:
@@ -578,7 +583,8 @@ def measure_traces_one_exposure(
                 with open(outname, 'a') as fh:
                     fh.write(
                         f'{obj_id} {ra:.6f} {dec:.6f} {mag:.3f} {order} '
-                        f'{x_det:.2f} {y_det:.2f} {X:.2f} {Y:.2f}\n'
+                        f'{x_det:.2f} {y_det:.2f} {X:.2f} {Y:.2f} '
+                        f'{m_fit:.6f} {b_fit:.4f} {sigma_fit:.4f}\n'
                     )
 
 
