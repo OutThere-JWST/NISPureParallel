@@ -221,6 +221,9 @@ if __name__ == '__main__':
         # Assign name to field
         names[key] = name
 
+    # Limit to public observations
+    results = [r[r['access'] == 'PUBLIC'] for r in results]
+
     # Save names to file
     with open('resources/names.yaml', 'w') as f:
         yaml.dump(names, f, default_flow_style=False, sort_keys=False)
@@ -234,6 +237,10 @@ if __name__ == '__main__':
     hdul = fits.HDUList([fits.PrimaryHDU()])
     field_names = []
     for i, f in enumerate(tqdm(results)):
+        # Skip empty fields
+        if len(f) == 0:
+            continue
+
         # Append field observations
         hdul.append(fits.BinTableHDU(f))
         field_name = names[str(f[0]['obs_id'])]
