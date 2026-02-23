@@ -15,23 +15,22 @@ slurm-no-account: True
 
 # Default job requests
 default-resources:
-    runtime: 2880
-    cpus_per_task: 72
-    mem_mb: 250000
+  runtime: 2880
+  cpus_per_task: 72
+  mem_mb: 250000
 
 # Group components
 group-components:
-    download: 72
-    stage1: 18
+  download: 72
+  stage1: 18
 set-resources:
-    download:
-        cpus_per_task: 1
-        mem_mb: 3472
-    stage1:
-        cpus_per_task: 1
-        mem_mb: 13888
-    preprocess:
-        runtime: 2160
-    mosaic:
-        runtime: 720
-    
+  download:
+    cpus_per_task: 1
+    mem_mb: 3472
+  stage1:
+    cpus_per_task: 1
+    mem_mb: 13888
+  preprocess:
+    runtime: 2160
+  mosaic:
+    runtime: 720

@@ -7,4 +7,4 @@ keep-incomplete: True
 
 # Default rule settings
 default-resources:
-    cpus_per_task: 8
+  cpus_per_task: 8
