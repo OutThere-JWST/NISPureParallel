@@ -10,7 +10,6 @@ rate = {
     f.name.lower(): [
         join('FIELDS', f.name.lower(), 'RATE', row['filename'].replace('uncal', 'rate'))
         for row in f.data
-        if row['access'] == 'PUBLIC'
     ]
     for f in fields[1:]
 }
