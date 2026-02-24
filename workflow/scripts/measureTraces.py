@@ -387,7 +387,9 @@ def measure_traces_one_exposure(
     # Create output table (overwrite)
     with open(outname, 'w') as fh:
         fh.write(f'# input={os.path.basename(filename)} pupil={pupil}\n')
-        fh.write('# id ra dec mag order x_det y_det x_det_trace y_det_trace\n')
+        fh.write(
+            '# id ra dec mag order x_det y_det x_det_trace y_det_trace m_fit b_fit sigma_fit\n'
+        )
 
     grism_image = fits.getdata(filename, 1)
     ny, nx = grism_image.shape  # (y, x)
