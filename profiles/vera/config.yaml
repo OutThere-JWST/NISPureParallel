@@ -23,6 +23,7 @@ default-resources:
 group-components:
   download: 72
   stage1: 18
+  trace: 36
 set-resources:
   download:
     cpus_per_task: 1
