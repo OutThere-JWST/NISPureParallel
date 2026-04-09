@@ -101,7 +101,7 @@ rule contam:
         """
 
 # Extraction Rule
-cpus_per_task = workflow.resource_settings.default_resources.parsed['cpus_per_task']
+cpus_per_task = workflow.resource_settings.default_resources.get('cpus_per_task').value
 rule extract:
     input:
         'FIELDS/{field}/logs/contam.log'
@@ -130,24 +130,16 @@ rule zfit:
         """
 
 # Fitsmap Creation Rule
-# We can remove this function once my snakemake PR is merged that allows wildcards in priority
-def create_rule(field):
-    priority = len(rate[field])
-    rule:
-        name: f"fmap_{field}"
-        input:
-            f'FIELDS/{field}/logs/zfit.log'
-        output:
-            f'FIELDS/{field}/logs/fmap.log'
-        log:
-            f'FIELDS/{field}/logs/fmap.log'
-        priority:
-            priority
-        shell:
-            f"""
-            pixi run --frozen --environment fitsmap ./workflow/scripts/makeFitsmap.py {field} --ncpu {{resources.cpus_per_task}} > {{log}} 2>&1
-            """
-            # tar -cf FIELDS/{wildcards.field}/fitsmap/{wildcards.field}.tar -C FIELDS/{wildcards.field}/fitsmap/ {wildcards.field}/
-
-# Create rules for all fields
-for field in rate.keys(): create_rule(field)
+rule fmap:
+    input:
+        'FIELDS/{field}/logs/zfit.log'
+    output:
+        'FIELDS/{field}/logs/fmap.log'
+    log:
+        'FIELDS/{field}/logs/fmap.log'
+    priority:
+        lambda wc: len(rate[wc.field])
+    shell:
+        """
+        pixi run --frozen --environment fitsmap ./workflow/scripts/makeFitsmap.py {wildcards.field} --ncpu {resources.cpus_per_task} > {log} 2>&1
+        """

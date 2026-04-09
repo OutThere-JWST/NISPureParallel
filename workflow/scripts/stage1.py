@@ -14,6 +14,9 @@ from jwst.ramp_fitting.ramp_fit_step import RampFitStep
 from photutils.background import Background2D, MedianBackground
 from threadpoolctl import threadpool_limits
 
+# Jump detection sigma threshold
+N_SIGMA = 4
+
 
 # Run pipeline in parallel
 def main():
@@ -42,7 +45,7 @@ def cal(file, out):
 
     # Set ColumnJumpStep Parameters
     cjs = ColumnJumpStep()
-    cjs.nsigma1jump, cjs.nsigma2jumps = 5.0, 5.0
+    cjs.nsigma1jump, cjs.nsigma2jumps = N_SIGMA, N_SIGMA
 
     # Set 1/f parameters
     imaging = fits.getval(file, 'FILTER', 'PRIMARY') == 'CLEAR'
@@ -52,7 +55,7 @@ def cal(file, out):
     # Define Detector 1 steps
     steps = dict(
         persistence=dict(skip=True),  # Not implemented
-        jump=dict(pre_hooks=[cjs], rejection_threshold=5.0),
+        jump=dict(pre_hooks=[cjs], rejection_threshold=N_SIGMA),
         ramp_fit=dict(skip=True),
         gain_scale=dict(skip=True),
     )
