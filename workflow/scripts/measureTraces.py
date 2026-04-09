@@ -411,7 +411,7 @@ def measure_traces_one_exposure(
     cat_sel = cat[ii_keep]
     print(f'  Selected bright: {len(cat_sel)} sources')
 
-    plot_dir = make_plot_dir(
+    plot_dir = make_plot_dir(  # noqa: F841
         dir, root=root, filter=filter_name, pupil=pupil, order=order
     )
 
