@@ -11,7 +11,7 @@ GRIZLI = '${PIXI_PROJECT_ROOT}/GRIZLI_RESOURCES'
 CRDS_PATH = '${PIXI_PROJECT_ROOT}/CRDS_CACHE'
 iref = '${GRIZLI}/iref'
 jref = '${GRIZLI}/jref'
-CRDS_CONTEXT = 'jwst_1477.pmap'
+CRDS_CONTEXT = 'jwst_1531.pmap'
 CRDS_SERVER_URL = 'https://jwst-crds.stsci.edu'
 
 [feature.grizli.activation.env]
@@ -60,13 +60,14 @@ jwst = ">=1.19.1, <2"
 
 [feature.grizli.dependencies]
 numba = '>=0.60.0,<0.61'
+pillow = '<11.3'
 
 [feature.grizli.pypi-dependencies]
 dust_attenuation = { git = 'https://github.com/karllark/dust_attenuation.git' , rev ='12b5504'}
 eazy = { git = 'https://github.com/gbrammer/eazy-py.git' , rev = '292172c' }
-drizzlepac = '<3.7.1'
+# drizzlepac = '<3.7.1'
 reproject = '>=0.14.1, <0.15'
-grizli = { git = 'https://github.com/TheSkyentist/grizli.git', extras = ['jwst'], rev = 'a4b80f3'}
+grizli = { git = 'https://github.com/TheSkyentist/grizli.git', extras = ['jwst'], rev = '88bbbd4'}
 
 [feature.fitsmap.dependencies]
 numpy = "<2"
