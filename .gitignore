@@ -1,5 +1,6 @@
 # Ignored directories
 FIELDS/
+vendor/
 __pycache__/
 GRIZLI_RESOURCES/
 CRDS_CACHE/
