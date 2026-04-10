@@ -18,7 +18,7 @@ from astropy.table import Table
 from grizli import jwst_utils, utils
 from grizli.aws import visit_processor
 from grizli.pipeline import auto_script
-from grizli.prep import visit_grism_sky
+from grizli.prep import visit_grism_sky  # noqa: F401
 from matplotlib import patches, pyplot
 
 # Silence warnings
@@ -93,11 +93,11 @@ def main():
     plot_visits(visits, fname, plots)
 
     # Subtract background from direct images
-    # os.chdir(raw)
-    # for group in all_groups:
-    #     if 'direct' in group:  #
-    #         visit_grism_sky(grism=group['grism'], column_average=False, ignoreNA=True)
-    # os.chdir(fields)
+    os.chdir(raw)
+    for group in all_groups:
+        if 'direct' in group:
+            visit_grism_sky(grism=group['grism'], column_average=False, ignoreNA=True)
+    os.chdir(fields)
 
     # Make visit associations
     assoc = info['EXPSTART', 'EXPTIME', 'INSTRUME']
@@ -134,6 +134,7 @@ def main():
         'snowball_kwargs': None,
         'imaging_bkg_params': None,
         'column_average': False,
+        'skymethod': 'match',
     }
 
     # Other arguements
@@ -169,7 +170,7 @@ def main():
         vm = np.nanpercentile(data, [5, 95])
 
         # Plot images
-        ax.imshow(data, vmin=-0.1 * vm[1], vmax=vm[1], cmap='gray_r')
+        ax.imshow(data, vmin=vm[0], vmax=vm[1], cmap='gray_r')
 
         # Set axis
         ax.set_title(f)
