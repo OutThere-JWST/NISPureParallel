@@ -3,8 +3,8 @@ authors = ['TheSkyentist <raphael.hviding@gmail.com>']
 channels = ['conda-forge', 'bioconda']
 description = 'NIRISS Pure Parallel Reduction Pipeline'
 name = 'NISPureParallel'
-platforms = ['osx-arm64', 'linux-64']
-version = '2.2.0'
+platforms = ['linux-64', 'osx-64', 'osx-arm64']
+version = '2.2.1'
 
 [activation.env]
 GRIZLI = '${PIXI_PROJECT_ROOT}/GRIZLI_RESOURCES'
@@ -55,7 +55,7 @@ threadpoolctl = '>=3.5.0,<4'
 numpy = '<2'
 
 [feature.jwst.pypi-dependencies]
-columnjump = { git = 'https://github.com/TheSkyentist/jwst-tools.git', subdirectory = 'columnjump' , rev = 'cdc163b' }
+columnjump = { git = 'https://github.com/chriswillott/jwst.git', subdirectory = 'columnjump' , rev = '2c20c4e' }
 jwst = ">=1.19.1, <2"
 
 [feature.grizli.dependencies]
