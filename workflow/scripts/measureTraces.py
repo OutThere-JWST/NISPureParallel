@@ -31,6 +31,9 @@ from astropy.table import Table
 from jwst import datamodels
 from jwst.step import AssignWcsStep
 
+from skimage.measure import find_contours
+from skimage.filters import gaussian
+
 warnings.filterwarnings('ignore')
 
 # ───────────────────────────────────────────────────
@@ -345,7 +348,61 @@ def make_plot_dir(input_dir, root, filter, pupil, order):
 
     os.makedirs(d, exist_ok=True)
     return d
+def robust_bg_noise(a):
+    finite = np.isfinite(a)
+    med = np.median(a[finite])
+    mad = np.median(np.abs(a[finite] - med))
+    sigma = 1.4826 * mad
+    return med, sigma
 
+
+def find_contour_around_peak(image, smooth_sigma=0.8, k=5, min_contour_length=10):
+    """Return a contour (y,x) at level=bg+k*noise and pick one closest to the global max."""
+    I = np.asarray(image, float)
+    bg, noise = robust_bg_noise(I)
+    level = bg + k * noise
+
+    # Fill NaNs slightly below the contour level so NaN regions don't generate edges
+    I2 = I.copy()
+    I2[~np.isfinite(I2)] = level - 1e-6
+
+    if smooth_sigma > 0:
+        I2 = gaussian(I2, sigma=smooth_sigma, preserve_range=True)
+
+    contours = find_contours(I2, level=level)
+    contours = [c for c in contours if len(c) >= min_contour_length]
+    if not contours:
+        raise ValueError("No contours found. Try lowering k or smoothing.")
+
+    py, px = np.unravel_index(np.nanargmax(I), I.shape)
+
+    # choose contour with smallest distance to peak
+    def dist_to_peak(c):
+        dy = c[:, 0] - py
+        dx = c[:, 1] - px
+        return np.min(dy*dy + dx*dx)
+
+    contour = min(contours, key=dist_to_peak)
+    return contour, level, (py, px), (bg, noise)
+
+def summarize_contour(contour):
+    yc = contour[:, 0]
+    xc = contour[:, 1]
+
+    i_left = np.argmin(xc)
+    i_right = np.argmax(xc)
+    left = (float(xc[i_left]), float(yc[i_left]))
+    right = (float(xc[i_right]), float(yc[i_right]))
+
+    return {
+        "left_edge_(x0,y0)": left,
+        "right_edge_(x1,y1)": right,
+        "x_min": float(np.min(xc)),
+        "x_max": float(np.max(xc)),
+        "y_min_top_index": float(np.min(yc)),     # smaller y = closer to row 0
+        "y_max_bottom_index": float(np.max(yc)),  # larger y = closer to last row
+        "n_points": int(len(contour)),
+    }
 
 # ---------------------------------------------------
 # MEASURE TRACES FOR ONE EXPOSURE
@@ -415,17 +472,23 @@ def measure_traces_one_exposure(
         dir, root=root, filter=filter_name, pupil=pupil, order=order
     )
 
-    if 'C' in filter_name:
+    if filter_name == 'GR150C':
         disp_axis = 'x'
-    elif 'R' in filter_name:
+    elif filter_name == 'GR150R':
         disp_axis = 'y'
 
     # Define intended bounding box around the full trace
-    if order == '+1':
-        pad_x, pad_y = 20, 10
-    else:
-        pad_x, pad_y = 20, 15
-
+    if filter_name == 'GR150C':
+        if (pupil == 'F200W') and ((order == '-1') or (order == '+2')):
+            pad_x, pad_y = 20, 15
+        else:
+            pad_x, pad_y = 20, 10
+    elif filter_name == 'GR150R':
+        if (pupil == 'F200W') and ((order == '-1') or (order == '+2')):
+            pad_x, pad_y = 15, 20
+        else:
+            pad_x, pad_y = 10, 20
+            
     for row in cat_sel:
         ra, dec = row['RA'], row['DEC']
         mag = row['MAG_AUTO']
@@ -481,87 +544,150 @@ def measure_traces_one_exposure(
         # Fit trace using FitTrace on cutout (or its transpose)
         work = cutout if disp_axis == 'x' else cutout.T
 
-        # -------------------------------
-        # EDGE DETECTION (BOTH AXES)
-        # -------------------------------
-        pad_disp = pad_x if disp_axis == 'x' else pad_y
+        if order != "0":
 
-        # Find edge on the "right" side by flipping horizontally
-        edge_start_flipped = find_step_derivative(np.fliplr(work)[:, :50], bg_npix=10)
-        edge_start = work.shape[1] - 1 - edge_start_flipped
+            # -------------------------------
+            # EDGE DETECTION (BOTH AXES)
+            # -------------------------------
+            pad_disp = pad_x if disp_axis == 'x' else pad_y
 
-        # Find edge on the "left" side
-        edge_end = find_step_derivative(work[:, :50], bg_npix=10)
+            # Find edge on the "right" side by flipping horizontally
+            edge_start_flipped = find_step_derivative(np.fliplr(work)[:, :50], bg_npix=10)
+            edge_start = work.shape[1] - 1 - edge_start_flipped
 
-        # Skip objects with edges too far from expected positions
-        if ~(
-            (edge_start > work.shape[1] - pad_disp * 1.5)
-            and (edge_start < work.shape[1] - pad_disp / 2)
-            and (edge_end > pad_disp / 2)
-            and (edge_end < pad_disp * 1.5)
-        ):
-            continue
+            # Find edge on the "left" side
+            edge_end = find_step_derivative(work[:, :50], bg_npix=10)
 
-        # Slice between detected edges in the working frame
-        sub = work[:, edge_end:edge_start]
+            # Skip objects with edges too far from expected positions
+            if ~(
+                (edge_start > work.shape[1] - pad_disp * 1.5)
+                and (edge_start < work.shape[1] - pad_disp / 2)
+                and (edge_end > pad_disp / 2)
+                and (edge_end < pad_disp * 1.5)
+            ):
+                continue
 
-        # Basic sanity checks
-        if not np.isfinite(sub).any():
-            print(f'  [WARN] Object {obj_id}: subimage is fully NaN → skipping')
-            continue
-        if np.nanmax(sub) == 0 or np.nanstd(sub) == 0:
-            print(f'  [WARN] Object {obj_id}: subimage has no signal → skipping')
-            continue
-        if sub.shape[0] < 10 or sub.shape[1] < 10:
-            print(
-                f'  [WARN] Object {obj_id}: subimage too small {sub.shape} → skipping'
-            )
-            continue
+            # Slice between detected edges in the working frame
+            sub = work[:, edge_end:edge_start]
 
-        try:
-            bg, tr = fit_trace_undersampled(sub, iter=3)
-        except Exception as e:
-            print(f'  [WARN] FitTrace failed for obj {obj_id}: {e}')
-            continue
+            # Basic sanity checks
+            if not np.isfinite(sub).any():
+                print(f'  [WARN] Object {obj_id}: subimage is fully NaN → skipping')
+                continue
+            if np.nanmax(sub) == 0 or np.nanstd(sub) == 0:
+                print(f'  [WARN] Object {obj_id}: subimage has no signal → skipping')
+                continue
+            if sub.shape[0] < 10 or sub.shape[1] < 10:
+                print(
+                    f'  [WARN] Object {obj_id}: subimage too small {sub.shape} → skipping'
+                )
+                continue
 
-        # Model returned by fit is defined in the sliced-subimage x-coordinates.
-        # We wrap it so callers can use full WORK-frame coordinates.
-        model_sub = tr.trace_model_fit
-        m_fit = model_sub.c1.value
-        b_fit = model_sub.c0.value
-        sigma_fit = tr.sigma_fit
-        shift = edge_end
+            try:
+                bg, tr = fit_trace_undersampled(sub, iter=3)
+            except Exception as e:
+                print(f'  [WARN] FitTrace failed for obj {obj_id}: {e}')
+                continue
 
-        def model_work(x, m=model_sub, s=shift):
-            x = np.asarray(x)
-            return m(x - s)
+            # Model returned by fit is defined in the sliced-subimage x-coordinates.
+            # We wrap it so callers can use full WORK-frame coordinates.
+            model_sub = tr.trace_model_fit
+            m_fit = model_sub.c1.value
+            b_fit = model_sub.c0.value
+            sigma_fit = tr.sigma_fit
+            shift = edge_end
 
-        # -------------------------------
-        # SAVE SANITY-CHECK TRACE PLOTS
-        # -------------------------------
-        # fig, ax = show_cutout_with_trace(
-        #     cutout,
-        #     x_tr,
-        #     y_tr,
-        #     x0,
-        #     y0,
-        #     filename,
-        #     obj_id,
-        #     x_det=x_det,
-        #     y_det=y_det,
-        #     edge1=edge_start,
-        #     edge2=edge_end,
-        #     model=model_work,
-        #     mag=mag,
-        #     disp_axis=disp_axis,
-        # )
-        # fig.savefig(f'{plot_dir}/obj_{obj_id:06d}.png', dpi=120)
-        # plt.close(fig)
+            def model_work(x, m=model_sub, s=shift):
+                x = np.asarray(x)
+                return m(x - s)
 
+            # -------------------------------
+            # SAVE SANITY-CHECK TRACE PLOTS
+            # -------------------------------
+            # fig, ax = show_cutout_with_trace(
+            #     cutout,
+            #     x_tr,
+            #     y_tr,
+            #     x0,
+            #     y0,
+            #     filename,
+            #     obj_id,
+            #     x_det=x_det,
+            #     y_det=y_det,
+            #     edge1=edge_start,
+            #     edge2=edge_end,
+            #     model=model_work,
+            #     mag=mag,
+            #     disp_axis=disp_axis,
+            # )
+            # fig.savefig(f'{plot_dir}/obj_{obj_id:06d}.png', dpi=120)
+            # plt.close(fig)
+
+        else:
+
+            bg = np.nanmedian(work)
+            # noise = 1.4826 * np.nanmedian(np.abs(work - bg))  # robust MAD estimate
+            # level = 1.
+            
+            try:
+                for k_test in [5,4,3]:
+                    contour, level, (py, px), (bg, noise) = find_contour_around_peak(work, smooth_sigma=0.8, k=k_test)
+                    summary = summarize_contour(contour)
+                    if summary is not None:
+                        break
+                
+                if summary is None:
+                    print(f"  [WARN] Object {obj_id}: no valid contour found → skipping")
+                    continue
+
+            except Exception as e:
+                print(f"  [WARN] Contour edge detection failed for obj {obj_id}: {e}")
+                continue
+
+            if summary is None or summary['x_max'] - summary['x_min'] > 15:
+                print(f"  [WARN] Object {obj_id}: → skipping")
+                continue
+
+            # summarize_contour returns (x, y) in work-frame coords.
+            # For GR150R, work = cutout.T, so x_work = y_cutout and y_work = x_cutout.
+            # Swap back to cutout coords so the plot and write are consistent.
+            xi, yi = (0, 1) if disp_axis == 'x' else (1, 0)
+            left_x_cut  = summary["left_edge_(x0,y0)"][xi]
+            left_y_cut  = summary["left_edge_(x0,y0)"][yi]
+            right_x_cut = summary["right_edge_(x1,y1)"][xi]
+            right_y_cut = summary["right_edge_(x1,y1)"][yi]
+
+            # fig, ax = show_cutout_with_trace(
+            #     cutout,
+            #     np.array([left_x_cut, right_x_cut]),
+            #     np.array([left_y_cut, right_y_cut]),
+            #     0, 0,
+            #     filename, obj_id,
+            #     x_det=x_det, y_det=y_det,
+            #     edge1=10, edge2=20,
+            #     model=None, mag=mag,
+            #     disp_axis=disp_axis,
+            # )
+            # fig.savefig(f"{plot_dir}/obj_{obj_id:06d}.png", dpi=120)
+            # # plt.show()
+            # plt.close(fig)
+        
         # -------------------------------
         # WRITE TRACE SAMPLE POINTS
         # -------------------------------
-        if disp_axis == 'x':
+        if order == '0':
+            # Zeroth order: write only the two contour edges (detector coords)
+            left_x  = left_x_cut  + x0
+            left_y  = left_y_cut  + y0
+            right_x = right_x_cut + x0
+            right_y = right_y_cut + y0
+            with open(outname, "a") as fh:
+                fh.write(f"{obj_id} {ra:.6f} {dec:.6f} {order} "
+                         f"{x_det:.2f} {y_det:.2f} {left_x:.2f} {left_y:.2f} nan nan\n")
+                fh.write(f"{obj_id} {ra:.6f} {dec:.6f} {order} "
+                         f"{x_det:.2f} {y_det:.2f} {right_x:.2f} {right_y:.2f} nan nan\n")
+                
+        elif disp_axis == 'x':
             # Sample along x (dispersion), model gives y
             idx = np.linspace(edge_end, edge_start - 1, N_TRACE_SAMPLES).astype(int)
 
