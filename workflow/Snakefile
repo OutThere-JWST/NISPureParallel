@@ -110,6 +110,9 @@ rule trace:
         'FIELDS/{field}/logs/trace.log'
     log:
         'FIELDS/{field}/logs/trace.log'
+    resources:
+        mem_mb = lambda wc, _: max(field_mem_mb[wc.field], per_file_mem_floor_mb),
+        cpus_per_task = 1
     shell:
         """
         pixi run --frozen --environment jwst ./workflow/scripts/measureTraces.py {wildcards.field} > {log} 2>&1
