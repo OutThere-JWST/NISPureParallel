@@ -111,7 +111,7 @@ rule trace:
     log:
         'FIELDS/{field}/logs/trace.log'
     resources:
-        mem_mb = lambda wc, _: max(field_mem_mb[wc.field], per_file_mem_floor_mb),
+        mem_mb = lambda wc: max(field_mem_mb[wc.field], per_file_mem_floor_mb),
         cpus_per_task = 1
     shell:
         """
