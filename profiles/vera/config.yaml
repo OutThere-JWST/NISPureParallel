@@ -26,15 +26,10 @@ group-components:
   stage1: 18
 set-resources:
   download:
-    cpus_per_task: 1
     mem_mb: 3472
   stage1:
-    cpus_per_task: 1
     mem_mb: 13888  # per-file floor: fits 18 stage1 jobs on a 250 GB p.vera node
   preprocess:
     runtime: 2160
   mosaic:
     runtime: 720
-    cpus_per_task: 1
-  contam:
-    cpus_per_task: 8

@@ -14,9 +14,9 @@ rate = {
     for f in fields[1:]
 }
 
-# Per-field memory request in MB: 20x total uncal size as upper envelope
+# Per-field memory request in MB
 field_mem_mb = {
-    f.name.lower(): int(20 * sum(row['size'] for row in f.data) / (1024**2))
+    f.name.lower(): int(sum(row['size'] for row in f.data) / (1024**2))
     for f in fields[1:]
 }
 
@@ -39,6 +39,8 @@ rule download:
         'FIELDS/{field}/logs/files/{file}_download.log'
     group:
         'download'
+    resources:
+        cpus_per_task = 1
     shell:
         """
         ./workflow/scripts/download.py {output} > {log} 2>&1
@@ -57,7 +59,8 @@ rule stage1:
     group:
         'stage1'
     resources:
-        mem_mb = lambda _, input: max(20 * input.size_mb, per_file_mem_floor_mb)
+        mem_mb = lambda _, input: max(20 * input.size_mb, per_file_mem_floor_mb),
+        cpus_per_task = 1
     shell:
         """
         pixi run --frozen --environment jwst ./workflow/scripts/stage1.py --scratch {input} {output} >> {log} 2>&1
@@ -92,7 +95,8 @@ rule mosaic:
     group:
         'imaging'
     resources:
-        mem_mb = lambda wc, _: max(field_mem_mb[wc.field], per_file_mem_floor_mb)
+        mem_mb = lambda wc, _: max(field_mem_mb[wc.field], per_file_mem_floor_mb),
+        cpus_per_task = 1
     shell:
         """
         pixi run --frozen --environment grizli ./workflow/scripts/mosaic.py {wildcards.field} > {log} 2>&1
@@ -107,7 +111,8 @@ rule contam:
     log:
         'FIELDS/{field}/logs/contam.log'
     resources:
-        mem_mb = lambda wc, _: max(field_mem_mb[wc.field], per_file_mem_floor_mb)
+        mem_mb = lambda wc, _: max(field_mem_mb[wc.field], per_file_mem_floor_mb),
+        cpus_per_task = 8
     shell:
         """
         pixi run --frozen --environment grizli ./workflow/scripts/contamination.py {wildcards.field} --ncpu {resources.cpus_per_task} > {log} 2>&1
