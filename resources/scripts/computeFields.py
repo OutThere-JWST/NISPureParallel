@@ -39,12 +39,15 @@ def create_region(row):
 def get_products(field):
     # Loop as MAST sometimes doesn't return all products
     prods = []
-    while len(prods) != len(field):
+    while True:
         # Get all products for the field
         allprods = missions.get_product_list(field)
 
         # Filter for 1b products
         prods = missions.filter_products(allprods, category='1b', file_suffix='_uncal')
+
+        if len(prods) != len(field):
+            break
 
     # Remove overlapping columns
     field.remove_columns(['access', 'category'])
@@ -157,7 +160,7 @@ if __name__ == '__main__':
     regs = regs[1:]
 
     # Iterate until all regions have been assigned to a field
-    print('Combining Nearby Fields')
+    print('Combining nearby fields')
     pbar = tqdm(total=len(regs))
     while len(regs) > 0:
         # Iterate over regions
@@ -184,7 +187,7 @@ if __name__ == '__main__':
     pbar.close()
 
     # Multiprocess to get products for each field
-    print('Getting products for each field...')
+    print('Querying products for each field...')
     with ThreadPoolExecutor(max_workers=args.maxcpu) as executor:
         results = list(tqdm(executor.map(get_products, fields), total=len(fields)))
 
