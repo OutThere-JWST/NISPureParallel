@@ -77,7 +77,7 @@ rule preprocess:
     group:
         'imaging'
     resources:
-        mem_mb = lambda wc, _: max(field_mem_mb[wc.field], per_file_mem_floor_mb),
+        mem_mb = lambda wc: max(field_mem_mb[wc.field], per_file_mem_floor_mb),
         cpus_per_task = lambda wc: min(len(rate[wc.field]), 8)
     shell:
         """
@@ -95,7 +95,7 @@ rule mosaic:
     group:
         'imaging'
     resources:
-        mem_mb = lambda wc, _: max(field_mem_mb[wc.field], per_file_mem_floor_mb),
+        mem_mb = lambda wc: max(field_mem_mb[wc.field], per_file_mem_floor_mb),
         cpus_per_task = 1
     shell:
         """
@@ -111,7 +111,7 @@ rule contam:
     log:
         'FIELDS/{field}/logs/contam.log'
     resources:
-        mem_mb = lambda wc, _: max(field_mem_mb[wc.field], per_file_mem_floor_mb),
+        mem_mb = lambda wc: max(field_mem_mb[wc.field], per_file_mem_floor_mb),
         cpus_per_task = 8
     shell:
         """
@@ -128,7 +128,7 @@ rule extract:
     log:
         'FIELDS/{field}/logs/extr.log'
     resources:
-        mem_mb = lambda wc, _: max(field_mem_mb[wc.field], per_file_mem_floor_mb),
+        mem_mb = lambda wc: max(field_mem_mb[wc.field], per_file_mem_floor_mb),
         cpus_per_task = lambda wc: cpus_per_task // 2 if wc.field in ['gru-00'] else cpus_per_task
     shell:
         """
@@ -144,7 +144,7 @@ rule zfit:
     log:
         'FIELDS/{field}/logs/zfit.log'
     resources:
-        mem_mb = lambda wc, _: max(field_mem_mb[wc.field], per_file_mem_floor_mb)
+        mem_mb = lambda wc: max(field_mem_mb[wc.field], per_file_mem_floor_mb)
     shell:
         """
         pixi run --frozen --environment grizli ./workflow/scripts/redshiftFit.py {wildcards.field} --ncpu {resources.cpus_per_task} > {log} 2>&1
@@ -161,7 +161,7 @@ rule fmap:
     priority:
         lambda wc: len(rate[wc.field])
     resources:
-        mem_mb = lambda wc, _: max(field_mem_mb[wc.field], per_file_mem_floor_mb)
+        mem_mb = lambda wc: max(field_mem_mb[wc.field], per_file_mem_floor_mb)
     shell:
         """
         pixi run --frozen --environment fitsmap ./workflow/scripts/makeFitsmap.py {wildcards.field} --ncpu {resources.cpus_per_task} > {log} 2>&1
