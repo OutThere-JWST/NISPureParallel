@@ -21,7 +21,7 @@ field_mem_mb = {
 }
 
 # Final Rule
-logs = ['fmap']
+logs = ['trace']
 rule all:
     input:
         expand('FIELDS/{field}/logs/{log}.log',field=rate.keys(),log=logs)
@@ -100,6 +100,19 @@ rule mosaic:
     shell:
         """
         pixi run --frozen --environment grizli ./workflow/scripts/mosaic.py {wildcards.field} > {log} 2>&1
+        """
+
+# Trace Measurement Rule
+rule trace:
+    input:
+        'FIELDS/{field}/logs/mos.log'
+    output:
+        'FIELDS/{field}/logs/trace.log'
+    log:
+        'FIELDS/{field}/logs/trace.log'
+    shell:
+        """
+        pixi run --frozen --environment jwst ./workflow/scripts/measureTraces.py {wildcards.field} > {log} 2>&1
         """
 
 # Contamination Rule

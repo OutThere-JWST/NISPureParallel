@@ -24,6 +24,7 @@ default-resources:
 group-components:
   download: 72
   stage1: 18
+  trace: 36
 set-resources:
   download:
     mem_mb: 3472
