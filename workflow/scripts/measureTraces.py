@@ -22,6 +22,8 @@ import matplotlib
 
 matplotlib.use('Agg')
 
+from collections import defaultdict
+
 import astropy.units as u
 import matplotlib.pyplot as plt
 import numpy as np
@@ -45,7 +47,8 @@ GRISMS = ['GR150C', 'GR150R']
 
 ORDERS = ['+1', '0', '-1', '+2']
 
-ORDER_MAG_LIMITS = {'+1': 24, '-1': 24, '+2': 24}
+# ORDER_MAG_LIMITS = {'+1': 24, '-1': 24, '+2': 24}
+ORDER_MAG_LIMITS = defaultdict(lambda: 24)
 
 WAVELENGTH_GRIDS = {
     'F090W': np.arange(0.796, 1.005 + 0.05, 0.05),
