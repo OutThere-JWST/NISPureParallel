@@ -99,6 +99,32 @@ Stage 1 is custom beyond the standard JWST pipeline:
 
 Download and stage1 rules use `group:` directives for batching multiple files into a single SLURM job. Group sizes are configured per-profile via `group-components`.
 
+### Resource Allocation Strategy
+
+The goal is **node bin-packing**: most pipeline rules don't saturate a full compute node, so rather than always requesting an entire node, rules declare only the CPUs they actually need. The scheduler can then co-schedule jobs from different fields onto the same node, improving utilization.
+
+**CPU allocation per rule:**
+
+| Rule | `cpus_per_task` | Notes |
+|---|---|---|
+| `download` | 1 | Many files grouped into one job via `group-components` |
+| `stage1` | 1 | Multiple files grouped per job; group size tuned per profile |
+| `preprocess` | `min(file_count, 8)` | Scales with field size, capped at 8 |
+| `mosaic` | 1 | Single-threaded |
+| `contam` | 8 | Fixed parallelism |
+| `extract` | default | Halved for `gru-00` (large field) to allow co-scheduling |
+| `zfit`, `fmap` | default | Use the full node default from the profile |
+
+The `default-resources.cpus_per_task` in each profile defines the node width (e.g. 72 on Vera), so rules that don't set `cpus_per_task` explicitly will claim a whole node.
+
+**Memory allocation:**
+
+- **`per_file_mem_floor_mb`**: Read at Snakefile load time from `set-resources.stage1.mem_mb` in the active profile. This makes the memory floor portable — each profile tunes the stage1 per-file allocation to fit as many stage1 jobs as possible onto one node given that cluster's node memory.
+- **Field-level rules** (`preprocess` through `fmap`): `max(field_mem_mb, per_file_mem_floor_mb)`, where `field_mem_mb` is the total size of all RATE files for the field.
+- **`stage1`**: `max(20 × input_size_mb, per_file_mem_floor_mb)`.
+
+**Group batching** (`download`, `stage1`): group sizes in `group-components` are tuned per profile to fill a node — e.g. 18 stage1 jobs on a Vera p.vera node (250 GB / 13888 MB per job). Multiple per-file tasks run sequentially inside one scheduler allocation, amortizing submission overhead.
+
 ## Key Directories
 
 - `FIELDS/` — pipeline outputs, one subdirectory per field
